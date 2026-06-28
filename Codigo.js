@@ -561,10 +561,11 @@ function registrarSocioNuevo(socioObj, userEmail) {
 
     const todayStr = new Date().toISOString().split("T")[0];
     const isMinor = (socioObj.Category || "").includes("Bab") || (socioObj.Category || "").includes("Juv") || (parseInt(age || "20") < 18);
+    const assignedRole = socioObj.Role || "Deportista";
 
     const rowArray = [
       email,
-      "Deportista",
+      assignedRole,
       socioObj.Name || "",
       socioObj.Phone || "",
       socioObj.Category || "Fut-May+35",
@@ -585,8 +586,20 @@ function registrarSocioNuevo(socioObj, userEmail) {
 
     sheet.appendRow(rowArray);
 
+    // Si es Administrador, asegurar que también figure en la hoja Admins
+    if (assignedRole === "Admin") {
+      const sheetAdmins = ss.getSheetByName(HOJA_ADMINS);
+      if (sheetAdmins) {
+        const adminsData = sheetAdmins.getDataRange().getValues();
+        const existing = adminsData.map(r => (r[0] || "").toString().toLowerCase().trim());
+        if (!existing.includes(email)) {
+          sheetAdmins.appendRow([email, socioObj.Name || "Admin"]);
+        }
+      }
+    }
+
     if (typeof registrarLogAuditoria === "function") {
-      registrarLogAuditoria(userEmail || "admin@futsalhaedo.com", "CREAR", "PADRON_SOCIOS", `Dado de alta socio: ${socioObj.Name || email} (${email})`);
+      registrarLogAuditoria(userEmail || "admin@futsalhaedo.com", "CREAR", "PADRON_SOCIOS", `Dado de alta usuario: ${socioObj.Name || email} (${email}) con rol ${assignedRole}`);
     }
 
     return { success: true, message: "Socio registrado con éxito." };

@@ -1931,14 +1931,22 @@
           <input type="text" id="form-socio-name" class="form-input" placeholder="Ej: Pérez, Juan Agustín" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;" required>
         </div>
         
-        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px;">
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px;">
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Correo Electrónico *</label>
-            <input type="email" id="form-socio-email" class="form-input" placeholder="socio@ejemplo.com" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;" required>
+            <input type="email" id="form-socio-email" class="form-input" placeholder="socio@ejemplo.com" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; font-size:0.8rem; padding:10px 8px;" required>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Rol / Permisos *</label>
+            <select id="form-socio-role" class="form-select" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; font-size:0.8rem; padding:10px 6px;" required>
+              <option value="Deportista">🧢 Socio / Deportista</option>
+              <option value="Coach">⚽ Coach / Técnico</option>
+              <option value="Admin">👑 Administrador</option>
+            </select>
           </div>
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Documento / DNI</label>
-            <input type="text" id="form-socio-dni" class="form-input" placeholder="Ej: 42.123.456" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;">
+            <input type="text" id="form-socio-dni" class="form-input" placeholder="Ej: 42.123.456" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; font-size:0.8rem; padding:10px 8px;">
           </div>
         </div>
 
@@ -3512,6 +3520,7 @@
     function abrirModalAltaSocio() {
       document.getElementById("form-socio-name").value = "";
       document.getElementById("form-socio-email").value = "";
+      if (document.getElementById("form-socio-role")) document.getElementById("form-socio-role").value = "Deportista";
       document.getElementById("form-socio-dni").value = "";
       document.getElementById("form-socio-category").value = "Fut-May+35";
       document.getElementById("form-socio-birthdate").value = "";
@@ -3532,6 +3541,7 @@
     function confirmarAltaSocio() {
       const name = document.getElementById("form-socio-name").value.trim();
       const email = document.getElementById("form-socio-email").value.trim().toLowerCase();
+      const role = document.getElementById("form-socio-role") ? document.getElementById("form-socio-role").value : "Deportista";
       const dni = document.getElementById("form-socio-dni").value.trim();
       const category = document.getElementById("form-socio-category").value;
       const birthDate = document.getElementById("form-socio-birthdate").value;
@@ -3551,6 +3561,7 @@
       const payload = {
         Name: name,
         Email: email,
+        Role: role,
         DNI: dni,
         Category: category,
         BirthDate: birthDate,
