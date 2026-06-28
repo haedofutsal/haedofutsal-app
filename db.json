@@ -2179,6 +2179,26 @@
         "",
         "",
         ""
+      ],
+      [
+        "marielamolina@gmail.com",
+        "Deportista",
+        "Molina, Mariela",
+        "1199887766",
+        "Fut-May+35",
+        "38123456",
+        "1992-05-14",
+        "34",
+        "2026-06-28",
+        "O+",
+        "Apto Físico Vigente",
+        "OSDE",
+        "Contacto Emergencia",
+        "1122334455",
+        "",
+        "",
+        "Socio para pruebas de cobro",
+        ""
       ]
     ]
   },
@@ -8251,6 +8271,66 @@
         30000,
         "Pagado",
         "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=mock_pref_PAG-0606",
+        "",
+        ""
+      ],
+      [
+        "PAG-0607",
+        "marielamolina@gmail.com",
+        "2026-01",
+        15000,
+        "Pendiente",
+        "",
+        "",
+        ""
+      ],
+      [
+        "PAG-0608",
+        "marielamolina@gmail.com",
+        "2026-02",
+        15000,
+        "Pendiente",
+        "",
+        "",
+        ""
+      ],
+      [
+        "PAG-0609",
+        "marielamolina@gmail.com",
+        "2026-03",
+        15000,
+        "Pendiente",
+        "",
+        "",
+        ""
+      ],
+      [
+        "PAG-0610",
+        "marielamolina@gmail.com",
+        "2026-04",
+        15000,
+        "Pendiente",
+        "",
+        "",
+        ""
+      ],
+      [
+        "PAG-0611",
+        "marielamolina@gmail.com",
+        "2026-05",
+        15000,
+        "Pendiente",
+        "",
+        "",
+        ""
+      ],
+      [
+        "PAG-0612",
+        "marielamolina@gmail.com",
+        "2026-06",
+        15000,
+        "Pendiente",
+        "",
         "",
         ""
       ]
