@@ -2462,8 +2462,33 @@
     };
 
     window.onload = function() {
+      // Verificar si viene una redirección de Mercado Pago acreditada
+      const urlParams = new URLSearchParams(window.location.search);
+      const mpStatus = urlParams.get('collection_status') || urlParams.get('status');
+      const extRef = urlParams.get('external_reference');
+
+      if ((mpStatus === 'approved' || mpStatus === 'accredited') && extRef) {
+        mostrarCarga("Acreditando pago en Mercado Pago...");
+        google.script.run
+          .withSuccessHandler(function() {
+            window.history.replaceState({}, document.title, window.location.pathname);
+            alert("¡Pago acreditado con éxito por Mercado Pago! Gracias.");
+            const session = AuthService.getSession();
+            if (session.email) ejecutarLoginDirecto(session.email);
+            else { ocultarCarga(); mostrarPantalla("login-view"); }
+          })
+          .withFailureHandler(function() {
+            window.history.replaceState({}, document.title, window.location.pathname);
+            const session = AuthService.getSession();
+            if (session.email) ejecutarLoginDirecto(session.email);
+            else { ocultarCarga(); mostrarPantalla("login-view"); }
+          })
+          .marcarPagoComoPagado(extRef, "MercadoPago", "MercadoPago");
+        return;
+      }
+
       const session = AuthService.getSession();
-      if (session.email) {
+      if (session && session.email) {
         ejecutarLoginDirecto(session.email);
       } else {
         ocultarCarga();
