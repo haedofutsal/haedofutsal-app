@@ -10,7 +10,7 @@
 // ==========================================
 // CONFIGURACIÓN Y CONSTANTES
 // ==========================================
-const SPREADSHEET_ID = ""; // OPCIONAL: Escribe tu ID de Google Sheets aquí si no está vinculado
+const SPREADSHEET_ID = "1nDZWIxdGPWK8YY86JcOW9YCwTuApQX380H7Wk4JGjWg"; // Planilla oficial de Futsal Haedo
 const HOJA_PAGOS = "Pagos";
 const HOJA_USUARIOS = "Usuarios";
 const HOJA_CATEGORIAS = "Categorias";
@@ -19,6 +19,29 @@ const HOJA_TORNEOS = "Torneos";
 const HOJA_FINANZAS = "Finanzas_Torneos";
 const HOJA_PARTIDOS = "Partidos";
 const HOJA_LOGS = "Logs_Audit";
+
+/**
+ * Endpoint POST para sincronización de API externa (Node.js / Render)
+ */
+function doPost(e) {
+  try {
+    const postData = JSON.parse(e.postData.contents);
+    const functionName = postData.functionName;
+    const args = postData.args || [];
+    
+    if (typeof this[functionName] === 'function') {
+      const result = this[functionName].apply(this, args);
+      return ContentService.createTextOutput(JSON.stringify({ success: true, result: result }))
+        .setMimeType(ContentService.MimeType.JSON);
+    } else {
+      return ContentService.createTextOutput(JSON.stringify({ success: false, error: "Función no encontrada: " + functionName }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
 /**
  * Obtiene el token de acceso de Mercado Pago desde las propiedades del script.
