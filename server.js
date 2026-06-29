@@ -61,19 +61,79 @@ global.HtmlService = {
   XFrameOptionsMode: { ALLOWALL: "ALLOWALL" }
 };
 
-// Simulación completa de SpreadsheetApp conectada a db.json
+// Simulación completa de SpreadsheetApp conectada en tiempo real a Supabase
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://kjcnotrxxthnzpgljeus.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_1XDuAL5LGylnk6SUgG3JHQ_stWGkIQ-';
+
+function syncSupabase(table, method, body = null, query = '') {
+  try {
+    const { execFileSync } = require('child_process');
+    const workerScript = `
+      const https = require('https');
+      const urlStr = process.argv[1];
+      const method = process.argv[2];
+      const headers = JSON.parse(process.argv[3]);
+      const payload = process.argv[4];
+
+      const url = new URL(urlStr);
+      const req = https.request(url, { method: method, headers: headers }, res => {
+        let d = ''; res.on('data', c => d += c);
+        res.on('end', () => process.stdout.write(res.statusCode + '|||' + d));
+      });
+      if (payload) req.write(payload);
+      req.end();
+    `;
+    const fullUrl = `${SUPABASE_URL}/rest/v1/${table}${query}`;
+    const headers = {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates'
+    };
+    const out = execFileSync(process.execPath, ['-e', workerScript, fullUrl, method, JSON.stringify(headers), body ? JSON.stringify(body) : ''], { encoding: 'utf8' });
+    const parts = out.split('|||');
+    if (parts[1]) return JSON.parse(parts[1]);
+    return [];
+  } catch(e) {
+    console.error(`[SUPABASE ERROR ${table}]`, e.message);
+    return [];
+  }
+}
+
+const tableMap = {
+  'Usuarios': 'usuarios',
+  'Pagos': 'pagos',
+  'Categorias': 'categorias',
+  'Admins': 'admins',
+  'Torneos': 'torneos',
+  'Finanzas_Torneos': 'finanzas_torneos',
+  'Partidos': 'partidos',
+  'Logs_Audit': 'logs_audit'
+};
+
 const mockSpreadsheet = {
   getSheetByName: (sheetName) => {
+    const sbTable = tableMap[sheetName] || sheetName.toLowerCase();
     return {
       getDataRange: () => ({
         getValues: () => {
           const db = readDb();
           const table = db[sheetName];
-          if (!table) {
-            console.error(`Error: No se encontró la tabla '${sheetName}' en db.json`);
-            return [];
+          if (!table) return [];
+          
+          // Consultar filas desde Supabase
+          const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*');
+          if (Array.isArray(sbRows) && sbRows.length > 0) {
+            // Mapear objetos de Supabase de vuelta a arrays según las cabeceras de db.json
+            const headers = table.headers;
+            const rows = sbRows.map(obj => {
+              return headers.map(h => {
+                const key = h.toLowerCase();
+                return obj[key] !== undefined && obj[key] !== null ? obj[key] : '';
+              });
+            });
+            return [headers, ...rows];
           }
-          // Devolvemos las cabeceras + las filas
           return [table.headers, ...table.rows];
         }
       }),
@@ -82,17 +142,24 @@ const mockSpreadsheet = {
         if (!db[sheetName]) db[sheetName] = { headers: [], rows: [] };
         db[sheetName].rows.push(rowArray);
         writeDb(db);
-        console.log(`[DB SUCCESS] Fila añadida en ${sheetName}:`, rowArray);
+
+        // Insertar en Supabase
+        const headers = db[sheetName].headers;
+        const obj = {};
+        headers.forEach((h, idx) => {
+          obj[h.toLowerCase()] = rowArray[idx] !== undefined ? rowArray[idx] : '';
+        });
+        syncSupabase(sbTable, 'POST', [obj]);
+        console.log(`[SUPABASE SUCCESS] Fila añadida en ${sbTable}:`, obj);
       },
       clear: () => {
-        // No es necesario en operaciones normales de desarrollo local, pero por compatibilidad
         const db = readDb();
         if (db[sheetName]) db[sheetName].rows = [];
         writeDb(db);
       },
       getLastRow: () => {
-        const db = readDb();
-        return db[sheetName] ? db[sheetName].rows.length + 1 : 1;
+        const sbRows = syncSupabase(sbTable, 'GET', null, '?select=id');
+        return Array.isArray(sbRows) ? sbRows.length + 1 : 1;
       },
       getRange: (row, col) => {
         return {
@@ -100,43 +167,39 @@ const mockSpreadsheet = {
             const db = readDb();
             const table = db[sheetName];
             if (!table) return;
-            
-            // row y col están basados en 1. Las cabeceras son row = 1.
-            const rowIndex = row - 2; // Índice en el array de filas (rows)
-            const colIndex = col - 1; // Índice en el array de columnas
-            
+            const rowIndex = row - 2;
+            const colIndex = col - 1;
             if (rowIndex >= 0 && rowIndex < table.rows.length) {
               table.rows[rowIndex][colIndex] = val;
               writeDb(db);
-              console.log(`[DB SUCCESS] Celda en ${sheetName} modificada (Fila ${row}, Col ${col}) a:`, val);
+              
+              // Actualizar también en Supabase si es Pagos
+              if (sheetName === 'Pagos') {
+                const pagId = table.rows[rowIndex][0];
+                const headerName = table.headers[colIndex].toLowerCase();
+                const patchObj = {};
+                patchObj[headerName] = val;
+                syncSupabase(sbTable, 'PATCH', patchObj, `?payment_id=eq.${encodeURIComponent(pagId)}`);
+              }
             }
           },
-          setNumberFormat: () => {} // Simulación vacía por compatibilidad
+          setNumberFormat: () => {}
         };
       },
       deleteRow: (rowIndex1Based) => {
         const db = readDb();
         const table = db[sheetName];
         if (table && table.rows) {
-          const idx = rowIndex1Based - 2; // header is row 1
+          const idx = rowIndex1Based - 2;
           if (idx >= 0 && idx < table.rows.length) {
-            const removed = table.rows.splice(idx, 1);
+            table.rows.splice(idx, 1);
             writeDb(db);
-            console.log(`[DB SUCCESS] Fila ${rowIndex1Based} eliminada en ${sheetName}:`, removed);
           }
         }
       }
     };
   },
-  insertSheet: (name) => {
-    // Por si se vuelve a correr el inicializador localmente
-    const db = readDb();
-    if (!db[name]) {
-      db[name] = { headers: [], rows: [] };
-      writeDb(db);
-    }
-    return mockSpreadsheet.getSheetByName(name);
-  },
+  insertSheet: (name) => mockSpreadsheet.getSheetByName(name),
   deleteSheet: () => {},
   getSheets: () => [{}, {}]
 };
