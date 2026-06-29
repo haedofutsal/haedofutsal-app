@@ -241,13 +241,29 @@ app.post('/api/run', (req, res) => {
   try {
     const ctx = getSandboxContext();
     const func = ctx[functionName];
-    // Comprobar si la función existe en el contexto sandbox
     if (typeof func !== 'function') {
       throw new Error(`La función de backend '${functionName}' no existe en el servidor.`);
     }
     
-    // Ejecutar la función con los argumentos
     const result = func.apply(null, args || []);
+
+    // Si es una operación de escritura o modificación, sincronizar también en vivo con Google Sheets vía Apps Script
+    const writeOps = ['registrarSocioNuevo', 'marcarPagoComoPagado', 'generarPagoMercadoPago', 'registrarPartidoNuevo', 'registrarMovimientoTorneo', 'editarMovimientoTorneo', 'eliminarMovimientoTorneo'];
+    if (writeOps.includes(functionName)) {
+      try {
+        const appsScriptUrl = process.env.APPS_SCRIPT_URL || "https://script.google.com/macros/s/AKfycbwxz-qDTovawp9qLbHfNnByvfIWkkprR2QjShJQekil3kxECCD59NsRjZ0PGL2J8IhX/exec";
+        const targetUrl = `${appsScriptUrl}?api=run&func=${encodeURIComponent(functionName)}&args=${encodeURIComponent(JSON.stringify(args || []))}`;
+        const https = require('https');
+        https.get(targetUrl, (res) => {
+          console.log(`[GOOGLE SHEETS SYNC] Sincronizado ${functionName} con Google Sheets (Status: ${res.statusCode})`);
+        }).on('error', (err) => {
+          console.error(`[GOOGLE SHEETS SYNC ERROR]`, err.message);
+        });
+      } catch(syncErr) {
+        console.error('[GOOGLE SHEETS SYNC EXCEPTION]', syncErr.message);
+      }
+    }
+
     res.json({ result });
     
   } catch (error) {
