@@ -2322,16 +2322,21 @@
         <!-- OPCION 1: TRANSFERENCIA ($0 COMISION) -->
         <div style="border: 2px solid #10b981; background: rgba(16, 185, 129, 0.05); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span style="background: #10b981; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; tracking: 0.05em;">RECOMENDADO ($0 COMISIÓN)</span>
+            <span style="background: #10b981; color: white; padding: 3px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 800;">RECOMENDADO ($0 COMISIÓN)</span>
             <i class="fa-solid fa-building-columns" style="color: #10b981; font-size: 1.3rem;"></i>
           </div>
-          <h4 style="margin: 0 0 4px 0; color: var(--text-primary); font-size: 1rem;">Transferencia Bancaria / CVU</h4>
-          <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0 0 12px 0; line-height: 1.4;">Transferí sin recargos ni demoras directamente a la cuenta oficial del club.</p>
+          <h4 style="margin: 0 0 4px 0; color: var(--text-primary); font-size: 1rem;">Transferencia Inmediata (CVU / Alias)</h4>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0 0 12px 0; line-height: 1.4;">Transferí sin recargos directamente a la cuenta oficial del club.</p>
           
+          <!-- BOTÓN DIRECTO MERCADO PAGO APP -->
+          <a id="btn-abrir-mp-transfer" href="https://link.mercadopago.com.ar/gpazosrio" target="_blank" rel="noopener noreferrer" class="btn-primary" style="background: #009ee3; border:none; width:100%; justify-content:center; padding: 10px; font-size: 0.88rem; font-weight: 700; margin-bottom: 12px; text-decoration: none; display: flex; align-items: center; gap: 6px; border-radius: 8px;">
+            <i class="fa-solid fa-mobile-screen-button" style="font-size: 1.1rem;"></i> Abrir Mercado Pago para Transferir
+          </a>
+
           <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 12px;">
             <div style="color: var(--text-muted); font-size: 0.8rem;">Titular: <strong style="color: var(--text-primary);">Club Futsal Haedo</strong></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; background: rgba(0,0,0,0.15); padding: 6px 10px; border-radius: 6px;">
-              <span>Alias: <code id="alias-club" style="color:#10b981; font-size:1.05rem; font-weight:bold;">gpazos.rio</code></span>
+              <span>Alias Banco/MP: <code id="alias-club" style="color:#10b981; font-size:1.05rem; font-weight:bold;">gpazos.rio</code></span>
               <button class="btn-secondary" style="padding:4px 10px; font-size:0.75rem; border-radius:6px;" onclick="copiarAlias()"><i class="fa-regular fa-copy"></i> Copiar</button>
             </div>
             <div style="margin-top:6px; color: var(--text-muted); font-size: 0.8rem;">CVU: <span style="font-family: monospace; color: var(--text-primary);">0000003100012345678901</span></div>
