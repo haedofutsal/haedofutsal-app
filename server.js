@@ -352,7 +352,91 @@ app.post('/api/run', (req, res) => {
   }
 });
 
-// Levantar el servidor en todas las interfaces de red (0.0.0.0)
+// ==========================================
+// WEBHOOK / IPN MERCADO PAGO NOTIFICATIONS
+// ==========================================
+app.post('/api/mp-webhook', (req, res) => {
+  console.log('[MERCADO PAGO WEBHOOK RECEIVED]', JSON.stringify(req.body));
+  
+  // Responder 200 OK de inmediato a Mercado Pago para confirmar recepción
+  res.status(200).send('OK');
+
+  const payload = req.body;
+  const paymentId = payload.data && payload.data.id;
+  const eventType = payload.type || payload.action;
+
+  if (paymentId && (eventType === 'payment' || eventType === 'payment.created')) {
+    try {
+      const https = require('https');
+      const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || "APP_USR-3796695277109598-062312-3b036573c099307abf18c869ea76c0f6-1868352613";
+      
+      const mpUrl = `https://api.mercadopago.com/v1/payments/${paymentId}`;
+      const options = {
+        headers: { 'Authorization': 'Bearer ' + MP_ACCESS_TOKEN }
+      };
+
+      https.get(mpUrl, options, (mpRes) => {
+        let body = '';
+        mpRes.on('data', chunk => body += chunk);
+        mpRes.on('end', () => {
+          try {
+            const paymentInfo = JSON.parse(body);
+            console.log('[MP PAYMENT INFO]', paymentInfo.id, paymentInfo.status, paymentInfo.operation_type);
+
+            if (paymentInfo.status === 'approved') {
+              const amount = paymentInfo.transaction_amount;
+              const payerName = paymentInfo.description || (paymentInfo.payer && (paymentInfo.payer.first_name + ' ' + (paymentInfo.payer.last_name || '')));
+              const payerEmail = paymentInfo.payer && paymentInfo.payer.email;
+              const operationType = paymentInfo.operation_type;
+
+              console.log(`[MP ACCREDITATION] Acreditando pago de $${amount} por ${payerName} (${payerEmail}) via ${operationType}`);
+
+              // Caso A: Pago directo por preferencia/checkout (trae external_reference)
+              const extRef = paymentInfo.external_reference;
+              if (extRef && extRef.startsWith('PAG-')) {
+                syncSupabase('pagos', 'PATCH', { status: 'Pagado', collected_by: 'MercadoPago', collected_at: new Date().toISOString().substring(0, 10) }, `?payment_id=eq.${encodeURIComponent(extRef)}`);
+                console.log(`[MP SUCCESS] Acreditado pago de checkout: ${extRef}`);
+                return;
+              }
+
+              // Caso B: Transferencia bancaria o dinero recibido (CVU/Alias)
+              const users = syncSupabase('usuarios', 'GET', null, '?select=*');
+              if (Array.isArray(users)) {
+                let matchedUser = null;
+                if (payerEmail) {
+                  matchedUser = users.find(u => u.email && u.email.toLowerCase().trim() === payerEmail.toLowerCase().trim());
+                }
+                if (!matchedUser && payerName) {
+                  const queryName = payerName.toLowerCase().trim();
+                  matchedUser = users.find(u => {
+                    const dbName = (u.name || '').toLowerCase().trim();
+                    return dbName.includes(queryName) || queryName.includes(dbName);
+                  });
+                }
+
+                if (matchedUser) {
+                  console.log(`[MP MATCH] Transferencia emparejada con socio: ${matchedUser.name} (${matchedUser.email})`);
+                  const pagosSocio = syncSupabase('pagos', 'GET', null, `?email=eq.${encodeURIComponent(matchedUser.email)}&status=eq.Pendiente&order=month.asc`);
+                  if (Array.isArray(pagosSocio) && pagosSocio.length > 0) {
+                    const oldestPayment = pagosSocio[0];
+                    syncSupabase('pagos', 'PATCH', { status: 'Pagado', collected_by: 'Transferencia MP', collected_at: new Date().toISOString().substring(0, 10) }, `?payment_id=eq.${encodeURIComponent(oldestPayment.payment_id)}`);
+                    console.log(`[MP SUCCESS] Acreditada cuota ${oldestPayment.payment_id} (${oldestPayment.month}) para ${matchedUser.name}`);
+                  }
+                }
+              }
+            }
+          } catch(err) {
+            console.error('[MP WEBHOOK PROCESSING ERROR]', err.message);
+          }
+        });
+      }).on('error', (err) => {
+        console.error('[MP GET ERROR]', err.message);
+      });
+    } catch(err) {
+      console.error('[MP WEBHOOK EXCEPTION]', err.message);
+    }
+  }
+});
 app.listen(PORT, '0.0.0.0', () => {
   const interfaces = os.networkInterfaces();
   const addresses = [];
