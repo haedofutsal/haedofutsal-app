@@ -111,21 +111,30 @@ const tableMap = {
   'Logs_Audit': 'logs_audit'
 };
 
+const SHEET_HEADERS = {
+  'Admins': ["Email"],
+  'Categorias': ["Category_ID", "Name", "Coach", "Monthly_Fee", "Torneos"],
+  'Usuarios': ["Email", "Role", "Name", "Phone", "Category", "DNI", "BirthDate", "Age", "JoinDate", "BloodType", "MedicalFit", "ObraSocial", "EmergencyContact", "EmergencyPhone", "ParentName", "ParentPhone", "Notes", "Photo", "Username", "Password"],
+  'Pagos': ["Payment_ID", "Email", "Month", "Amount", "Status", "MP_Link", "Collected_By", "Collected_At"],
+  'Torneos': ["Torneo_ID", "Name", "Category"],
+  'Finanzas_Torneos': ["Movimiento_ID", "Torneo_ID", "Type", "Concept", "Amount", "Date", "Payment_Method"],
+  'Partidos': ["Partido_ID", "Torneo_ID", "Date", "Opponent", "Location", "Result", "Scorers", "Cards", "MVP", "Summary"],
+  'Logs_Audit': ["Timestamp", "User", "Action", "Details"]
+};
+
 const mockSpreadsheet = {
   getSheetByName: (sheetName) => {
     const sbTable = tableMap[sheetName] || sheetName.toLowerCase();
     return {
       getDataRange: () => ({
         getValues: () => {
-          const db = readDb();
-          const table = db[sheetName];
-          if (!table) return [];
-          
+          const headers = SHEET_HEADERS[sheetName] || [];
           // Consultar filas desde Supabase
           const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*');
-          if (Array.isArray(sbRows) && sbRows.length > 0) {
-            // Mapear objetos de Supabase de vuelta a arrays según las cabeceras de db.json
-            const headers = table.headers;
+          if (Array.isArray(sbRows)) {
+            // Ordenar consistentemente por ID para mantener orden determinista
+            sbRows.sort((a, b) => (a.id || 0) - (b.id || 0));
+            // Mapear objetos de Supabase de vuelta a arrays según las cabeceras fijas
             const rows = sbRows.map(obj => {
               return headers.map(h => {
                 const key = h.toLowerCase();
@@ -134,28 +143,23 @@ const mockSpreadsheet = {
             });
             return [headers, ...rows];
           }
-          return [table.headers, ...table.rows];
+          return [headers];
         }
       }),
       appendRow: (rowArray) => {
-        const db = readDb();
-        if (!db[sheetName]) db[sheetName] = { headers: [], rows: [] };
-        db[sheetName].rows.push(rowArray);
-        writeDb(db);
-
+        const headers = SHEET_HEADERS[sheetName] || [];
         // Insertar en Supabase
-        const headers = db[sheetName].headers;
         const obj = {};
         headers.forEach((h, idx) => {
           obj[h.toLowerCase()] = rowArray[idx] !== undefined ? rowArray[idx] : '';
         });
         syncSupabase(sbTable, 'POST', [obj]);
-        console.log(`[SUPABASE SUCCESS] Fila añadida en ${sbTable}:`, obj);
+        console.log(`[SUPABASE SUCCESS] Fila añadida dinámicamente en ${sbTable}:`, obj);
       },
       clear: () => {
-        const db = readDb();
-        if (db[sheetName]) db[sheetName].rows = [];
-        writeDb(db);
+        // Eliminar todos los registros de la tabla en Supabase
+        syncSupabase(sbTable, 'DELETE', null, '?id=gt.0');
+        console.log(`[SUPABASE SUCCESS] Limpiada tabla ${sbTable}`);
       },
       getLastRow: () => {
         const sbRows = syncSupabase(sbTable, 'GET', null, '?select=id');
@@ -164,22 +168,35 @@ const mockSpreadsheet = {
       getRange: (row, col) => {
         return {
           setValue: (val) => {
-            const db = readDb();
-            const table = db[sheetName];
-            if (!table) return;
+            const headers = SHEET_HEADERS[sheetName] || [];
+            const colName = headers[col - 1];
+            if (!colName) return;
+            const fieldName = colName.toLowerCase();
+
+            // Buscar la fila por su posición
+            const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*');
+            if (!Array.isArray(sbRows)) return;
+            sbRows.sort((a, b) => (a.id || 0) - (b.id || 0));
+            
             const rowIndex = row - 2;
-            const colIndex = col - 1;
-            if (rowIndex >= 0 && rowIndex < table.rows.length) {
-              table.rows[rowIndex][colIndex] = val;
-              writeDb(db);
+            if (rowIndex >= 0 && rowIndex < sbRows.length) {
+              const targetObj = sbRows[rowIndex];
               
-              // Actualizar también en Supabase si es Pagos
-              if (sheetName === 'Pagos') {
-                const pagId = table.rows[rowIndex][0];
-                const headerName = table.headers[colIndex].toLowerCase();
+              // Resolver el identificador primario de la tabla
+              let idCol = 'id';
+              if (sheetName === 'Usuarios' || sheetName === 'Admins') idCol = 'email';
+              else if (sheetName === 'Pagos') idCol = 'payment_id';
+              else if (sheetName === 'Categorias') idCol = 'category_id';
+              else if (sheetName === 'Torneos') idCol = 'torneo_id';
+              else if (sheetName === 'Finanzas_Torneos') idCol = 'movimiento_id';
+              else if (sheetName === 'Partidos') idCol = 'partido_id';
+
+              const idVal = targetObj[idCol];
+              if (idVal !== undefined && idVal !== null) {
                 const patchObj = {};
-                patchObj[headerName] = val;
-                syncSupabase(sbTable, 'PATCH', patchObj, `?payment_id=eq.${encodeURIComponent(pagId)}`);
+                patchObj[fieldName] = val;
+                syncSupabase(sbTable, 'PATCH', patchObj, `?${idCol}=eq.${encodeURIComponent(idVal)}`);
+                console.log(`[SUPABASE SUCCESS] Celda editada dinámicamente en ${sbTable}: ${fieldName}=${val} para ${idCol}=${idVal}`);
               }
             }
           },
@@ -187,13 +204,26 @@ const mockSpreadsheet = {
         };
       },
       deleteRow: (rowIndex1Based) => {
-        const db = readDb();
-        const table = db[sheetName];
-        if (table && table.rows) {
-          const idx = rowIndex1Based - 2;
-          if (idx >= 0 && idx < table.rows.length) {
-            table.rows.splice(idx, 1);
-            writeDb(db);
+        const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*');
+        if (!Array.isArray(sbRows)) return;
+        sbRows.sort((a, b) => (a.id || 0) - (b.id || 0));
+
+        const rowIndex = rowIndex1Based - 2;
+        if (rowIndex >= 0 && rowIndex < sbRows.length) {
+          const targetObj = sbRows[rowIndex];
+          
+          let idCol = 'id';
+          if (sheetName === 'Usuarios' || sheetName === 'Admins') idCol = 'email';
+          else if (sheetName === 'Pagos') idCol = 'payment_id';
+          else if (sheetName === 'Categorias') idCol = 'category_id';
+          else if (sheetName === 'Torneos') idCol = 'torneo_id';
+          else if (sheetName === 'Finanzas_Torneos') idCol = 'movimiento_id';
+          else if (sheetName === 'Partidos') idCol = 'partido_id';
+
+          const idVal = targetObj[idCol];
+          if (idVal !== undefined && idVal !== null) {
+            syncSupabase(sbTable, 'DELETE', null, `?${idCol}=eq.${encodeURIComponent(idVal)}`);
+            console.log(`[SUPABASE SUCCESS] Fila eliminada dinámicamente en ${sbTable} para ${idCol}=${idVal}`);
           }
         }
       }
