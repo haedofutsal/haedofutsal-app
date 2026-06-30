@@ -323,7 +323,8 @@ app.post('/api/run', (req, res) => {
           const payload = JSON.stringify([{
             email: (s.Email || '').toLowerCase().trim(), role: s.Role || 'Deportista', name: s.Name || '', phone: s.Phone || '',
             category: s.Category || '', dni: s.DNI || '', birthdate: s.BirthDate || '', bloodtype: s.BloodType || 'O+',
-            medicalfit: s.MedicalFit || 'Apto Físico Vigente', obrasocial: s.ObraSocial || 'Particular', notes: s.Notes || ''
+            medicalfit: s.MedicalFit || 'Apto Físico Vigente', obrasocial: s.ObraSocial || 'Particular', notes: s.Notes || '',
+            username: s.Username || '', password: s.Password || ''
           }]);
           const req = https.request(new URL('/rest/v1/usuarios', SUPABASE_URL), {
             method: 'POST', headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' }
@@ -437,6 +438,32 @@ app.post('/api/mp-webhook', (req, res) => {
     }
   }
 });
+
+app.get('/run-migration', async (req, res) => {
+  try {
+    const { Client } = require('pg');
+    const client = new Client({
+      host: 'db.kjcnotrxxthnzpgljeus.supabase.co',
+      port: 5432,
+      database: 'postgres',
+      user: 'postgres',
+      password: 'HaedoFutsal.2026',
+      ssl: { rejectUnauthorized: false }
+    });
+    await client.connect();
+    await client.query(`
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS username TEXT UNIQUE;
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS password TEXT;
+      UPDATE usuarios SET username = split_part(email, '@', 1) WHERE username IS NULL;
+      UPDATE usuarios SET password = '1234' WHERE password IS NULL;
+    `);
+    await client.end();
+    res.send('✅ Migración ejecutada con éxito en Supabase!');
+  } catch (err) {
+    res.status(500).send('❌ Error: ' + err.message);
+  }
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   const interfaces = os.networkInterfaces();
   const addresses = [];
