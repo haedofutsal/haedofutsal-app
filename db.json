@@ -77,7 +77,9 @@
       "ParentName",
       "ParentPhone",
       "Notes",
-      "Photo"
+      "Photo",
+      "Username",
+      "Password"
     ],
     "rows": [
       [
