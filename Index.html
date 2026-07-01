@@ -6298,12 +6298,17 @@
       document.getElementById("login-error").style.display = "none";
     }
 
-    // ───────────── PWA: Registro del Service Worker ─────────────
+    // ───────────── PWA: Limpieza y Desregistro del Service Worker (Bypass Caché) ─────────────
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(reg => console.log('[PWA] Service Worker registrado:', reg.scope))
-          .catch(err => console.warn('[PWA] Error al registrar SW:', err));
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        if (registrations.length > 0) {
+          console.log('[PWA] Detectado Service Worker viejo. Desregistrando...');
+          let promises = registrations.map(r => r.unregister());
+          Promise.all(promises).then(function() {
+            console.log('[PWA] Todos los Service Workers eliminados con éxito. Recargando aplicación...');
+            window.location.reload();
+          });
+        }
       });
     }
 
