@@ -2706,25 +2706,34 @@
       document.getElementById("admin-agenda-view").style.display = "none";
       const tiendaView = document.getElementById("club-tienda-view");
       if (tiendaView) tiendaView.style.display = "none";
-      
+
       document.getElementById("nav-bar-socio").style.display = "none";
       document.getElementById("nav-bar-admin").style.display = "none";
-      
+
       const targetEl = document.getElementById(idPantalla);
       if (targetEl) targetEl.style.display = "flex";
-      
-      if (idPantalla === "club-tienda-view") {
-        const normRole = typeof getNormalizedRole === 'function' ? getNormalizedRole(estadoApp.role) : "Deportista";
-        const config = (typeof RolePermissions !== 'undefined' && RolePermissions[normRole]) ? RolePermissions[normRole] : { navBar: "socio" };
-        if (config.navBar === "admin") {
-          document.getElementById("nav-bar-admin").style.display = "flex";
-        } else {
-          document.getElementById("nav-bar-socio").style.display = "flex";
-        }
-      } else if (idPantalla.startsWith("socio-")) {
-        document.getElementById("nav-bar-socio").style.display = "flex";
-      } else if (idPantalla.startsWith("admin-")) {
+
+      // Determine which nav bar to show based on current role
+      const normRole = (typeof getNormalizedRole === 'function' && estadoApp.role)
+        ? getNormalizedRole(estadoApp.role)
+        : null;
+      const config = (normRole && typeof RolePermissions !== 'undefined' && RolePermissions[normRole])
+        ? RolePermissions[normRole]
+        : null;
+
+      if (idPantalla === 'login-view') {
+        // No nav bar on login screen
+      } else if (config && config.navBar === 'admin') {
+        // Admin/Coach: always show admin nav bar
         document.getElementById("nav-bar-admin").style.display = "flex";
+        // Re-apply tab visibility for this role (e.g. Coach hides Torneos)
+        const allAdminTabs = ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"];
+        allAdminTabs.forEach(tabId => {
+          const tabEl = document.getElementById(tabId);
+          if (tabEl) tabEl.style.display = config.visibleTabs.includes(tabId) ? "flex" : "none";
+        });
+      } else if (idPantalla.startsWith("socio-") || (config && config.navBar === 'socio') || !config) {
+        document.getElementById("nav-bar-socio").style.display = "flex";
       }
     }
 
@@ -3043,37 +3052,28 @@
         seccion = config.defaultView;
       }
 
-      // Reaplica la visibilidad de tabs por rol (por si se navegó sin pasar por login)
-      RoleAccessController.applyRoleConfig(estadoApp.role);
-
+      // Marcar tab activo (mostrarPantalla se encarga de la barra y visibilidad de tabs)
       document.querySelectorAll("#nav-bar-admin .nav-item").forEach(el => el.classList.remove("active"));
+      const activeTabId = seccion === 'tienda' ? 'nav-admin-tienda' : ('nav-admin-' + seccion);
+      const activeTabEl = document.getElementById(activeTabId);
+      if (activeTabEl) activeTabEl.classList.add("active");
 
       if (seccion === 'inicio') {
-        const navItem = document.getElementById("nav-admin-inicio");
-        if (navItem) navItem.classList.add("active");
         cargarDatosAdministracion();
       } else if (seccion === 'socios') {
-        const navItem = document.getElementById("nav-admin-socios");
-        if (navItem) navItem.classList.add("active");
         mostrarPantalla("admin-socios-view");
         cargarSelectSociosFilters();
         filtrarSociosAdmin();
       } else if (seccion === 'torneos') {
-        const navItem = document.getElementById("nav-admin-torneos");
-        if (navItem) navItem.classList.add("active");
         mostrarPantalla("admin-torneos-view");
         cargarSelectTorneos();
         actualizarDropdownFechasJornada();
         filtrarYCalcularFinanzas();
       } else if (seccion === 'agenda') {
-        const navItem = document.getElementById("nav-admin-agenda");
-        if (navItem) navItem.classList.add("active");
         mostrarPantalla("admin-agenda-view");
         cargarSelectAgendaFilters();
         dibujarPartidosAdmin(estadoApp.datosAdmin ? estadoApp.datosAdmin.partidos : []);
       } else if (seccion === 'tienda') {
-        const navItem = document.getElementById("nav-admin-tienda");
-        if (navItem) navItem.classList.add("active");
         mostrarPantalla("club-tienda-view");
         renderizarProductosTienda();
       }
@@ -6268,14 +6268,20 @@
 
     // LOGOUT & INTERFAZ ERROR
     function ejecutarLogout() {
-      localStorage.removeItem("futsal_session_email");
+      // Limpiar toda la sesión y credenciales recordadas
+      AuthService.clearSession();
       estadoApp.userEmail = null;
       estadoApp.role = null;
       estadoApp.userName = null;
+      estadoApp.username = null;
       estadoApp.datosSocio = null;
       estadoApp.datosAdmin = null;
-      
-      document.getElementById("login-email").value = "";
+
+      // Limpiar campos del formulario de login
+      const usernameField = document.getElementById("login-username");
+      const passwordField = document.getElementById("login-password");
+      if (usernameField) usernameField.value = "";
+      if (passwordField) passwordField.value = "";
       ocultarErrorLogin();
       mostrarPantalla("login-view");
     }
