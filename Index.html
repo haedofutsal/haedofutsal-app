@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="ERP Haedo Futsal">
   <meta name="theme-color" content="#ffffff">
   <link rel="manifest" href="manifest.json">
-  <title>Futsal Haedo - ERP Deportivo</title>
+  <title>Haedo Futsal</title>
   <!-- Google Fonts: Outfit -->
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- FontAwesome Icons -->
@@ -911,10 +911,10 @@
       40%, 80% { transform: translateX(4px); }
     }
 
-    /* ===== DASHBOARD NUEVO ===== */
+    /* ===== Resumen NUEVO ===== */
 
     /* Tarjeta hero de total socios */
-    .dashboard-hero-card {
+    .Resumen-hero-card {
       background: linear-gradient(135deg, rgba(129,140,248,0.12) 0%, rgba(99,102,241,0.08) 100%);
       border: 1px solid rgba(129,140,248,0.25);
       border-radius: 20px;
@@ -929,7 +929,7 @@
       overflow: hidden;
       box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     }
-    .dashboard-hero-card::before {
+    .Resumen-hero-card::before {
       content: '';
       position: absolute;
       top: -30px; right: -30px;
@@ -1246,7 +1246,7 @@
   <!-- PANTALLA DE CARGA -->
   <div id="loading-screen">
     <div class="spinner"></div>
-    <p class="loading-text">FUTSAL HAEDO</p>
+    <p class="loading-text">HAEDO FUTSAL</p>
   </div>
 
   <div class="container">
@@ -1255,8 +1255,8 @@
     <div id="login-view" class="login-wrapper" style="display:none;">
       <div class="logo-area">
         <img src="logo.png" style="height: 119px; width: auto; margin-bottom: 12px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));" alt="Haedo Futsal">
-        <h1 class="logo-title" style="color: #0f172a;">Futsal Haedo</h1>
-        <p class="logo-subtitle">ERP Deportivo & Financiero</p>
+        <h1 class="logo-title" style="color: #0f172a;">Haedo Futsal</h1>
+        <p class="logo-subtitle"></p>
       </div>
       
       <div class="card">
@@ -1372,8 +1372,8 @@
     <div id="admin-inicio-view" class="view-section" style="gap: 8px;">
       <div class="header-bar" style="margin-bottom: 2px; padding-bottom: 6px; border-bottom: none;">
         <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-          <h2 style="margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a;">Dashboard</h2>
-          <span id="dash-month-subtitle" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Resumen del Mes (Junio 2026)</span>
+          <h2 style="margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a;">Resumen</h2>
+          <span id="dash-month-subtitle" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">(Junio 2026)</span>
         </div>
         <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
           <i class="fa-solid fa-right-from-bracket"></i>
@@ -1381,7 +1381,7 @@
       </div>
 
       <!-- SECCIÓN SOCIOS ACTIVOS Y GRÁFICO RESUMEN DEL MES -->
-      <div class="dashboard-hero-card" id="dashboard-hero" onclick="toggleDetalleSocios()" style="cursor: pointer; padding: 12px 16px; margin-bottom: 8px; border: 1px solid var(--border-color); border-left: 4px solid var(--primary); background: #ffffff; box-shadow: var(--shadow-premium);" title="Tocá para ver el detalle por categoría y socios">
+      <div class="Resumen-hero-card" id="Resumen-hero" onclick="toggleDetalleSocios()" style="cursor: pointer; padding: 12px 16px; margin-bottom: 8px; border: 1px solid var(--border-color); border-left: 4px solid var(--primary); background: #ffffff; box-shadow: var(--shadow-premium);" title="Tocá para ver el detalle por categoría y socios">
         <div class="hero-left-col" style="gap: 14px;">
           <img src="logo.png" style="height: 73px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15)); flex-shrink: 0;" alt="Haedo Futsal">
           <div class="hero-data">
@@ -1411,23 +1411,23 @@
       </div>
 
       <!-- DESGLOSE DE CATEGORÍAS (DESPLEGABLE AL HACER CLICK EN HERO O GRÁFICO) -->
-      <div id="dashboard-categorias-list" style="display: none; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+      <div id="Resumen-categorias-list" style="display: none; flex-direction: column; gap: 8px; margin-bottom: 12px;">
         <!-- Categorías se renderizan dinámicamente -->
       </div>
 
       <!-- SECCIÓN: JORNADAS PRÓXIMAS DE TORNEOS -->
       <div class="section-title-area" style="margin-top: 14px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <h3 class="section-title" style="margin-bottom:0; color:#0f172a; font-weight:700;"><i class="fa-solid fa-trophy" style="margin-right:6px; color:#d97706;"></i>Partidos Pendientes (Esta semana y la siguiente)</h3>
+          <h3 class="section-title" style="margin-bottom:0; color:#0f172a; font-weight:700;"><i class="fa-solid fa-trophy" style="margin-right:6px; color:#d97706;"></i>Proximos Partidos</h3>
           <small style="color: var(--text-muted); font-size: 0.65rem;">Tocá una jornada para ver el detalle</small>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
-          <select id="dash-jornadas-filter-torneo" class="form-select" style="padding: 6px 12px; font-size: 0.75rem; width: 100%; border-color: #cbd5e1; background: #ffffff; color:#0f172a;" onchange="filtrarDashboardJornadas()">
+          <select id="dash-jornadas-filter-torneo" class="form-select" style="padding: 6px 12px; font-size: 0.75rem; width: 100%; border-color: #cbd5e1; background: #ffffff; color:#0f172a;" onchange="filtrarResumenJornadas()">
             <option value="Todos">-- Todos los Torneos --</option>
           </select>
         </div>
       </div>
-      <div id="dashboard-jornadas-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+      <div id="Resumen-jornadas-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
         <!-- Jornadas se renderizan dinámicamente -->
       </div>
 
@@ -1871,7 +1871,7 @@
   <div id="nav-bar-admin" class="bottom-nav">
     <button class="nav-item active" id="nav-admin-inicio" onclick="navegarAdmin('inicio')">
       <i class="fa-solid fa-chart-pie"></i>
-      <span>Dashboard</span>
+      <span>Resumen</span>
     </button>
     <button class="nav-item" id="nav-admin-socios" onclick="navegarAdmin('socios')">
       <i class="fa-solid fa-users"></i>
@@ -2439,7 +2439,7 @@
           </button>
 
           <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 12px;">
-            <div style="color: var(--text-muted); font-size: 0.8rem;">Titular: <strong style="color: var(--text-primary);">Club Futsal Haedo</strong></div>
+            <div style="color: var(--text-muted); font-size: 0.8rem;">Titular: <strong style="color: var(--text-primary);">Club Haedo Futsal</strong></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px; background: rgba(0,0,0,0.15); padding: 6px 10px; border-radius: 6px;">
               <span>Alias Banco/MP: <code id="alias-club" style="color:#10b981; font-size:1.05rem; font-weight:bold;">willy.78.mp</code></span>
               <button class="btn-secondary" style="padding:4px 10px; font-size:0.75rem; border-radius:6px;" onclick="copiarAlias()"><i class="fa-regular fa-copy"></i> Copiar</button>
@@ -3097,7 +3097,7 @@
     }
 
     function toggleDetalleSocios() {
-      const list = document.getElementById("dashboard-categorias-list");
+      const list = document.getElementById("Resumen-categorias-list");
       const icon = document.getElementById("cat-toggle-icon");
       if (!list) return;
       const isHidden = window.getComputedStyle(list).display === "none";
@@ -3162,11 +3162,11 @@
             }
 
             // --- Dibujar panel de categorías (desplegable) ---
-            dibujarDashboardCategorias(response, currentMonth);
+            dibujarResumenCategorias(response, currentMonth);
 
             // --- Cargar filtro de torneos y dibujar jornadas del mes ---
             cargarSelectDashJornadasTorneo(response.torneos || []);
-            dibujarDashboardJornadas(response, currentMonth);
+            dibujarResumenJornadas(response, currentMonth);
 
             mostrarPantalla("admin-inicio-view");
           } else {
@@ -3212,9 +3212,9 @@
       return `${apellido}, ${nombres}`;
     }
 
-    // Dibuja las tarjetas de categoría con gráficos donut en el dashboard
-    function dibujarDashboardCategorias(data, currentMonth) {
-      const container = document.getElementById("dashboard-categorias-list");
+    // Dibuja las tarjetas de categoría con gráficos donut en el Resumen
+    function dibujarResumenCategorias(data, currentMonth) {
+      const container = document.getElementById("Resumen-categorias-list");
       if (!container) return;
       container.innerHTML = "";
 
@@ -3429,10 +3429,10 @@
       });
     }
 
-    function filtrarDashboardJornadas() {
+    function filtrarResumenJornadas() {
       const select = document.getElementById("dash-jornadas-filter-torneo");
       const filtroTorneoId = select ? select.value : "Todos";
-      dibujarDashboardJornadas(estadoApp.datosAdmin, "2026-06", filtroTorneoId);
+      dibujarResumenJornadas(estadoApp.datosAdmin, "2026-06", filtroTorneoId);
     }
 
     function obtenerUbicacionSedePartido(partido, torneo) {
@@ -3552,8 +3552,8 @@
       };
     }
 
-    function dibujarDashboardJornadas(data, currentMonth, filtroTorneoId) {
-      const container = document.getElementById("dashboard-jornadas-list");
+    function dibujarResumenJornadas(data, currentMonth, filtroTorneoId) {
+      const container = document.getElementById("Resumen-jornadas-list");
       if (!container) return;
       container.innerHTML = "";
 
@@ -3574,7 +3574,7 @@
       }
 
       if (partidos.length === 0) {
-        container.innerHTML = `<div class="empty-state" style="padding:15px;"><p>No hay partidos pendientes para esta semana o la siguiente.</p></div>`;
+        container.innerHTML = `<div class="empty-state" style="padding:15px;"><p>No hay Proximos Partidos para esta semana o la siguiente.</p></div>`;
         return;
       }
 
