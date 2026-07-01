@@ -2713,26 +2713,29 @@
       const targetEl = document.getElementById(idPantalla);
       if (targetEl) targetEl.style.display = "flex";
 
-      // Determine which nav bar to show based on current role
-      const normRole = (typeof getNormalizedRole === 'function' && estadoApp.role)
-        ? getNormalizedRole(estadoApp.role)
-        : null;
-      const config = (normRole && typeof RolePermissions !== 'undefined' && RolePermissions[normRole])
-        ? RolePermissions[normRole]
-        : null;
+      // No mostrar nav bar en la pantalla de login
+      if (idPantalla === 'login-view') return;
 
-      if (idPantalla === 'login-view') {
-        // No nav bar on login screen
-      } else if (config && config.navBar === 'admin') {
-        // Admin/Coach: always show admin nav bar
+      // Calcular rol y config actuales
+      const normRole = (estadoApp.role && typeof getNormalizedRole === 'function')
+        ? getNormalizedRole(estadoApp.role)
+        : 'Deportista';
+      const config = (typeof RolePermissions !== 'undefined' && RolePermissions[normRole])
+        ? RolePermissions[normRole]
+        : RolePermissions['Deportista'];
+
+      console.log('[NAV] mostrarPantalla(' + idPantalla + ') | role=' + estadoApp.role + ' | normRole=' + normRole + ' | navBar=' + config.navBar);
+
+      if (config.navBar === 'admin') {
+        // Admin/Coach: mostrar barra admin con tabs del rol
         document.getElementById("nav-bar-admin").style.display = "flex";
-        // Re-apply tab visibility for this role (e.g. Coach hides Torneos)
         const allAdminTabs = ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"];
         allAdminTabs.forEach(tabId => {
           const tabEl = document.getElementById(tabId);
           if (tabEl) tabEl.style.display = config.visibleTabs.includes(tabId) ? "flex" : "none";
         });
-      } else if (idPantalla.startsWith("socio-") || (config && config.navBar === 'socio') || !config) {
+      } else {
+        // Deportista: barra de socio
         document.getElementById("nav-bar-socio").style.display = "flex";
       }
     }
@@ -6277,13 +6280,11 @@
       estadoApp.datosSocio = null;
       estadoApp.datosAdmin = null;
 
-      // Limpiar campos del formulario de login
-      const usernameField = document.getElementById("login-username");
-      const passwordField = document.getElementById("login-password");
-      if (usernameField) usernameField.value = "";
-      if (passwordField) passwordField.value = "";
-      ocultarErrorLogin();
-      mostrarPantalla("login-view");
+      console.log('[LOGOUT] Sesión limpiada. Redirigiendo al login...');
+
+      // Recargar la página para limpiar cualquier estado en memoria
+      // y forzar al service worker a cargar la versión más reciente
+      window.location.reload();
     }
 
     function mostrarErrorLogin(mensaje) {
