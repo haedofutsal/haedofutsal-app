@@ -16,12 +16,26 @@ const PORT = process.env.PORT || 3000;
 const DB_FILE = path.join(__dirname, 'db.json');
 
 app.use(express.json());
-app.use(express.static(__dirname));
 
-// Servir el archivo estático Index.html
+// Servir sw.js sin cache para que el navegador siempre detecte actualizaciones
+app.get('/sw.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Content-Type', 'application/javascript');
+  res.sendFile(path.join(__dirname, 'sw.js'));
+});
+
+// Servir el archivo estático Index.html sin cache
 app.get('/', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.sendFile(path.join(__dirname, 'Index.html'));
 });
+
+app.get('/Index.html', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.sendFile(path.join(__dirname, 'Index.html'));
+});
+
+app.use(express.static(__dirname));
 
 // ==========================================
 // SIMULACIÓN DE GOOGLE APPS SCRIPT (MOCKS GLOBALES)
