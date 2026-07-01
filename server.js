@@ -63,7 +63,7 @@ global.HtmlService = {
 
 // Simulación completa de SpreadsheetApp conectada en tiempo real a Supabase
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://kjcnotrxxthnzpgljeus.supabase.co';
-const SUPABASE_KEY = process.env.SUPABASE_KEY || 'sb_publishable_1XDuAL5LGylnk6SUgG3JHQ_stWGkIQ-';
+const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtqY25vdHJ4eHRobnpwZ2xqZXVzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjY5ODY3MywiZXhwIjoyMDk4Mjc0NjczfQ.2yOpoM3C9ejhxA9hY0g88bkyU6KShhSaFHfnaBOLGiU';
 
 function syncSupabase(table, method, body = null, query = '') {
   try {
@@ -323,6 +323,86 @@ function getSandboxContext() {
 }
 
 console.log("¡Backend de Codigo.js cargado y simulado con éxito!");
+
+// ==========================================
+// ENDPOINT API /api/login
+// ==========================================
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body || {};
+  if (!username) return res.status(400).json({ success: false, message: 'Falta usuario.' });
+
+  try {
+    // Buscar el usuario en Supabase por username
+    let query = '?select=*&username=eq.' + encodeURIComponent(username);
+    let rows = syncSupabase('usuarios', 'GET', null, query);
+    if (!Array.isArray(rows) || rows.length === 0) {
+      // Intentar búsqueda por email
+      query = '?select=*&email=eq.' + encodeURIComponent(username);
+      rows = syncSupabase('usuarios', 'GET', null, query);
+    }
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return res.json({ success: false, message: 'Usuario no encontrado en el sistema.' });
+    }
+    const user = rows[0];
+    if (password && user.password && user.password !== String(password)) {
+      return res.json({ success: false, message: 'Clave incorrecta.' });
+    }
+    return res.json({
+      success: true,
+      email: user.email,
+      role: user.role || 'Deportista',
+      name: user.name || '',
+      username: user.username || username,
+      photo: user.photo || ''
+    });
+  } catch (err) {
+    console.error('[LOGIN ERROR]', err.message);
+    res.status(500).json({ success: false, message: 'Error interno del servidor.' });
+  }
+});
+
+// ==========================================
+// ENDPOINT API /api/migrate-usuarios (DDL - solo usar una vez)
+// ==========================================
+app.get('/api/migrate-usuarios', async (req, res) => {
+  const secret = req.query.secret;
+  if (secret !== 'HaedoFutsal2026') return res.status(403).send('Forbidden');
+  try {
+    const https = require('https');
+    const steps = [
+      "ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS username TEXT;",
+      "ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS password TEXT;",
+      "UPDATE usuarios SET username = split_part(email, '@', 1) WHERE username IS NULL OR username = '';",
+      "UPDATE usuarios SET password = '1234' WHERE password IS NULL OR password = '';",
+      "UPDATE usuarios SET username = 'admin' WHERE email = 'admin@futsalhaedo.com';",
+      "UPDATE usuarios SET username = 'gpazos' WHERE email = 'guillermopazos@gmail.com';",
+      "UPDATE usuarios SET username = 'coach' WHERE email = 'coach@futsalhaedo.com';",
+      "UPDATE usuarios SET username = 'socio' WHERE email = 'deportista@futsalhaedo.com';"
+    ];
+    const PROJECT_REF = 'kjcnotrxxthnzpgljeus';
+    const results = [];
+    for (const sql of steps) {
+      const result = await new Promise((resolve) => {
+        const body = JSON.stringify({ query: sql });
+        const r = https.request({
+          hostname: 'api.supabase.com',
+          path: '/v1/projects/' + PROJECT_REF + '/database/query',
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }
+        }, (resp) => {
+          let d = ''; resp.on('data', c => d += c);
+          resp.on('end', () => resolve({ status: resp.statusCode, body: d }));
+        });
+        r.on('error', e => resolve({ status: 0, body: e.message }));
+        r.write(body); r.end();
+      });
+      results.push({ sql: sql.substring(0, 60), status: result.status, body: result.body.substring(0, 100) });
+    }
+    res.json({ ok: true, results });
+  } catch (err) {
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
 
 // ==========================================
 // ENDPOINT API /api/run (PROXEA CON CLIENTE)
