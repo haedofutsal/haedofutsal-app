@@ -2758,41 +2758,49 @@
       }
       
       mostrarCarga("Iniciando sesión...");
-      google.script.run
-        .withSuccessHandler(function(response) {
-          if (response && response.success) {
-            // Guardar password en respuesta si recordamos sesión
-            if (rememberChecked) response.password = passwordInput;
-            cargarRolUsuario(response, rememberChecked);
-          } else {
-            ocultarCarga();
-            mostrarErrorLogin(response ? response.message : "Credenciales inválidas.");
-          }
-        })
-        .withFailureHandler(function(err) {
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: usernameInput, password: passwordInput })
+      })
+      .then(r => r.json())
+      .then(function(response) {
+        if (response && response.success) {
+          if (rememberChecked) response.password = passwordInput;
+          cargarRolUsuario(response, rememberChecked);
+        } else {
           ocultarCarga();
-          mostrarErrorLogin("Error al conectar: " + err.toString());
-        })
-        .loginUsuario(usernameInput, passwordInput);
+          mostrarErrorLogin(response ? response.message : "Credenciales inválidas.");
+        }
+      })
+      .catch(function(err) {
+        ocultarCarga();
+        mostrarErrorLogin("Error al conectar con el servidor.");
+        console.error('[LOGIN ERROR]', err);
+      });
     }
 
     function ejecutarLoginDirecto(username, password) {
-      google.script.run
-        .withSuccessHandler(function(response) {
-          if (response && response.success) {
-            cargarRolUsuario(response, !!password);
-          } else {
-            AuthService.clearSession();
-            ocultarCarga();
-            mostrarPantalla("login-view");
-          }
-        })
-        .withFailureHandler(function() {
+      fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username, password: password })
+      })
+      .then(r => r.json())
+      .then(function(response) {
+        if (response && response.success) {
+          cargarRolUsuario(response, !!password);
+        } else {
           AuthService.clearSession();
           ocultarCarga();
           mostrarPantalla("login-view");
-        })
-        .loginUsuario(username, password);
+        }
+      })
+      .catch(function() {
+        AuthService.clearSession();
+        ocultarCarga();
+        mostrarPantalla("login-view");
+      });
     }
 
     function cargarRolUsuario(userInfo, remember = false) {
@@ -2808,45 +2816,6 @@
         navegarAdmin(config.defaultView);
       } else {
         navegarSocio(config.defaultView);
-      }
-    }
-
-    function navegarAdmin(seccion) {
-      const normRole = getNormalizedRole(estadoApp.role);
-      const config = RolePermissions[normRole] || RolePermissions.Deportista;
-      
-      // Route guard
-      const targetViewId = seccion === 'tienda' ? 'club-tienda-view' : `admin-${seccion}-view`;
-      if (!config.allowedViews.includes(targetViewId)) {
-        console.warn(`Rol ${normRole} no tiene acceso a la vista ${seccion}`);
-        seccion = config.defaultView;
-      }
-
-      document.querySelectorAll("#nav-bar-admin .nav-item").forEach(el => el.classList.remove("active"));
-      
-      if (seccion === 'inicio') {
-        const navItem = document.getElementById("nav-admin-inicio");
-        if (navItem) navItem.classList.add("active");
-        mostrarPantalla("admin-inicio-view");
-        cargarDatosAdministracion();
-      } else if (seccion === 'socios') {
-        const navItem = document.getElementById("nav-admin-socios");
-        if (navItem) navItem.classList.add("active");
-        mostrarPantalla("admin-socios-view");
-        cargarSelectSociosFilters();
-        filtrarSociosAdmin();
-      } else if (seccion === 'torneos') {
-        const navItem = document.getElementById("nav-admin-torneos");
-        if (navItem) navItem.classList.add("active");
-        mostrarPantalla("admin-torneos-view");
-        cargarSelectTorneos();
-        actualizarDropdownFechasJornada();
-        filtrarYCalcularFinanzas();
-      } else if (seccion === 'agenda') {
-        const navItem = document.getElementById("nav-admin-agenda");
-        if (navItem) navItem.classList.add("active");
-        mostrarPantalla("admin-agenda-view");
-        dibujarPartidosAdmin(estadoApp.datosAdmin ? estadoApp.datosAdmin.partidos : []);
       }
     }
 
@@ -2870,6 +2839,12 @@
     }
 
     function cargarDatosSocioEnPantalla() {
+      // Verificar que tenemos email antes de intentar cargar
+      if (!estadoApp.userEmail) {
+        alert('Error: No hay sesión activa. Por favor, iniciá sesión nuevamente.');
+        mostrarPantalla('login-view');
+        return;
+      }
       mostrarCarga("Cargando tu cuenta...");
       google.script.run
         .withSuccessHandler(function(response) {
@@ -2877,23 +2852,30 @@
           if (response && response.success) {
             estadoApp.datosSocio = response;
             
-            document.getElementById("socio-welcome-name").innerText = `Hola, ${estadoApp.userName.split(" ")[0]}`;
-            document.getElementById("socio-profile-name").innerText = estadoApp.userName;
-            document.getElementById("socio-profile-email").innerText = estadoApp.userEmail;
+            const welcomeEl = document.getElementById("socio-welcome-name");
+            const nameEl = document.getElementById("socio-profile-name");
+            const emailEl = document.getElementById("socio-profile-email");
+            const catEl = document.getElementById("socio-profile-cat");
+            const avatarEl = document.getElementById("socio-avatar");
+
+            if (welcomeEl) welcomeEl.innerText = 'Hola, ' + (estadoApp.userName || '').split(' ')[0];
+            if (nameEl) nameEl.innerText = estadoApp.userName || '';
+            if (emailEl) emailEl.innerText = estadoApp.userEmail || '';
+
+            const perfil = response.perfil || {};
+            const categoryName = perfil.Category || 'Sin Categoría';
+            if (catEl) catEl.innerText = categoryName;
+            if (avatarEl) avatarEl.innerText = (estadoApp.userName || '?').charAt(0).toUpperCase();
             
-            const categoryName = response.perfil.Category || "Sin Categoría";
-            document.getElementById("socio-profile-cat").innerText = categoryName;
-            document.getElementById("socio-avatar").innerText = estadoApp.userName.charAt(0).toUpperCase();
-            
-            dibujarCuotasPendientesSocio(response.pagos);
+            dibujarCuotasPendientesSocio(response.pagos || []);
             mostrarPantalla("socio-mi-cuenta-view");
           } else {
-            alert("No se pudo cargar el perfil: " + (response ? response.message : "Error del servidor."));
+            alert('No se pudo cargar el perfil: ' + (response ? response.message : 'Error del servidor.'));
           }
         })
         .withFailureHandler(function(err) {
           ocultarCarga();
-          alert("Error: " + err.toString());
+          alert('Error al cargar datos: ' + (err ? err.toString() : 'Error desconocido.'));
         })
         .obtenerDatosSocio(estadoApp.userEmail);
     }
@@ -3049,12 +3031,26 @@
       });
     }
 
-    // NAVEGACIÓN ENTORNO ADMINISTRADOR
+    // NAVEGACIÓN ENTORNO ADMINISTRADOR / COACH (única definición con route guard)
     function navegarAdmin(seccion) {
+      const normRole = getNormalizedRole(estadoApp.role);
+      const config = RolePermissions[normRole] || RolePermissions.Deportista;
+
+      // Route guard: si la sección no está permitida, redirigir al default
+      const targetViewId = seccion === 'tienda' ? 'club-tienda-view' : ('admin-' + seccion + '-view');
+      if (!config.allowedViews.includes(targetViewId)) {
+        console.warn('[NavGuard] Rol ' + normRole + ' no tiene acceso a "' + seccion + '". Redirigiendo a "' + config.defaultView + '".');
+        seccion = config.defaultView;
+      }
+
+      // Reaplica la visibilidad de tabs por rol (por si se navegó sin pasar por login)
+      RoleAccessController.applyRoleConfig(estadoApp.role);
+
       document.querySelectorAll("#nav-bar-admin .nav-item").forEach(el => el.classList.remove("active"));
-      
+
       if (seccion === 'inicio') {
-        document.getElementById("nav-admin-inicio").classList.add("active");
+        const navItem = document.getElementById("nav-admin-inicio");
+        if (navItem) navItem.classList.add("active");
         cargarDatosAdministracion();
       } else if (seccion === 'socios') {
         const navItem = document.getElementById("nav-admin-socios");
@@ -3063,13 +3059,15 @@
         cargarSelectSociosFilters();
         filtrarSociosAdmin();
       } else if (seccion === 'torneos') {
-        document.getElementById("nav-admin-torneos").classList.add("active");
+        const navItem = document.getElementById("nav-admin-torneos");
+        if (navItem) navItem.classList.add("active");
         mostrarPantalla("admin-torneos-view");
         cargarSelectTorneos();
         actualizarDropdownFechasJornada();
         filtrarYCalcularFinanzas();
       } else if (seccion === 'agenda') {
-        document.getElementById("nav-admin-agenda").classList.add("active");
+        const navItem = document.getElementById("nav-admin-agenda");
+        if (navItem) navItem.classList.add("active");
         mostrarPantalla("admin-agenda-view");
         cargarSelectAgendaFilters();
         dibujarPartidosAdmin(estadoApp.datosAdmin ? estadoApp.datosAdmin.partidos : []);
