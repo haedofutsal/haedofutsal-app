@@ -1,5 +1,5 @@
 /**
- * Google Apps Script - Backend API para ERP Web Futsal Haedo (Ampliando Torneos, Finanzas y Socios)
+ * Google Apps Script - Backend API para ERP Web Haedo Futsal (Ampliando Torneos, Finanzas y Socios)
  * Desarrollado con sintaxis moderna ES6 (motor V8).
  * 
  * Este archivo actúa como el backend que sirve el frontend HTML (HtmlService)
@@ -10,7 +10,7 @@
 // ==========================================
 // CONFIGURACIÓN Y CONSTANTES
 // ==========================================
-const SPREADSHEET_ID = "1nDZWIxdGPWK8YY86JcOW9YCwTuApQX380H7Wk4JGjWg"; // Planilla oficial de Futsal Haedo
+const SPREADSHEET_ID = "1nDZWIxdGPWK8YY86JcOW9YCwTuApQX380H7Wk4JGjWg"; // Planilla oficial de Haedo Futsal
 const HOJA_PAGOS = "Pagos";
 const HOJA_USUARIOS = "Usuarios";
 const HOJA_CATEGORIAS = "Categorias";
@@ -74,7 +74,7 @@ function doGet(e) {
     }
     const template = HtmlService.createTemplateFromFile("Index");
     return template.evaluate()
-      .setTitle("Futsal Haedo - ERP Deportivo")
+      .setTitle("Haedo Futsal - ERP Deportivo")
       .addMetaTag("viewport", "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   } catch (error) {
@@ -986,7 +986,7 @@ function crearPreferenciaMercadoPago({ paymentId, email, amount, month }) {
     items: [
       {
         id: String(paymentId),
-        title: `Futsal Haedo - Cuota Mes: ${month}`,
+        title: `Haedo Futsal - Cuota Mes: ${month}`,
         description: `Pago de arancel mensual - Socio: ${email}`,
         quantity: 1,
         unit_price: numericAmount,
@@ -1042,7 +1042,7 @@ function crearPreferenciaMercadoPago({ paymentId, email, amount, month }) {
 
 /**
  * Crea las hojas de cálculo, escribe las cabeceras de columnas y carga datos iniciales
- * de prueba ampliados (con Torneos, Finanzas y Partidos) para Futsal Haedo.
+ * de prueba ampliados (con Torneos, Finanzas y Partidos) para Haedo Futsal.
  */
 function inicializarBaseDatos() {
   const ss = getSpreadsheet();
