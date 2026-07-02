@@ -1417,7 +1417,7 @@
           <div class="profile-info">
             <h3 id="socio-profile-name">Cargando...</h3>
             <p id="socio-profile-email">Cargando...</p>
-            <span class="profile-badge" id="socio-profile-cat">Categoría</span>
+            <div id="socio-profile-cats" style="display:flex; flex-wrap:wrap; gap:4px;"><span class="profile-badge" id="socio-profile-cat">Categoría</span></div>
           </div>
         </div>
       </div>
@@ -2076,14 +2076,14 @@
 
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
           <div class="form-group" style="margin-bottom:0;">
-            <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Categoría Deportiva *</label>
-            <select id="form-socio-category" class="form-select" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;" required>
-              <option value="Fut-May+35">Futsal Mayores +35</option>
-              <option value="Fut-May+42">Futsal Mayores +42</option>
-              <option value="Fut-Fem-1ra">Futsal Femenino 1ra</option>
-              <option value="Fut-Juv-5ta">Futsal Juveniles 5ta</option>
-              <option value="Bab-2015">Baby Fútbol 2015</option>
-            </select>
+            <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Categorías Deportivas * <span style="font-weight:400; color:#64748b;">(puede elegir varias)</span></label>
+            <div id="form-socio-category-checks" style="display:flex; flex-wrap:wrap; gap:8px; padding:8px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px;">
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Fut-May+35" class="cat-checkbox"> Futsal Mayores +35</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Fut-May+42" class="cat-checkbox"> Futsal Mayores +42</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Fut-Fem-1ra" class="cat-checkbox"> Futsal Femenino 1ra</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Fut-Juv-5ta" class="cat-checkbox"> Futsal Juveniles 5ta</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Bab-2015" class="cat-checkbox"> Baby Fútbol 2015</label>
+            </div>
           </div>
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Fecha de Nacimiento</label>
@@ -2975,8 +2975,15 @@
             if (emailEl) emailEl.innerText = estadoApp.userEmail || '';
 
             const perfil = response.perfil || {};
-            const categoryName = perfil.Category || 'Sin Categoría';
-            if (catEl) catEl.innerText = categoryName;
+            const categories = (perfil.Category || 'Sin Categoría').split('|').map(c => c.trim()).filter(Boolean);
+            const catContainer = document.getElementById('socio-profile-cats');
+            if (catContainer) {
+              catContainer.innerHTML = categories.map(c =>
+                '<span class="profile-badge" style="background:rgba(99,102,241,0.12);color:#6366f1;border:1px solid rgba(99,102,241,0.25);">' + c + '</span>'
+              ).join('');
+            } else if (catEl) {
+              catEl.innerText = categories.join(' | ');
+            }
             if (avatarEl) avatarEl.innerText = (estadoApp.userName || '?').charAt(0).toUpperCase();
             
             dibujarCuotasPendientesSocio(response.pagos || []);
@@ -3908,7 +3915,10 @@
       document.getElementById("form-socio-email").value = "";
       if (document.getElementById("form-socio-role")) document.getElementById("form-socio-role").value = "Deportista";
       document.getElementById("form-socio-dni").value = "";
-      document.getElementById("form-socio-category").value = "Fut-May+35";
+      // Leer checkboxes de categorías (múltiple)
+      const checkedCats = Array.from(document.querySelectorAll('#form-socio-category-checks .cat-checkbox:checked')).map(cb => cb.value);
+      if (checkedCats.length === 0) checkedCats.push('Fut-May+35'); // default
+      document.querySelector('#form-socio-category-checks .cat-checkbox[value="Fut-May+35"]').checked = true;
       document.getElementById("form-socio-birthdate").value = "";
       document.getElementById("form-socio-phone").value = "";
       document.getElementById("form-socio-blood").value = "O+";
@@ -3932,7 +3942,8 @@
       const email = document.getElementById("form-socio-email").value.trim().toLowerCase();
       const role = document.getElementById("form-socio-role") ? document.getElementById("form-socio-role").value : "Deportista";
       const dni = document.getElementById("form-socio-dni").value.trim();
-      const category = document.getElementById("form-socio-category").value;
+      const checkedCats = Array.from(document.querySelectorAll('#form-socio-category-checks .cat-checkbox:checked')).map(cb => cb.value);
+      const category = checkedCats.length > 0 ? checkedCats.join('|') : 'Fut-May+35';
       const birthDate = document.getElementById("form-socio-birthdate").value;
       const phone = document.getElementById("form-socio-phone").value.trim();
       const bloodType = document.getElementById("form-socio-blood").value;
