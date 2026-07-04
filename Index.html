@@ -1469,9 +1469,12 @@
           </div>
         </div>
 
-        <div class="form-group" style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
-          <input type="checkbox" id="login-remember" style="width: 16px; height: 16px; cursor: pointer;">
-          <label for="login-remember" style="font-size: 0.8rem; color: var(--text-muted); cursor: pointer; user-select: none;">Recordarme en este dispositivo</label>
+        <div class="form-group" style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <input type="checkbox" id="login-remember" style="width: 16px; height: 16px; cursor: pointer;">
+            <label for="login-remember" style="font-size: 0.8rem; color: var(--text-muted); cursor: pointer; user-select: none;">Recordarme</label>
+          </div>
+          <a href="javascript:void(0)" onclick="abrirModalOlvideClave()" style="font-size: 0.78rem; color: var(--primary); text-decoration: none; font-weight: 600;">¿Olvidaste tu clave?</a>
         </div>
         
         <button id="btn-login" class="btn" type="button" onclick="ejecutarLogin()" style="margin-top: 12px;">
@@ -1505,9 +1508,14 @@
             <p>Estado de cuenta</p>
           </div>
         </div>
-        <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
-          <i class="fa-solid fa-right-from-bracket"></i>
-        </button>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-logout" onclick="abrirModalCambiarClave()" title="Cambiar clave numérica" style="color:var(--text-muted); border-color:var(--border-color);">
+            <i class="fa-solid fa-key"></i>
+          </button>
+          <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
       </div>
       
       <div class="card">
@@ -1571,9 +1579,14 @@
           <h2 style="margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a;">Dashboard</h2>
           <span id="dash-month-subtitle" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Resumen del Mes (Junio 2026)</span>
         </div>
-        <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
-          <i class="fa-solid fa-right-from-bracket"></i>
-        </button>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-logout" onclick="abrirModalCambiarClave()" title="Cambiar clave numérica" style="color:var(--text-muted); border-color:var(--border-color);">
+            <i class="fa-solid fa-key"></i>
+          </button>
+          <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
       </div>
 
       <!-- SECCIÓN SOCIOS ACTIVOS Y GRÁFICO RESUMEN DEL MES -->
@@ -2143,11 +2156,11 @@
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:0;">
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Nombre *</label>
-            <input type="text" id="form-socio-firstname" class="form-input" placeholder="Ej: Juan Agustín" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;" required>
+            <input type="text" id="form-socio-firstname" class="form-input" placeholder="Ej: Juan Agustín" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;" oninput="sugerirYValidarUsuario()" required>
           </div>
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Apellido *</label>
-            <input type="text" id="form-socio-lastname" class="form-input" placeholder="Ej: Pérez" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;" required>
+            <input type="text" id="form-socio-lastname" class="form-input" placeholder="Ej: Pérez" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;" oninput="sugerirYValidarUsuario()" required>
           </div>
         </div>
 
@@ -2810,6 +2823,84 @@
     </div>
   </div>
 
+  <!-- MODAL: CAMBIAR CLAVE NUMÉRICA -->
+  <div id="modal-cambiar-clave" class="modal-overlay" style="z-index: 13000; display: none;">
+    <div class="modal" style="max-width: 420px; border-radius: 16px; overflow: hidden; width: 90%;">
+      <div class="modal-header" style="background: var(--bg-card); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin:0; font-size: 1.1rem; color: var(--text-primary);"><i class="fa-solid fa-key text-primary" style="margin-right: 6px;"></i> Cambiar Clave</h3>
+        <button class="btn-close-modal" onclick="cerrarModalCambiarClave()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem;">
+        <div id="cambiar-clave-error" class="error-toast" style="display: none; margin-bottom: 12px;">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span id="cambiar-clave-error-text">Error</span>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label class="form-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Nueva Clave (4 dígitos):</label>
+          <input type="password" id="cambiar-clave-nueva" class="form-input" placeholder="••••" maxlength="4" pattern="[0-9]*" inputmode="numeric" required style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;">
+        </div>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Confirmar Nueva Clave:</label>
+          <input type="password" id="cambiar-clave-confirmar" class="form-input" placeholder="••••" maxlength="4" pattern="[0-9]*" inputmode="numeric" required style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" style="flex: 1; padding: 10px 0; justify-content: center; font-size: 0.9rem;" onclick="cerrarModalCambiarClave()">Cancelar</button>
+          <button class="btn-primary" style="flex: 1.5; justify-content: center; padding: 10px 0; font-size: 0.9rem;" onclick="confirmarCambiarClave()">Actualizar Clave</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: OLVIDÉ MI CLAVE (SOLICITUD) -->
+  <div id="modal-olvide-clave" class="modal-overlay" style="z-index: 13000; display: none;">
+    <div class="modal" style="max-width: 420px; border-radius: 16px; overflow: hidden; width: 90%;">
+      <div class="modal-header" style="background: var(--bg-card); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin:0; font-size: 1.1rem; color: var(--text-primary);"><i class="fa-solid fa-envelope text-primary" style="margin-right: 6px;"></i> Recuperar Clave</h3>
+        <button class="btn-close-modal" onclick="cerrarModalOlvideClave()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem;">
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 14px 0;">Ingresá tu correo electrónico. Si estás registrado, te enviaremos un email con un link para restablecer tu clave.</p>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Correo Electrónico:</label>
+          <input type="email" id="olvide-clave-email" class="form-input" placeholder="socio@ejemplo.com" required style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" style="flex: 1; padding: 10px 0; justify-content: center; font-size: 0.9rem;" onclick="cerrarModalOlvideClave()">Cancelar</button>
+          <button class="btn-primary" style="flex: 1.5; justify-content: center; padding: 10px 0; font-size: 0.9rem;" onclick="confirmarSolicitudOlvideClave()">Enviar Correo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: RESTABLECER CLAVE (CON TOKEN) -->
+  <div id="modal-restablecer-clave" class="modal-overlay" style="z-index: 13000; display: none;">
+    <div class="modal" style="max-width: 420px; border-radius: 16px; overflow: hidden; width: 90%;">
+      <div class="modal-header" style="background: var(--bg-card); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        <h3 style="margin:0; font-size: 1.1rem; color: var(--text-primary);"><i class="fa-solid fa-lock-open text-primary" style="margin-right: 6px;"></i> Restablecer Clave</h3>
+        <button class="btn-close-modal" onclick="cerrarModalRestablecerClave()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem;">
+        <p style="font-size: 0.82rem; color: var(--text-primary); font-weight: 700; margin: 0 0 12px 0;" id="restablecer-clave-email-label">Restablecer para: --</p>
+        <div id="restablecer-clave-error" class="error-toast" style="display: none; margin-bottom: 12px;">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span id="restablecer-clave-error-text">Error</span>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label class="form-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Nueva Clave (4 dígitos):</label>
+          <input type="password" id="restablecer-clave-nueva" class="form-input" placeholder="••••" maxlength="4" pattern="[0-9]*" inputmode="numeric" required style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;">
+        </div>
+        <div class="form-group" style="margin-bottom: 16px;">
+          <label class="form-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Confirmar Nueva Clave:</label>
+          <input type="password" id="restablecer-clave-confirmar" class="form-input" placeholder="••••" maxlength="4" pattern="[0-9]*" inputmode="numeric" required style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a;">
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" style="flex: 1; padding: 10px 0; justify-content: center; font-size: 0.9rem;" onclick="cerrarModalRestablecerClave()">Cancelar</button>
+          <button class="btn-primary" style="flex: 1.5; justify-content: center; padding: 10px 0; font-size: 0.9rem;" onclick="confirmarRestablecerClave()">Guardar Nueva Clave</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT CLIENTE -->
   <script>
     // DETECCIÓN DE ENTORNO SERVIDOR / RED LOCAL / TUNEL PARA PRUEBAS
@@ -2980,8 +3071,20 @@
     };
 
     window.onload = function() {
-      // Verificar si viene una redirección de Mercado Pago acreditada
+      // Verificar si viene solicitud de restablecimiento de clave
       const urlParams = new URLSearchParams(window.location.search);
+      const action = urlParams.get('action');
+      const emailParam = urlParams.get('email');
+      const tokenParam = urlParams.get('token');
+      
+      if (action === 'reset' && emailParam && tokenParam) {
+        ocultarCarga();
+        mostrarPantalla("login-view");
+        abrirModalRestablecerClave(emailParam, tokenParam);
+        return;
+      }
+
+      // Verificar si viene una redirección de Mercado Pago acreditada
       const mpStatus = urlParams.get('collection_status') || urlParams.get('status');
       const extRef = urlParams.get('external_reference');
 
@@ -4407,7 +4510,7 @@
       document.getElementById("form-socio-firstname").value = "";
       document.getElementById("form-socio-lastname").value = "";
       document.getElementById("form-socio-username").value = "";
-      document.getElementById("form-socio-password").value = "";
+      document.getElementById("form-socio-password").value = "1234";
       document.getElementById("form-socio-email").value = "";
       if (document.getElementById("form-socio-role")) document.getElementById("form-socio-role").value = "Deportista";
       document.getElementById("form-socio-dni").value = "";
@@ -4424,6 +4527,99 @@
       document.getElementById("form-socio-contactphone").value = "";
       document.getElementById("form-socio-notes").value = "";
       document.getElementById("alta-socio-modal").style.display = "flex";
+    }
+
+    function sugerirYValidarUsuario() {
+      const firstName = document.getElementById("form-socio-firstname").value.trim();
+      const lastName = document.getElementById("form-socio-lastname").value.trim();
+      const usernameInput = document.getElementById("form-socio-username");
+      
+      if (!firstName || !lastName) {
+        usernameInput.value = "";
+        return;
+      }
+
+      // Limpiar y sanitizar texto (remover acentos y caracteres especiales)
+      function sanitizar(txt) {
+        return txt.toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "") // remover acentos
+                  .replace(/[^a-z0-9]/g, "");    // remover todo lo que no sea alfanumérico
+      }
+
+      const apellidoClean = sanitizar(lastName);
+      const nombresArr = firstName.split(/\s+/).map(n => sanitizar(n)).filter(Boolean);
+      
+      if (nombresArr.length === 0 || !apellidoClean) {
+        usernameInput.value = "";
+        return;
+      }
+
+      // Obtener lista de usuarios existentes (en mayúsculas para comparar)
+      const existingUsernames = new Set();
+      if (estadoApp.datosAdmin && estadoApp.datosAdmin.socios) {
+        estadoApp.datosAdmin.socios.forEach(s => {
+          if (s.Username) {
+            existingUsernames.add(s.Username.trim().toUpperCase());
+          }
+        });
+      }
+
+      // Intentar diferentes combinaciones en orden de prioridad:
+      // 1. Primera letra del primer nombre + Apellido completo
+      // 2. Primeras letras de todos los nombres + Apellido completo
+      // 3. Primeras 2 letras del primer nombre + Apellido completo
+      // 4. Primeras 3 letras del primer nombre + Apellido completo
+      // 5. Primera letra del primer nombre + Apellido completo + Sufijo numérico (1, 2, 3...)
+      
+      const combinaciones = [];
+      
+      // Combinación 1: Inicial primer nombre + Apellido
+      const p1 = (nombresArr[0][0] || "") + apellidoClean;
+      combinaciones.push(p1.toUpperCase());
+      
+      // Combinación 2: Iniciales de todos los nombres + Apellido (solo si hay más de 1 nombre)
+      if (nombresArr.length > 1) {
+        const p2 = nombresArr.map(n => n[0] || "").join("") + apellidoClean;
+        combinaciones.push(p2.toUpperCase());
+      }
+      
+      // Combinación 3: Primeras 2 letras del primer nombre + Apellido
+      if (nombresArr[0].length >= 2) {
+        const p3 = nombresArr[0].substring(0, 2) + apellidoClean;
+        combinaciones.push(p3.toUpperCase());
+      }
+      
+      // Combinación 4: Primeras 3 letras del primer nombre + Apellido
+      if (nombresArr[0].length >= 3) {
+        const p4 = nombresArr[0].substring(0, 3) + apellidoClean;
+        combinaciones.push(p4.toUpperCase());
+      }
+      
+      // Encontrar la primera combinación que no exista en existingUsernames
+      let candidato = "";
+      for (const comb of combinaciones) {
+        if (!existingUsernames.has(comb)) {
+          candidato = comb;
+          break;
+        }
+      }
+      
+      // Fallback: Sufijo numérico
+      if (!candidato) {
+        let i = 1;
+        const base = ((nombresArr[0][0] || "") + apellidoClean).toUpperCase();
+        while (true) {
+          const combNum = base + i;
+          if (!existingUsernames.has(combNum)) {
+            candidato = combNum;
+            break;
+          }
+          i++;
+        }
+      }
+      
+      usernameInput.value = candidato;
     }
 
     function cerrarModalAltaSocio() {
@@ -6903,6 +7099,166 @@
 
     function ocultarErrorLogin() {
       document.getElementById("login-error").style.display = "none";
+    }
+
+    // MODALES Y LOGICA DE CAMBIO/RECUPERACIÓN DE CLAVE
+
+    // 1. Cambiar Clave (Socio / Admin logueado)
+    function abrirModalCambiarClave() {
+      document.getElementById("cambiar-clave-nueva").value = "";
+      document.getElementById("cambiar-clave-confirmar").value = "";
+      document.getElementById("cambiar-clave-error").style.display = "none";
+      document.getElementById("modal-cambiar-clave").style.display = "flex";
+    }
+
+    function cerrarModalCambiarClave() {
+      document.getElementById("modal-cambiar-clave").style.display = "none";
+    }
+
+    function confirmarCambiarClave() {
+      const nueva = document.getElementById("cambiar-clave-nueva").value.trim();
+      const confirmar = document.getElementById("cambiar-clave-confirmar").value.trim();
+      const errorDiv = document.getElementById("cambiar-clave-error");
+      const errorText = document.getElementById("cambiar-clave-error-text");
+
+      if (!nueva || !confirmar) {
+        errorText.innerText = "Por favor, completá ambos campos.";
+        errorDiv.style.display = "flex";
+        return;
+      }
+      if (nueva.length !== 4 || isNaN(nueva)) {
+        errorText.innerText = "La clave debe ser numérica de 4 dígitos.";
+        errorDiv.style.display = "flex";
+        return;
+      }
+      if (nueva !== confirmar) {
+        errorText.innerText = "Las claves ingresadas no coinciden.";
+        errorDiv.style.display = "flex";
+        return;
+      }
+
+      mostrarCarga("Actualizando clave...");
+      google.script.run
+        .withSuccessHandler(function(response) {
+          ocultarCarga();
+          if (response && response.success) {
+            alert("¡Clave actualizada con éxito!");
+            cerrarModalCambiarClave();
+          } else {
+            errorText.innerText = response ? response.message : "Error al cambiar clave.";
+            errorDiv.style.display = "flex";
+          }
+        })
+        .withFailureHandler(function(err) {
+          ocultarCarga();
+          errorText.innerText = "Error de conexión: " + err.message;
+          errorDiv.style.display = "flex";
+        })
+        .actualizarClaveUsuario(estadoApp.userEmail, nueva);
+    }
+
+    // 2. Olvidé Mi Clave (Solicitud)
+    function abrirModalOlvideClave() {
+      document.getElementById("olvide-clave-email").value = "";
+      document.getElementById("modal-olvide-clave").style.display = "flex";
+    }
+
+    function cerrarModalOlvideClave() {
+      document.getElementById("modal-olvide-clave").style.display = "none";
+    }
+
+    function confirmarSolicitudOlvideClave() {
+      const email = document.getElementById("olvide-clave-email").value.trim();
+      if (!email) {
+        alert("Por favor, ingresá tu correo electrónico.");
+        return;
+      }
+
+      const origin = window.location.origin + window.location.pathname;
+
+      mostrarCarga("Verificando correo...");
+      google.script.run
+        .withSuccessHandler(function(response) {
+          ocultarCarga();
+          if (response && response.success) {
+            alert("¡Correo enviado con éxito! Revisá tu bandeja de entrada para restablecer tu clave.");
+            cerrarModalOlvideClave();
+          } else {
+            alert(response ? response.message : "El correo ingresado no pertenece a ningún socio registrado.");
+          }
+        })
+        .withFailureHandler(function(err) {
+          ocultarCarga();
+          alert("Error de conexión: " + err.message);
+        })
+        .solicitarRestablecimientoClave(email, origin);
+    }
+
+    // 3. Restablecer Clave (Con Token)
+    let resetParamEmail = "";
+    let resetParamToken = "";
+
+    function abrirModalRestablecerClave(email, token) {
+      resetParamEmail = email;
+      resetParamToken = token;
+      document.getElementById("restablecer-clave-email-label").innerText = "Restablecer para: " + email;
+      document.getElementById("restablecer-clave-nueva").value = "";
+      document.getElementById("restablecer-clave-confirmar").value = "";
+      document.getElementById("restablecer-clave-error").style.display = "none";
+      document.getElementById("modal-restablecer-clave").style.display = "flex";
+    }
+
+    function cerrarModalRestablecerClave() {
+      document.getElementById("modal-restablecer-clave").style.display = "none";
+      // Limpiar parámetros de la URL para que no vuelva a abrirse al recargar
+      const url = new URL(window.location.href);
+      url.searchParams.delete("action");
+      url.searchParams.delete("email");
+      url.searchParams.delete("token");
+      window.history.replaceState({}, document.title, url.toString());
+    }
+
+    function confirmarRestablecerClave() {
+      const nueva = document.getElementById("restablecer-clave-nueva").value.trim();
+      const confirmar = document.getElementById("restablecer-clave-confirmar").value.trim();
+      const errorDiv = document.getElementById("restablecer-clave-error");
+      const errorText = document.getElementById("restablecer-clave-error-text");
+
+      if (!nueva || !confirmar) {
+        errorText.innerText = "Por favor, completá ambos campos.";
+        errorDiv.style.display = "flex";
+        return;
+      }
+      if (nueva.length !== 4 || isNaN(nueva)) {
+        errorText.innerText = "La clave debe ser numérica de 4 dígitos.";
+        errorDiv.style.display = "flex";
+        return;
+      }
+      if (nueva !== confirmar) {
+        errorText.innerText = "Las claves ingresadas no coinciden.";
+        errorDiv.style.display = "flex";
+        return;
+      }
+
+      mostrarCarga("Restableciendo clave...");
+      google.script.run
+        .withSuccessHandler(function(response) {
+          ocultarCarga();
+          if (response && response.success) {
+            alert("¡Tu clave ha sido restablecida con éxito! Ya podés iniciar sesión.");
+            cerrarModalRestablecerClave();
+            mostrarPantalla("login-view");
+          } else {
+            errorText.innerText = response ? response.message : "Error al restablecer clave.";
+            errorDiv.style.display = "flex";
+          }
+        })
+        .withFailureHandler(function(err) {
+          ocultarCarga();
+          errorText.innerText = "Error de conexión: " + err.message;
+          errorDiv.style.display = "flex";
+        })
+        .restablecerClaveConToken(resetParamEmail, resetParamToken, nueva);
     }
 
     // ───────────── PWA: Registro del Service Worker e Intercepción de Share Target ─────────────
