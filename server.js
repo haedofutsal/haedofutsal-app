@@ -636,6 +636,12 @@ app.get('/run-migration', async (req, res) => {
   });
 });
 
+// Servidor fallback para Web Share Target (si no se intercepta por Service Worker)
+app.post('/share-receipt', (req, res) => {
+  console.log('[SERVER] Recibido share target POST sin interceptar. Redirigiendo...');
+  res.redirect('/?shared=fallback');
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   const interfaces = os.networkInterfaces();
   const addresses = [];
