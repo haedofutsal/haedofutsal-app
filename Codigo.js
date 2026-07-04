@@ -232,7 +232,10 @@ function obtenerDatosSocio(email) {
         if (socioCategories.includes(tCat)) {
           const tId = getVal(torneosData[i], tIdCol);
           if (!misTorneosIds.includes(tId)) misTorneosIds.push(tId);
-          torneosMap[tId] = getVal(torneosData[i], tNameCol);
+          torneosMap[tId] = {
+            name: getVal(torneosData[i], tNameCol),
+            category: tCat
+          };
         }
       }
       
@@ -256,8 +259,25 @@ function obtenerDatosSocio(email) {
           pHeaders.forEach((h, idx) => {
             partidoObj[h] = getVal(row, idx);
           });
-          partidoObj.Torneo_Name = torneosMap[torneoId] || "Torneo";
+          partidoObj.Torneo_Name = torneosMap[torneoId] ? torneosMap[torneoId].name : "Torneo";
+          partidoObj.Category = torneosMap[torneoId] ? torneosMap[torneoId].category : "";
           misPartidos.push(partidoObj);
+        }
+      }
+    }
+    
+    // Cargar nombres de categorías
+    const sheetCategorias = ss.getSheetByName(HOJA_CATEGORIAS);
+    const categoriasMap = {};
+    if (sheetCategorias) {
+      const catData = sheetCategorias.getDataRange().getValues();
+      const catHeaders = catData[0];
+      const catIdCol = catHeaders.indexOf("Category_ID");
+      const catNameCol = catHeaders.indexOf("Name");
+      for (let i = 1; i < catData.length; i++) {
+        const cId = getVal(catData[i], catIdCol);
+        if (cId) {
+          categoriasMap[cId] = getVal(catData[i], catNameCol);
         }
       }
     }
@@ -269,7 +289,8 @@ function obtenerDatosSocio(email) {
       success: true,
       perfil,
       pagos: misPagos,
-      partidos: misPartidos
+      partidos: misPartidos,
+      categoriasMap: categoriasMap
     };
     
   } catch (error) {
@@ -968,6 +989,76 @@ function marcarPagoComoPagado(paymentId, collectorEmail, collectorRole) {
     
   } catch (error) {
     console.error("Error en marcarPagoComoPagado:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Registra el pago de una cuota por transferencia tras recibir y validar un comprobante.
+ * Cambia el estado del pago a 'Pagado' y suma el importe a las finanzas del club.
+ */
+function registrarPagoTransferenciaComprobante(paymentId, email, amount, month, paymentMethod) {
+  try {
+    const ss = getSpreadsheet();
+    
+    // 1. Marcar pago como Pagado
+    const sheetPagos = ss.getSheetByName(HOJA_PAGOS);
+    if (!sheetPagos) throw new Error("No se encontró la hoja de pagos.");
+    const pagosData = sheetPagos.getDataRange().getValues();
+    const pHeaders = pagosData[0];
+    const pIdCol = pHeaders.indexOf("Payment_ID");
+    const pStatusCol = pHeaders.indexOf("Status");
+    const pByCol = pHeaders.indexOf("Collected_By");
+    const pAtCol = pHeaders.indexOf("Collected_At");
+    const pEmailCol = pHeaders.indexOf("Email");
+    
+    let filaIndex = -1;
+    for (let i = 1; i < pagosData.length; i++) {
+      if (pagosData[i][pIdCol].toString().trim() === paymentId.toString().trim()) {
+        filaIndex = i;
+        break;
+      }
+    }
+    
+    if (filaIndex === -1) {
+      throw new Error("No se encontró el registro de pago.");
+    }
+    
+    const rowNum = filaIndex + 1;
+    const nowStr = new Date().toISOString().replace("T", " ").substring(0, 16);
+    const methodStr = paymentMethod || "Transferencia MP";
+    const socioEmail = pagosData[filaIndex][pEmailCol] || email;
+    
+    sheetPagos.getRange(rowNum, pStatusCol + 1).setValue("Pagado");
+    sheetPagos.getRange(rowNum, pByCol + 1).setValue(`Socio (${methodStr})`);
+    sheetPagos.getRange(rowNum, pAtCol + 1).setValue(nowStr);
+    
+    // 2. Sumar el importe a las finanzas del club (appendRow en Finanzas_Torneos)
+    const sheetFinanzas = ss.getSheetByName(HOJA_FINANZAS);
+    if (sheetFinanzas) {
+      const movId = `MOV-${Date.now().toString().slice(-6)}`;
+      const dateFormatted = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const concept = `Cuota Social ${month} - Socio: ${socioEmail}`;
+      const numericAmount = parseFloat(amount || 0);
+      
+      // Columnas: Movimiento_ID, Torneo_ID, Type, Concept, Amount, Date, Payment_Method
+      sheetFinanzas.appendRow([movId, "General", "Ingreso", concept, numericAmount, dateFormatted, methodStr]);
+      
+      const lastRowIndex = sheetFinanzas.getLastRow();
+      if (sheetFinanzas.getRange(lastRowIndex, 5).setNumberFormat) {
+        sheetFinanzas.getRange(lastRowIndex, 5).setNumberFormat("$#,##0.00");
+      }
+    }
+    
+    SpreadsheetApp.flush();
+    
+    // 3. Registrar Log
+    registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Pago por transferencia autogestionado para cuota ${month} por $${parseFloat(amount).toLocaleString('es-AR')} (Comprobante recibido y validado)`);
+    
+    return { success: true, message: "Comprobante validado correctamente. Tu cuota ha sido acreditada y registrada en las finanzas." };
+    
+  } catch (error) {
+    console.error("Error en registrarPagoTransferenciaComprobante:", error);
     return { success: false, message: error.message };
   }
 }
