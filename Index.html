@@ -1327,6 +1327,99 @@
       50% { top: 100%; }
       100% { top: 0%; }
     }
+
+    /* ==============================================
+       SOPORTE DE DISEÑO RESPONSIVO (MOBILE-FIRST)
+       ============================================== */
+
+    /* Reglas generales para PC / Pantallas medianas y grandes */
+    @media (min-width: 768px) {
+      .bottom-nav {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        max-width: 1000px !important;
+        border-left: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+        border-radius: 16px 16px 0 0;
+      }
+      .container {
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+      }
+    }
+
+    /* Reglas para Tablet y móvil ancho */
+    @media (max-width: 992px) {
+      .container {
+        max-width: 100%;
+      }
+    }
+
+    /* Reglas específicas para pantallas móviles (menos de 600px) */
+    @media (max-width: 600px) {
+      .container {
+        padding: 14px 14px 80px 14px !important; /* Menor padding lateral en móviles */
+      }
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+      }
+      .metric-card {
+        padding: 10px 8px !important;
+      }
+      .metric-val {
+        font-size: 1.1rem !important;
+      }
+      .modal {
+        padding: 16px 14px !important;
+        width: 95% !important;
+        max-height: 94vh !important;
+        border-radius: 16px !important;
+      }
+      .modal-header {
+        margin-bottom: 12px !important;
+      }
+      .modal-footer {
+        margin-top: 14px !important;
+        gap: 8px !important;
+        flex-wrap: wrap !important;
+      }
+      .modal-btn {
+        padding: 10px !important;
+        font-size: 0.8rem !important;
+        flex: 1 1 40% !important; /* Permitir que los botones se achiquen o apilen si es necesario */
+      }
+      /* Formularios más compactos en móvil */
+      .form-group {
+        margin-bottom: 12px !important;
+      }
+      /* Balances */
+      .balance-area {
+        padding: 10px 14px !important;
+        gap: 8px !important;
+      }
+      .balance-val {
+        font-size: 1rem !important;
+      }
+      /* Ajuste de cards de productos de tienda */
+      #tienda-productos-grid {
+        gap: 8px !important;
+      }
+    }
+
+    /* Reglas para teléfonos muy pequeños (menos de 400px) */
+    @media (max-width: 400px) {
+      .metrics-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .modal-footer {
+        flex-direction: column !important;
+      }
+      .modal-btn {
+        width: 100% !important;
+        flex: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1946,7 +2039,7 @@
       </div>
 
       <!-- GRID DE PRODUCTOS -->
-      <div id="tienda-productos-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; margin-bottom:24px;">
+      <div id="tienda-productos-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap:12px; margin-bottom:24px;">
         <!-- Productos renderizados dinámicamente -->
       </div>
     </div>
@@ -6495,8 +6588,8 @@
       });
 
       container.innerHTML = `
-        <div style="overflow-x:hidden; border-radius:10px; border:1px solid var(--border-color); width:100%;">
-          <table style="width:100%; table-layout:fixed; border-collapse:collapse; text-align:left;">
+        <div style="overflow-x:auto; border-radius:10px; border:1px solid var(--border-color); width:100%; -webkit-overflow-scrolling: touch;">
+          <table style="width:100%; min-width:500px; border-collapse:collapse; text-align:left;">
             <thead>
               <tr style="background:rgba(15,23,42,0.9); border-bottom:1px solid var(--border-color); font-size:0.64rem; color:#94a3b8; text-transform:uppercase;">
                 <th style="width:7%; padding:6px 2px; text-align:center;">#</th>
