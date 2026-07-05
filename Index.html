@@ -1439,6 +1439,147 @@
 
   <div class="container">
     
+    <!-- PANTALLA PÚBLICA DE ACTUALIZACIÓN DE DATOS (WHATSAPP) -->
+    <div id="public-update-view" class="login-wrapper" style="display:none; max-width: 500px; margin: 0 auto; padding: 20px 10px;">
+      <div class="logo-area">
+        <img src="logo.png" style="height: 100px; width: auto; margin-bottom: 12px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.12));" alt="Haedo Futsal">
+        <h1 class="logo-title" style="color: #0f172a; font-size: 24px;">Haedo Futsal</h1>
+        <p class="logo-subtitle" style="font-size: 14px;">Actualización de Datos de Socio</p>
+      </div>
+
+      <div class="card" style="padding: 24px; border-radius: 16px;">
+        <div id="public-update-success" style="display:none; text-align: center; padding: 30px 10px;">
+          <div class="success-checkmark" style="margin-bottom: 20px;">
+            <div class="check-icon" style="font-size: 60px; color: #10b981;">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+          </div>
+          <h2 style="font-size: 20px; color: #0f172a; margin-bottom: 10px;">¡Datos Actualizados!</h2>
+          <p style="color: #64748b; font-size: 14px; line-height: 1.5;">Tu información ha sido registrada con éxito en el sistema del club. Ya podés cerrar esta pestaña.</p>
+        </div>
+
+        <div id="public-update-form-container">
+          <p style="color: #475569; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px; text-align: center;">
+            Por favor, revisá y completá tus datos de contacto y salud para mantener el padrón del club actualizado.
+          </p>
+
+          <form id="form-public-update" onsubmit="event.preventDefault(); guardarDatosPublicos();">
+            <input type="hidden" id="public-update-email">
+
+            <!-- Nombre -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="public-update-firstname">Nombres</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-user input-icon"></i>
+                <input type="text" id="public-update-firstname" class="form-input" required placeholder="Tus nombres">
+              </div>
+            </div>
+
+            <!-- Apellido -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="public-update-lastname">Apellido</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-user input-icon"></i>
+                <input type="text" id="public-update-lastname" class="form-input" required placeholder="Tu apellido">
+              </div>
+            </div>
+
+            <!-- DNI -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="public-update-dni">DNI</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-id-card input-icon"></i>
+                <input type="text" id="public-update-dni" class="form-input" required placeholder="Tu DNI sin puntos">
+              </div>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="public-update-phone">Teléfono de Contacto</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-phone input-icon"></i>
+                <input type="text" id="public-update-phone" class="form-input" required placeholder="Tu celular con código de área">
+              </div>
+            </div>
+
+            <!-- Fecha de Nacimiento -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="public-update-birthdate">Fecha de Nacimiento</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-calendar-days input-icon"></i>
+                <input type="date" id="public-update-birthdate" class="form-input" required>
+              </div>
+            </div>
+
+            <!-- Grupo Sanguíneo -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="public-update-bloodtype">Grupo Sanguíneo</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-droplet input-icon"></i>
+                <select id="public-update-bloodtype" class="form-input" required style="padding-left: 36px; -webkit-appearance: none;">
+                  <option value="O+">O Positivo (O+)</option>
+                  <option value="O-">O Negativo (O-)</option>
+                  <option value="A+">A Positivo (A+)</option>
+                  <option value="A-">A Negativo (A-)</option>
+                  <option value="B+">B Positivo (B+)</option>
+                  <option value="B-">B Negativo (B-)</option>
+                  <option value="AB+">AB Positivo (AB+)</option>
+                  <option value="AB-">AB Negativo (AB-)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Obra Social -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="public-update-obrasocial">Obra Social / Prepaga</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-briefcase-medical input-icon"></i>
+                <input type="text" id="public-update-obrasocial" class="form-input" required placeholder="Particular / Nombre de Prepaga">
+              </div>
+            </div>
+
+            <!-- Apto Físico -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="public-update-medicalfit">Apto Físico</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-heart-pulse input-icon"></i>
+                <select id="public-update-medicalfit" class="form-input" required style="padding-left: 36px; -webkit-appearance: none;">
+                  <option value="Apto Físico Vigente">Apto Físico Vigente</option>
+                  <option value="Apto Físico Vencido">Apto Físico Vencido</option>
+                </select>
+              </div>
+            </div>
+
+            <h3 style="font-size: 14px; color: #0f172a; margin: 24px 0 12px 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
+              Contacto de Emergencia
+            </h3>
+
+            <!-- Nombre de Emergencia -->
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="public-update-emergencycontact">Nombre del Contacto</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-user-shield input-icon"></i>
+                <input type="text" id="public-update-emergencycontact" class="form-input" required placeholder="Nombre de familiar / contacto">
+              </div>
+            </div>
+
+            <!-- Teléfono de Emergencia -->
+            <div class="form-group" style="margin-bottom: 24px;">
+              <label class="form-label" for="public-update-emergencyphone">Teléfono de Emergencia</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-phone-flip input-icon"></i>
+                <input type="text" id="public-update-emergencyphone" class="form-input" required placeholder="Teléfono de contacto de emergencia">
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; height: 44px; font-size: 15px; font-weight: 600; border-radius: 8px;">
+              <i class="fa-solid fa-floppy-disk" style="margin-right: 6px;"></i> Guardar Cambios
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- PANTALLA DE LOGIN -->
     <div id="login-view" class="login-wrapper" style="display:none;">
       <div class="logo-area">
@@ -3084,6 +3225,12 @@
         return;
       }
 
+      if (action === 'update-info' && emailParam) {
+        ocultarCarga();
+        inicializarFormularioPublico(emailParam);
+        return;
+      }
+
       // Verificar si viene una redirección de Mercado Pago acreditada
       const mpStatus = urlParams.get('collection_status') || urlParams.get('status');
       const extRef = urlParams.get('external_reference');
@@ -3150,6 +3297,8 @@
 
     function mostrarPantalla(idPantalla) {
       document.getElementById("login-view").style.display = "none";
+      const pubView = document.getElementById("public-update-view");
+      if (pubView) pubView.style.display = "none";
       document.getElementById("socio-mi-cuenta-view").style.display = "none";
       document.getElementById("socio-agenda-view").style.display = "none";
       document.getElementById("admin-inicio-view").style.display = "none";
@@ -3165,8 +3314,8 @@
       const targetEl = document.getElementById(idPantalla);
       if (targetEl) targetEl.style.display = "flex";
 
-      // No mostrar nav bar en la pantalla de login
-      if (idPantalla === 'login-view') return;
+      // No mostrar nav bar en la pantalla de login o actualización pública
+      if (idPantalla === 'login-view' || idPantalla === 'public-update-view') return;
 
       // Calcular rol y config actuales
       const normRole = (estadoApp.role && typeof getNormalizedRole === 'function')
@@ -7259,6 +7408,95 @@
           errorDiv.style.display = "flex";
         })
         .restablecerClaveConToken(resetParamEmail, resetParamToken, nueva);
+    }
+
+    // FORMULARIO PÚBLICO DE ACTUALIZACIÓN DE DATOS (WHATSAPP)
+    function inicializarFormularioPublico(email) {
+      document.getElementById("public-update-email").value = email;
+      document.getElementById("public-update-success").style.display = "none";
+      document.getElementById("public-update-form-container").style.display = "block";
+      mostrarPantalla("public-update-view");
+
+      mostrarCarga("Cargando tus datos...");
+      google.script.run
+        .withSuccessHandler(function(response) {
+          ocultarCarga();
+          if (response && response.success && response.datos) {
+            const d = response.datos;
+            
+            // Dividir Name en Nombres y Apellido
+            let nombres = "";
+            let apellido = "";
+            const nameStr = d.Name || "";
+            if (nameStr.includes(',')) {
+              const parts = nameStr.split(',');
+              apellido = parts[0].trim();
+              nombres = parts[1].trim();
+            } else {
+              const parts = nameStr.trim().split(/\s+/);
+              if (parts.length > 1) {
+                apellido = parts[parts.length - 1];
+                nombres = parts.slice(0, -1).join(' ');
+              } else {
+                apellido = parts[0] || "";
+                nombres = "";
+              }
+            }
+
+            document.getElementById("public-update-firstname").value = nombres;
+            document.getElementById("public-update-lastname").value = apellido;
+            document.getElementById("public-update-dni").value = d.DNI || "";
+            document.getElementById("public-update-phone").value = d.Phone || "";
+            document.getElementById("public-update-birthdate").value = d.BirthDate || "";
+            document.getElementById("public-update-bloodtype").value = d.BloodType || "O+";
+            document.getElementById("public-update-obrasocial").value = d.ObraSocial || "";
+            document.getElementById("public-update-medicalfit").value = d.MedicalFit || "Apto Físico Vigente";
+            document.getElementById("public-update-emergencycontact").value = d.EmergencyContact || "";
+            document.getElementById("public-update-emergencyphone").value = d.EmergencyPhone || "";
+          } else {
+            alert(response ? response.message : "Error al obtener datos del socio.");
+          }
+        })
+        .withFailureHandler(function(err) {
+          ocultarCarga();
+          alert("Error de conexión: " + err.message);
+        })
+        .obtenerDatosSocioPublico(email);
+    }
+
+    function guardarDatosPublicos() {
+      const email = document.getElementById("public-update-email").value.trim();
+      const nombres = document.getElementById("public-update-firstname").value.trim();
+      const apellido = document.getElementById("public-update-lastname").value.trim();
+      
+      const datos = {
+        Name: nombres + " " + apellido,
+        Phone: document.getElementById("public-update-phone").value.trim(),
+        DNI: document.getElementById("public-update-dni").value.trim(),
+        BirthDate: document.getElementById("public-update-birthdate").value.trim(),
+        BloodType: document.getElementById("public-update-bloodtype").value,
+        ObraSocial: document.getElementById("public-update-obrasocial").value.trim(),
+        MedicalFit: document.getElementById("public-update-medicalfit").value,
+        EmergencyContact: document.getElementById("public-update-emergencycontact").value.trim(),
+        EmergencyPhone: document.getElementById("public-update-emergencyphone").value.trim()
+      };
+
+      mostrarCarga("Guardando cambios...");
+      google.script.run
+        .withSuccessHandler(function(response) {
+          ocultarCarga();
+          if (response && response.success) {
+            document.getElementById("public-update-form-container").style.display = "none";
+            document.getElementById("public-update-success").style.display = "block";
+          } else {
+            alert(response ? response.message : "Error al guardar cambios.");
+          }
+        })
+        .withFailureHandler(function(err) {
+          ocultarCarga();
+          alert("Error de conexión: " + err.message);
+        })
+        .actualizarDatosSocioPublico(email, datos);
     }
 
     // ───────────── PWA: Registro del Service Worker e Intercepción de Share Target ─────────────
