@@ -1216,6 +1216,236 @@ function actualizarDatosSocioPublico(email, datos) {
 }
 
 /**
+ * Verifica si un DNI ya existe en la hoja de usuarios.
+ */
+function chequearDniSocioNuevo(dni) {
+  try {
+    const ss = getSpreadsheet();
+    const sheetUsers = ss.getSheetByName(HOJA_USUARIOS);
+    if (!sheetUsers) throw new Error("No se encontró la hoja de usuarios.");
+
+    const dniClean = (dni || "").toString().replace(/[^0-9]/g, "").trim();
+    if (!dniClean) {
+      return { success: false, message: "DNI inválido." };
+    }
+
+    const data = sheetUsers.getDataRange().getValues();
+    const headers = data[0];
+    const dniColIndex = headers.indexOf("DNI");
+
+    if (dniColIndex === -1) {
+      throw new Error("Estructura de la hoja de usuarios inválida.");
+    }
+
+    let existe = false;
+    for (let i = 1; i < data.length; i++) {
+      const currentDni = (data[i][dniColIndex] || "").toString().replace(/[^0-9]/g, "").trim();
+      if (currentDni === dniClean) {
+        existe = true;
+        break;
+      }
+    }
+
+    return { success: true, existe: existe };
+  } catch (error) {
+    console.error("Error en chequearDniSocioNuevo:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Obtiene la lista de categorías registradas en el club para uso público.
+ */
+function obtenerCategoriasPublicas() {
+  try {
+    const ss = getSpreadsheet();
+    const sheetCats = ss.getSheetByName(HOJA_CATEGORIAS);
+    if (!sheetCats) throw new Error("No se encontró la hoja de categorías.");
+
+    const data = sheetCats.getDataRange().getValues();
+    const headers = data[0];
+    const idColIdx = headers.indexOf("Category_ID");
+    const nameColIdx = headers.indexOf("Name");
+
+    if (idColIdx === -1 || nameColIdx === -1) {
+      throw new Error("Estructura de la hoja de categorías inválida.");
+    }
+
+    const categorias = [];
+    for (let i = 1; i < data.length; i++) {
+      const id = (data[i][idColIdx] || "").toString().trim();
+      const name = (data[i][nameColIdx] || "").toString().trim();
+      if (id && name) {
+        categorias.push({ id: id, name: name });
+      }
+    }
+
+    return { success: true, categorias: categorias };
+  } catch (error) {
+    console.error("Error en obtenerCategoriasPublicas:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Registra un nuevo socio de forma pública desde el formulario de WhatsApp.
+ * Autogenera usuario único y define la clave '1234' por defecto.
+ */
+function registrarSocioPublico(socioObj) {
+  try {
+    const ss = getSpreadsheet();
+    const sheetUsers = ss.getSheetByName(HOJA_USUARIOS);
+    if (!sheetUsers) throw new Error("No se encontró la hoja de usuarios.");
+
+    const email = (socioObj.Email || "").trim().toLowerCase();
+    const dni = (socioObj.DNI || "").toString().replace(/[^0-9]/g, "").trim();
+
+    if (!email) throw new Error("El correo electrónico es obligatorio.");
+    if (dni.length !== 8 || isNaN(dni)) throw new Error("El DNI debe tener exactamente 8 caracteres numéricos.");
+
+    // Verificar si ya existe email o DNI
+    const data = sheetUsers.getDataRange().getValues();
+    const headers = data[0];
+    const emailColIdx = headers.indexOf("Email");
+    const dniColIdx = headers.indexOf("DNI");
+    const userColIdx = headers.indexOf("Username");
+
+    for (let i = 1; i < data.length; i++) {
+      if (emailColIdx !== -1 && (data[i][emailColIdx] || "").toString().toLowerCase().trim() === email) {
+        throw new Error("Ya existe un socio registrado con el correo " + email);
+      }
+      if (dniColIdx !== -1 && (data[i][dniColIdx] || "").toString().replace(/[^0-9]/g, "").trim() === dni) {
+        throw new Error("Ya existe un socio registrado con el DNI " + dni);
+      }
+    }
+
+    // Sanitizar nombres y apellidos para generar usuario
+    function sanitizar(txt) {
+      return (txt || "").toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // remover acentos
+        .replace(/[^a-z0-9]/g, "");    // alfanumérico únicamente
+    }
+
+    const firstName = socioObj.FirstName || "";
+    const lastName = socioObj.LastName || "";
+
+    const apellidoClean = sanitizar(lastName);
+    const nombresArr = firstName.split(/\s+/).map(n => sanitizar(n)).filter(Boolean);
+
+    if (nombresArr.length === 0 || !apellidoClean) {
+      throw new Error("Nombre o Apellido inválidos.");
+    }
+
+    // Obtener lista de usuarios existentes en mayúsculas
+    const existingUsernames = new Set();
+    for (let i = 1; i < data.length; i++) {
+      if (userColIdx !== -1 && data[i][userColIdx]) {
+        existingUsernames.add(data[i][userColIdx].toString().trim().toUpperCase());
+      }
+    }
+
+    // Algoritmo de 5 combinaciones
+    const combinaciones = [];
+    const p1 = (nombresArr[0][0] || "") + apellidoClean;
+    combinaciones.push(p1.toUpperCase());
+
+    if (nombresArr.length > 1) {
+      const p2 = nombresArr.map(n => n[0] || "").join("") + apellidoClean;
+      combinaciones.push(p2.toUpperCase());
+    }
+
+    if (nombresArr[0].length >= 2) {
+      const p3 = nombresArr[0].substring(0, 2) + apellidoClean;
+      combinaciones.push(p3.toUpperCase());
+    }
+
+    if (nombresArr[0].length >= 3) {
+      const p4 = nombresArr[0].substring(0, 3) + apellidoClean;
+      combinaciones.push(p4.toUpperCase());
+    }
+
+    let candidato = "";
+    for (const comb of combinaciones) {
+      if (!existingUsernames.has(comb)) {
+        candidato = comb;
+        break;
+      }
+    }
+
+    if (!candidato) {
+      let i = 1;
+      const base = ((nombresArr[0][0] || "") + apellidoClean).toUpperCase();
+      while (true) {
+        const combNum = base + i;
+        if (!existingUsernames.has(combNum)) {
+          candidato = combNum;
+          break;
+        }
+        i++;
+      }
+    }
+
+    // Formatear nombre completo para la base (Apellido, Nombres)
+    const formattedName = lastName.trim().split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ") + ", " +
+                          firstName.trim().split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ");
+
+    // Calcular edad
+    let age = "";
+    if (socioObj.BirthDate) {
+      const birth = new Date(socioObj.BirthDate);
+      const today = new Date();
+      age = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+    }
+
+    // Formatear fila con los headers correctos
+    const nowStr = new Date().toISOString().substring(0, 10); // YYYY-MM-DD
+    const newRow = [];
+    headers.forEach(header => {
+      if (header === "Email") newRow.push(email);
+      else if (header === "Role") newRow.push("Deportista");
+      else if (header === "Name") newRow.push(formattedName);
+      else if (header === "Phone") newRow.push((socioObj.Phone || "").trim());
+      else if (header === "Category") newRow.push(socioObj.Category || "");
+      else if (header === "DNI") newRow.push(dni);
+      else if (header === "BirthDate") newRow.push(socioObj.BirthDate || "");
+      else if (header === "Age") newRow.push(age.toString());
+      else if (header === "JoinDate") newRow.push(nowStr);
+      else if (header === "BloodType") newRow.push(socioObj.BloodType || "O+");
+      else if (header === "MedicalFit") newRow.push(socioObj.MedicalFit || "Apto Físico Vigente");
+      else if (header === "ObraSocial") newRow.push(socioObj.ObraSocial || "Particular");
+      else if (header === "EmergencyContact") newRow.push(socioObj.EmergencyContact || "");
+      else if (header === "EmergencyPhone") newRow.push(socioObj.EmergencyPhone || "");
+      else if (header === "Username") newRow.push(candidato);
+      else if (header === "Password") newRow.push("1234");
+      else newRow.push("");
+    });
+
+    sheetUsers.appendRow(newRow);
+
+    // Escribir en Logs_Audit
+    try {
+      const sheetLogs = ss.getSheetByName("Logs_Audit");
+      if (sheetLogs) {
+        const timeStr = new Date().toISOString().replace("T", " ").substring(0, 19);
+        sheetLogs.appendRow([timeStr, email, "REGISTER_PUBLIC_SOCIO", "Se registró como nuevo socio de forma pública. Usuario autogenerado: " + candidato]);
+      }
+    } catch (e) {
+      console.warn("No se pudo escribir en Logs_Audit:", e);
+    }
+
+    return { success: true, username: candidato, password: "1234" };
+  } catch (error) {
+    console.error("Error en registrarSocioPublico:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
  * Actualiza la clave de acceso numérica de un usuario.
  */
 function actualizarClaveUsuario(email, nuevaClave) {
