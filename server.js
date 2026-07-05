@@ -388,9 +388,8 @@ app.post('/api/login', (req, res) => {
   if (!username) return res.status(400).json({ success: false, message: 'Falta usuario.' });
 
   try {
-    // 1. Obtener los usuarios. Evitamos consultar las columnas username/password directamente
-    // por si el usuario aún no ejecutó el SQL Editor en Supabase.
-    let query = '?select=id,email,role,name,photo';
+    // 1. Obtener los usuarios con todos los campos incluyendo username y password
+    let query = '?select=id,email,role,name,photo,username,password';
     let rows = syncSupabase('usuarios', 'GET', null, query);
     
     if (!Array.isArray(rows)) {
@@ -398,23 +397,25 @@ app.post('/api/login', (req, res) => {
       return res.status(500).json({ success: false, message: 'Error consultando base de datos.' });
     }
 
-    // 2. Buscar al usuario en memoria (por email o por prefijo del email)
+    // 2. Buscar al usuario por Username, Email completo, o prefijo del Email
     const target = username.toLowerCase().trim();
     const user = rows.find(u => {
-      if (!u.email) return false;
-      const emailLower = u.email.toLowerCase();
-      const prefix = emailLower.split('@')[0];
-      return emailLower === target || prefix === target;
+      const dbUser = (u.username || '').toLowerCase().trim();
+      const dbEmail = (u.email || '').toLowerCase().trim();
+      const prefix = dbEmail.split('@')[0];
+      return dbUser === target || dbEmail === target || prefix === target;
     });
 
     if (!user) {
       return res.json({ success: false, message: 'Usuario no encontrado en el sistema.' });
     }
 
-    // 3. Como no podemos asegurar que la columna password exista, usamos "1234" por defecto
-    // (que es lo que se iba a configurar en el SQL)
-    if (password && password !== '1234') {
-      return res.json({ success: false, message: 'Clave incorrecta.' });
+    // 3. Verificar contraseña contra u.password (default "1234")
+    if (password !== null && password !== undefined) {
+      const expectedPassword = (user.password || '1234').toString().trim();
+      if (password.toString().trim() !== expectedPassword) {
+        return res.json({ success: false, message: 'Clave incorrecta.' });
+      }
     }
 
     return res.json({
@@ -422,7 +423,7 @@ app.post('/api/login', (req, res) => {
       email: user.email,
       role: user.role || 'Deportista',
       name: user.name || '',
-      username: user.email.split('@')[0],
+      username: user.username || user.email.split('@')[0],
       photo: user.photo || ''
     });
   } catch (err) {
