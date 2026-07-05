@@ -1459,11 +1459,27 @@
         </div>
 
         <div id="public-update-form-container">
-          <p style="color: #475569; font-size: 13.5px; line-height: 1.5; margin-bottom: 20px; text-align: center;">
-            Por favor, revisá y completá tus datos de contacto y salud para mantener el padrón del club actualizado.
-          </p>
+          <!-- Paso 1: Ingreso de DNI o Teléfono para buscar los datos (Solo se muestra si no vino param en URL) -->
+          <div id="public-update-search-step" style="display:none; text-align: center;">
+            <p style="color: #475569; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+              Ingresá tu DNI o número de Teléfono celular para buscar tus datos y actualizarlos.
+            </p>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label class="form-label" for="public-update-search-input">DNI o Teléfono Celular</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-magnifying-glass input-icon"></i>
+                <input type="text" id="public-update-search-input" class="form-input" placeholder="Ej: 35123456 o 1161234567" onkeydown="if(event.key === 'Enter') buscarDatosSocioPublicoManual()">
+              </div>
+            </div>
 
-          <form id="form-public-update" onsubmit="event.preventDefault(); guardarDatosPublicos();">
+            <button type="button" class="btn btn-primary" onclick="buscarDatosSocioPublicoManual()" style="width: 100%; height: 44px; font-size: 15px; font-weight: 600; border-radius: 8px;">
+              Buscar Mis Datos
+            </button>
+          </div>
+
+          <!-- Paso 2: Formulario real de campos (se muestra al encontrar al socio) -->
+          <form id="form-public-update" onsubmit="event.preventDefault(); guardarDatosPublicos();" style="display:none;">
             <input type="hidden" id="public-update-email">
 
             <!-- Nombre -->
@@ -3225,9 +3241,18 @@
         return;
       }
 
-      if (action === 'update-info' && emailParam) {
+      if (action === 'update-info') {
+        const phoneParam = urlParams.get('phone');
+        const dniParam = urlParams.get('dni');
+        const userParam = urlParams.get('user');
+        const identifier = phoneParam || dniParam || emailParam || userParam;
+        
         ocultarCarga();
-        inicializarFormularioPublico(emailParam);
+        if (identifier) {
+          inicializarFormularioPublico(identifier);
+        } else {
+          mostrarActualizacionPublicaPaso1();
+        }
         return;
       }
 
@@ -7411,8 +7436,25 @@
     }
 
     // FORMULARIO PÚBLICO DE ACTUALIZACIÓN DE DATOS (WHATSAPP)
-    function inicializarFormularioPublico(email) {
-      document.getElementById("public-update-email").value = email;
+    function mostrarActualizacionPublicaPaso1() {
+      document.getElementById("public-update-success").style.display = "none";
+      document.getElementById("public-update-search-step").style.display = "block";
+      document.getElementById("form-public-update").style.display = "none";
+      document.getElementById("public-update-search-input").value = "";
+      document.getElementById("public-update-form-container").style.display = "block";
+      mostrarPantalla("public-update-view");
+    }
+
+    function buscarDatosSocioPublicoManual() {
+      const val = document.getElementById("public-update-search-input").value.trim();
+      if (!val) {
+        alert("Por favor, ingresá tu DNI o número de Teléfono celular.");
+        return;
+      }
+      inicializarFormularioPublico(val);
+    }
+
+    function inicializarFormularioPublico(identifier) {
       document.getElementById("public-update-success").style.display = "none";
       document.getElementById("public-update-form-container").style.display = "block";
       mostrarPantalla("public-update-view");
@@ -7423,6 +7465,13 @@
           ocultarCarga();
           if (response && response.success && response.datos) {
             const d = response.datos;
+            
+            // Ocultar paso de búsqueda y mostrar formulario de edición
+            document.getElementById("public-update-search-step").style.display = "none";
+            document.getElementById("form-public-update").style.display = "block";
+
+            // Guardar el email (identificador único primario) en el input hidden
+            document.getElementById("public-update-email").value = d.Email || "";
             
             // Dividir Name en Nombres y Apellido
             let nombres = "";
