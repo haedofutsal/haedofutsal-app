@@ -1064,6 +1064,141 @@ function registrarPagoTransferenciaComprobante(paymentId, email, amount, month, 
 }
 
 /**
+ * Obtiene los datos personales de un socio por su correo para el formulario público de WhatsApp.
+ */
+function obtenerDatosSocioPublico(email) {
+  try {
+    const ss = getSpreadsheet();
+    const sheetUsers = ss.getSheetByName(HOJA_USUARIOS);
+    if (!sheetUsers) throw new Error("No se encontró la hoja de usuarios.");
+
+    const usersData = sheetUsers.getDataRange().getValues();
+    const userHeaders = usersData[0];
+    const emailColIndex = userHeaders.indexOf("Email");
+    
+    if (emailColIndex === -1) {
+      throw new Error("Estructura de la hoja de usuarios inválida.");
+    }
+
+    const getVal = (row, idx) => (row && idx !== -1 && idx < row.length && row[idx] !== undefined && row[idx] !== null) ? row[idx].toString().trim() : "";
+
+    let perfil = null;
+    for (let i = 1; i < usersData.length; i++) {
+      const row = usersData[i];
+      if (getVal(row, emailColIndex).toLowerCase() === email.toLowerCase().trim()) {
+        perfil = {};
+        userHeaders.forEach((header, index) => {
+          perfil[header] = getVal(row, index);
+        });
+        break;
+      }
+    }
+
+    if (!perfil) {
+      throw new Error("No se encontró ningún socio registrado con el correo especificado.");
+    }
+
+    return {
+      success: true,
+      datos: {
+        Email: perfil.Email || "",
+        Name: perfil.Name || "",
+        Phone: perfil.Phone || "",
+        DNI: perfil.DNI || "",
+        BirthDate: perfil.BirthDate || "",
+        BloodType: perfil.BloodType || "",
+        ObraSocial: perfil.ObraSocial || "",
+        MedicalFit: perfil.MedicalFit || "",
+        EmergencyContact: perfil.EmergencyContact || "",
+        EmergencyPhone: perfil.EmergencyPhone || ""
+      }
+    };
+  } catch (error) {
+    console.error("Error en obtenerDatosSocioPublico:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Actualiza los datos de un socio desde el formulario público de WhatsApp.
+ */
+function actualizarDatosSocioPublico(email, datos) {
+  try {
+    const ss = getSpreadsheet();
+    const sheetUsers = ss.getSheetByName(HOJA_USUARIOS);
+    if (!sheetUsers) throw new Error("No se encontró la hoja de usuarios.");
+
+    const emailClean = (email || "").trim().toLowerCase();
+    const usersData = sheetUsers.getDataRange().getValues();
+    const userHeaders = usersData[0];
+    const emailColIndex = userHeaders.indexOf("Email");
+
+    if (emailColIndex === -1) {
+      throw new Error("Estructura de la hoja de usuarios inválida.");
+    }
+
+    let foundRowIdx = -1;
+    for (let i = 1; i < usersData.length; i++) {
+      const row = usersData[i];
+      if ((row[emailColIndex] || "").toString().toLowerCase().trim() === emailClean) {
+        foundRowIdx = i + 1; // +1 for headers
+        break;
+      }
+    }
+
+    if (foundRowIdx === -1) {
+      throw new Error("No se encontró ningún socio registrado con el correo especificado.");
+    }
+
+    // Capitalizar nombre y apellido si vienen presentes
+    let formattedName = datos.Name || "";
+    if (formattedName) {
+      formattedName = formattedName.trim().split(/\s+/).map(w => {
+        if (!w) return "";
+        return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+      }).join(" ");
+    }
+
+    // Actualizar columnas una por una
+    const updates = {
+      "Name": formattedName,
+      "Phone": (datos.Phone || "").trim(),
+      "DNI": (datos.DNI || "").trim(),
+      "BirthDate": (datos.BirthDate || "").trim(),
+      "BloodType": (datos.BloodType || "").trim(),
+      "ObraSocial": (datos.ObraSocial || "").trim(),
+      "MedicalFit": (datos.MedicalFit || "").trim(),
+      "EmergencyContact": (datos.EmergencyContact || "").trim(),
+      "EmergencyPhone": (datos.EmergencyPhone || "").trim()
+    };
+
+    // Aplicar las ediciones en el rango correspondiente
+    Object.keys(updates).forEach(header => {
+      const colIdx = userHeaders.indexOf(header);
+      if (colIdx !== -1) {
+        sheetUsers.getRange(foundRowIdx, colIdx + 1).setValue(updates[header]);
+      }
+    });
+
+    // Guardar un log de auditoría
+    try {
+      const sheetLogs = ss.getSheetByName("Logs_Audit");
+      if (sheetLogs) {
+        const nowStr = new Date().toISOString().replace("T", " ").substring(0, 19);
+        sheetLogs.appendRow([nowStr, emailClean, "UPDATE_PUBLIC_PROFILE", "Actualizó sus datos personales de forma pública vía WhatsApp."]);
+      }
+    } catch (e) {
+      console.warn("No se pudo escribir en Logs_Audit:", e);
+    }
+
+    return { success: true, message: "Datos actualizados con éxito." };
+  } catch (error) {
+    console.error("Error en actualizarDatosSocioPublico:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
  * Actualiza la clave de acceso numérica de un usuario.
  */
 function actualizarClaveUsuario(email, nuevaClave) {
