@@ -22,39 +22,151 @@
     ],
     "rows": [
       [
-        "Fut-May+35",
-        "Futsal Mayores +35",
+        "EDEFI-May30",
+        "EDEFI - Futsal Mayores +30",
         "Bocha",
         15000,
         "EDEFI"
       ],
       [
-        "Fut-May+42",
-        "Futsal Mayores +42",
+        "EDEFI-May35",
+        "EDEFI - Futsal Mayores +35",
         "Bocha",
         15000,
         "EDEFI"
       ],
       [
-        "Fut-Fem-1ra",
-        "Futsal Femenino 1ra",
+        "EDEFI-May42",
+        "EDEFI - Futsal Mayores +42",
+        "Bocha",
+        15000,
+        "EDEFI"
+      ],
+      [
+        "EDEFI-Baby",
+        "EDEFI - Baby",
+        "Marcelo",
+        30000,
+        "EDEFI"
+      ],
+      [
+        "BAFI-Masc5ta",
+        "BAFI - Masculino 5ta",
+        "Bocha",
+        30000,
+        "BAFI"
+      ],
+      [
+        "BAFI-Masc4ta",
+        "BAFI - Masculino 4ta",
+        "Bocha",
+        30000,
+        "BAFI"
+      ],
+      [
+        "BAFI-Masc3ra",
+        "BAFI - Masculino 3ra",
+        "Bocha",
+        30000,
+        "BAFI"
+      ],
+      [
+        "BAFI-MascRes",
+        "BAFI - Masculino Reserva",
+        "Bocha",
+        30000,
+        "BAFI"
+      ],
+      [
+        "BAFI-Masc1ra",
+        "BAFI - Masculino 1ra",
+        "Bocha",
+        30000,
+        "BAFI"
+      ],
+      [
+        "BAFI-FemRes",
+        "BAFI - Femenino Reserva",
         "Pol",
         20000,
-        "FutFEM"
+        "BAFI"
       ],
       [
-        "Fut-Juv-5ta",
-        "Futsal Juveniles 5ta",
+        "BAFI-Fem1ra",
+        "BAFI - Femenino 1ra",
+        "Pol",
+        20000,
+        "BAFI"
+      ],
+      [
+        "FUTSALA-Prom2016",
+        "FUTSALA - Promocionales 2016",
+        "Marcelo",
+        30000,
+        "FUTSALA"
+      ],
+      [
+        "FUTSALA-Prom2017",
+        "FUTSALA - Promocionales 2017",
+        "Marcelo",
+        30000,
+        "FUTSALA"
+      ],
+      [
+        "FUTSALA-Prom2018",
+        "FUTSALA - Promocionales 2018",
+        "Marcelo",
+        30000,
+        "FUTSALA"
+      ],
+      [
+        "FUTSALA-Masc8va",
+        "FUTSALA - Masculino 8va",
         "Bocha",
         30000,
         "FUTSALA"
       ],
       [
-        "Bab-2015",
-        "Baby Futbol - 2015",
-        "Marcelo",
+        "FUTSALA-Masc7ma",
+        "FUTSALA - Masculino 7ma",
+        "Bocha",
         30000,
-        "Baby EDEFI"
+        "FUTSALA"
+      ],
+      [
+        "FUTSALA-Masc6ta",
+        "FUTSALA - Masculino 6ta",
+        "Bocha",
+        30000,
+        "FUTSALA"
+      ],
+      [
+        "FUTSALA-Masc5ta",
+        "FUTSALA - Masculino 5ta",
+        "Bocha",
+        30000,
+        "FUTSALA"
+      ],
+      [
+        "FUTSALA-Masc4ta",
+        "FUTSALA - Masculino 4ta",
+        "Bocha",
+        30000,
+        "FUTSALA"
+      ],
+      [
+        "FUTSALA-Masc3ra",
+        "FUTSALA - Masculino 3ra",
+        "Bocha",
+        30000,
+        "FUTSALA"
+      ],
+      [
+        "FUTSALA-Masc1ra",
+        "FUTSALA - Masculino 1ra",
+        "Bocha",
+        30000,
+        "FUTSALA"
       ]
     ]
   },
@@ -127,7 +239,7 @@
         "Deportista",
         "Juan Perez",
         "1199887766",
-        "Fut-May+35|Fut-May+42",
+        "EDEFI-May30",
         "37.102.202",
         "1988-03-15",
         "38",
@@ -149,7 +261,7 @@
         "Deportista",
         "Sofia Messi",
         "1120005432",
-        "Fut-May+35",
+        "EDEFI-May30",
         "38.103.203",
         "1988-04-15",
         "38",
@@ -171,7 +283,7 @@
         "Deportista",
         "Javier Lopez",
         "1120010864",
-        "Fut-May+42",
+        "EDEFI-May42",
         "39.104.204",
         "1980-05-15",
         "46",
@@ -193,7 +305,7 @@
         "Deportista",
         "Lautaro Aguero",
         "1120016296",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "40.105.205",
         "2000-06-15",
         "26",
@@ -215,7 +327,7 @@
         "Deportista",
         "Yamila Correa",
         "1120021728",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "41.106.206",
         "2008-07-15",
         "18",
@@ -237,7 +349,7 @@
         "Deportista",
         "Alexis Lopez",
         "1120027160",
-        "Bab-2015",
+        "EDEFI-Baby",
         "42.107.207",
         "2015-08-15",
         "11",
@@ -259,7 +371,7 @@
         "Deportista",
         "Vanina Rodriguez",
         "1120032592",
-        "Fut-May+35",
+        "EDEFI-May35",
         "43.108.208",
         "1988-09-15",
         "38",
@@ -281,7 +393,7 @@
         "Deportista",
         "Valentina Torres",
         "1120038024",
-        "Fut-May+42",
+        "EDEFI-May35",
         "44.109.209",
         "1980-01-15",
         "46",
@@ -303,7 +415,7 @@
         "Deportista",
         "Joaquin Mac Allister",
         "1120043456",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "45.110.210",
         "2000-02-15",
         "26",
@@ -325,7 +437,7 @@
         "Deportista",
         "Roman Francescoli",
         "1120048888",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "46.111.211",
         "2008-03-15",
         "18",
@@ -347,7 +459,7 @@
         "Deportista",
         "Tomas Palermo",
         "1120054320",
-        "Bab-2015",
+        "FUTSALA-Prom2016",
         "47.112.212",
         "2015-04-15",
         "11",
@@ -369,7 +481,7 @@
         "Deportista",
         "Javier Messi",
         "1120059752",
-        "Fut-May+35",
+        "EDEFI-May30",
         "48.113.213",
         "1988-05-15",
         "38",
@@ -391,7 +503,7 @@
         "Deportista",
         "Valentina Gonzalez",
         "1120065184",
-        "Fut-May+35|Fut-Fem-1ra",
+        "EDEFI-May30",
         "49.114.214",
         "1980-06-15",
         "46",
@@ -413,7 +525,7 @@
         "Deportista",
         "Lionel Perez",
         "1120070616",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "35.115.215",
         "2000-07-15",
         "26",
@@ -435,7 +547,7 @@
         "Deportista",
         "Alexis Ronaldo",
         "1120076048",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "36.116.216",
         "2008-08-15",
         "18",
@@ -457,7 +569,7 @@
         "Deportista",
         "Carlos Rodriguez",
         "1120081480",
-        "Bab-2015",
+        "FUTSALA-Prom2017",
         "37.117.217",
         "2015-09-15",
         "11",
@@ -479,7 +591,7 @@
         "Deportista",
         "Mateo Rodriguez",
         "1120086912",
-        "Fut-May+35",
+        "EDEFI-May35",
         "38.118.218",
         "1988-01-15",
         "38",
@@ -501,7 +613,7 @@
         "Deportista",
         "Enzo Martinez",
         "1120092344",
-        "Fut-May+42",
+        "EDEFI-May42",
         "39.119.219",
         "1980-02-15",
         "46",
@@ -523,7 +635,7 @@
         "Deportista",
         "Vanina Zanetti",
         "1120097776",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "40.120.220",
         "2000-03-15",
         "26",
@@ -545,7 +657,7 @@
         "Deportista",
         "Mateo Lopez",
         "1120103208",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "41.121.221",
         "2008-04-15",
         "18",
@@ -567,7 +679,7 @@
         "Deportista",
         "Geronimo Gomez",
         "1120108640",
-        "Bab-2015",
+        "EDEFI-Baby",
         "42.122.222",
         "2015-05-15",
         "11",
@@ -589,7 +701,7 @@
         "Deportista",
         "Benjamin Gonzalez",
         "1120114072",
-        "Fut-May+35",
+        "EDEFI-May30",
         "43.123.223",
         "1988-06-15",
         "38",
@@ -611,7 +723,7 @@
         "Deportista",
         "Yamila Ronaldo",
         "1120119504",
-        "Fut-May+42",
+        "EDEFI-May35",
         "44.124.224",
         "1980-07-15",
         "46",
@@ -633,7 +745,7 @@
         "Deportista",
         "Julian Ronaldo",
         "1120124936",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "45.125.225",
         "2000-08-15",
         "26",
@@ -655,7 +767,7 @@
         "Deportista",
         "Geronimo Sosa",
         "1120130368",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "46.126.226",
         "2008-09-15",
         "18",
@@ -677,7 +789,7 @@
         "Deportista",
         "Tomas Gonzalez",
         "1120135800",
-        "Bab-2015",
+        "FUTSALA-Prom2016",
         "47.127.227",
         "2015-01-15",
         "11",
@@ -699,7 +811,7 @@
         "Deportista",
         "Geronimo Bonsegundo",
         "1120141232",
-        "Fut-May+35",
+        "EDEFI-May35",
         "48.128.228",
         "1988-02-15",
         "38",
@@ -721,7 +833,7 @@
         "Deportista",
         "Tomas Bonsegundo",
         "1120146664",
-        "Fut-May+42",
+        "EDEFI-May42",
         "49.129.229",
         "1980-03-15",
         "46",
@@ -743,7 +855,7 @@
         "Deportista",
         "Franco Zanetti",
         "1120152096",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "35.130.230",
         "2000-04-15",
         "26",
@@ -765,7 +877,7 @@
         "Deportista",
         "Benjamin Francescoli",
         "1120157528",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "36.131.231",
         "2008-05-15",
         "18",
@@ -787,7 +899,7 @@
         "Deportista",
         "Javier Perez",
         "1120162960",
-        "Bab-2015",
+        "FUTSALA-Prom2017",
         "37.132.232",
         "2015-06-15",
         "11",
@@ -809,7 +921,7 @@
         "Deportista",
         "Agustina Banini",
         "1120168392",
-        "Fut-May+35",
+        "EDEFI-May30",
         "38.133.233",
         "1988-07-15",
         "38",
@@ -831,7 +943,7 @@
         "Deportista",
         "Camila Alvarez",
         "1120173824",
-        "Fut-May+42",
+        "EDEFI-May35",
         "39.134.234",
         "1980-08-15",
         "46",
@@ -853,7 +965,7 @@
         "Deportista",
         "Mateo Banini",
         "1120179256",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "40.135.235",
         "2000-09-15",
         "26",
@@ -875,7 +987,7 @@
         "Deportista",
         "Javier Francescoli",
         "1120184688",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "41.136.236",
         "2008-01-15",
         "18",
@@ -897,7 +1009,7 @@
         "Deportista",
         "Lucia Garnacho",
         "1120190120",
-        "Bab-2015",
+        "EDEFI-Baby",
         "42.137.237",
         "2015-02-15",
         "11",
@@ -919,7 +1031,7 @@
         "Deportista",
         "Florencia Francescoli",
         "1120195552",
-        "Fut-May+35",
+        "EDEFI-May35",
         "43.138.238",
         "1988-03-15",
         "38",
@@ -941,7 +1053,7 @@
         "Deportista",
         "Roman Mac Allister",
         "1120200984",
-        "Fut-May+42",
+        "EDEFI-May42",
         "44.139.239",
         "1980-04-15",
         "46",
@@ -963,7 +1075,7 @@
         "Deportista",
         "Camila Ruiz",
         "1120206416",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "45.140.240",
         "2000-05-15",
         "26",
@@ -985,7 +1097,7 @@
         "Deportista",
         "Bautista Perez",
         "1120211848",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "46.141.241",
         "2008-06-15",
         "18",
@@ -1007,7 +1119,7 @@
         "Deportista",
         "Lucia Alonso",
         "1120217280",
-        "Bab-2015",
+        "FUTSALA-Prom2016",
         "47.142.242",
         "2015-07-15",
         "11",
@@ -1029,7 +1141,7 @@
         "Deportista",
         "Benjamin Gomez",
         "1120222712",
-        "Fut-May+35",
+        "EDEFI-May30",
         "48.143.243",
         "1988-08-15",
         "38",
@@ -1051,7 +1163,7 @@
         "Deportista",
         "Agustina Ortega",
         "1120228144",
-        "Fut-May+42",
+        "EDEFI-May35",
         "49.144.244",
         "1980-09-15",
         "46",
@@ -1073,7 +1185,7 @@
         "Deportista",
         "Sofia Diaz",
         "1120233576",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "35.145.245",
         "2000-01-15",
         "26",
@@ -1095,7 +1207,7 @@
         "Deportista",
         "Javier Maradona",
         "1120239008",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "36.146.246",
         "2008-02-15",
         "18",
@@ -1117,7 +1229,7 @@
         "Deportista",
         "Milagros Aguero",
         "1120244440",
-        "Bab-2015",
+        "FUTSALA-Prom2017",
         "37.147.247",
         "2015-03-15",
         "11",
@@ -1139,7 +1251,7 @@
         "Deportista",
         "Enzo Gomez",
         "1120249872",
-        "Fut-May+35",
+        "EDEFI-May35",
         "38.148.248",
         "1988-04-15",
         "38",
@@ -1161,7 +1273,7 @@
         "Deportista",
         "Yamila Romero",
         "1120255304",
-        "Fut-May+42",
+        "EDEFI-May42",
         "39.149.249",
         "1980-05-15",
         "46",
@@ -1183,7 +1295,7 @@
         "Deportista",
         "Joaquin Lopez",
         "1120260736",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "40.150.250",
         "2000-06-15",
         "26",
@@ -1205,7 +1317,7 @@
         "Deportista",
         "Florencia Perez",
         "1120266168",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "41.151.251",
         "2008-07-15",
         "18",
@@ -1227,7 +1339,7 @@
         "Deportista",
         "Geronimo Bianchi",
         "1120271600",
-        "Fut-Juv-5ta|Bab-2015",
+        "EDEFI-Baby",
         "42.152.252",
         "2015-08-15",
         "11",
@@ -1249,7 +1361,7 @@
         "Deportista",
         "Bautista Diaz",
         "1120277032",
-        "Fut-May+35",
+        "EDEFI-May30",
         "43.153.253",
         "1988-09-15",
         "38",
@@ -1271,7 +1383,7 @@
         "Deportista",
         "Joaquin Riquelme",
         "1120282464",
-        "Fut-May+42",
+        "EDEFI-May35",
         "44.154.254",
         "1980-01-15",
         "46",
@@ -1293,7 +1405,7 @@
         "Deportista",
         "Lucia Gomez",
         "1120287896",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "45.155.255",
         "2000-02-15",
         "26",
@@ -1315,7 +1427,7 @@
         "Deportista",
         "Javier Lopez",
         "1120293328",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "46.156.256",
         "2008-03-15",
         "18",
@@ -1337,7 +1449,7 @@
         "Deportista",
         "Agustina Rodriguez",
         "1120298760",
-        "Bab-2015",
+        "EDEFI-Baby",
         "47.157.257",
         "2015-04-15",
         "11",
@@ -1359,7 +1471,7 @@
         "Deportista",
         "Milagros Zanetti",
         "1120304192",
-        "Fut-May+35",
+        "EDEFI-May35",
         "48.158.258",
         "1988-05-15",
         "38",
@@ -1381,7 +1493,7 @@
         "Deportista",
         "Sofia Fernandez",
         "1120309624",
-        "Fut-May+42",
+        "EDEFI-May42",
         "49.159.259",
         "1980-06-15",
         "46",
@@ -1403,7 +1515,7 @@
         "Deportista",
         "Vanina Martinez",
         "1120315056",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "35.160.260",
         "2000-07-15",
         "26",
@@ -1425,7 +1537,7 @@
         "Deportista",
         "Agustina Aguero",
         "1120320488",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "36.161.261",
         "2008-08-15",
         "18",
@@ -1447,7 +1559,7 @@
         "Deportista",
         "Lionel Sosa",
         "1120325920",
-        "Bab-2015",
+        "FUTSALA-Prom2016",
         "37.162.262",
         "2015-09-15",
         "11",
@@ -1469,7 +1581,7 @@
         "Deportista",
         "Martin Fernandez",
         "1120331352",
-        "Fut-May+35",
+        "EDEFI-May30",
         "38.163.263",
         "1988-01-15",
         "38",
@@ -1491,7 +1603,7 @@
         "Deportista",
         "Estefania Bonsegundo",
         "1120336784",
-        "Fut-May+42",
+        "EDEFI-May35",
         "39.164.264",
         "1980-02-15",
         "46",
@@ -1513,7 +1625,7 @@
         "Deportista",
         "Enzo Torres",
         "1120342216",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "40.165.265",
         "2000-03-15",
         "26",
@@ -1535,7 +1647,7 @@
         "Deportista",
         "Joaquin Palermo",
         "1120347648",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "41.166.266",
         "2008-04-15",
         "18",
@@ -1557,7 +1669,7 @@
         "Deportista",
         "Agustina Ruiz",
         "1120353080",
-        "Bab-2015",
+        "FUTSALA-Prom2017",
         "42.167.267",
         "2015-05-15",
         "11",
@@ -1579,7 +1691,7 @@
         "Deportista",
         "Vanina Romero",
         "1120358512",
-        "Fut-May+35",
+        "EDEFI-May35",
         "43.168.268",
         "1988-06-15",
         "38",
@@ -1601,7 +1713,7 @@
         "Deportista",
         "Tomas Ortega",
         "1120363944",
-        "Fut-May+42",
+        "EDEFI-May42",
         "44.169.269",
         "1980-07-15",
         "46",
@@ -1623,7 +1735,7 @@
         "Deportista",
         "Bautista Rodriguez",
         "1120369376",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "45.170.270",
         "2000-08-15",
         "26",
@@ -1645,7 +1757,7 @@
         "Deportista",
         "Bautista Martinez",
         "1120374808",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "46.171.271",
         "2008-09-15",
         "18",
@@ -1667,7 +1779,7 @@
         "Deportista",
         "Franco Ortega",
         "1120380240",
-        "Bab-2015",
+        "EDEFI-Baby",
         "47.172.272",
         "2015-01-15",
         "11",
@@ -1689,7 +1801,7 @@
         "Deportista",
         "Milagros Diaz",
         "1120385672",
-        "Fut-May+35",
+        "EDEFI-May30",
         "48.173.273",
         "1988-02-15",
         "38",
@@ -1711,7 +1823,7 @@
         "Deportista",
         "Nicolas Mac Allister",
         "1120391104",
-        "Fut-May+42",
+        "EDEFI-May35",
         "49.174.274",
         "1980-03-15",
         "46",
@@ -1733,7 +1845,7 @@
         "Deportista",
         "Ariel Garnacho",
         "1120396536",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "35.175.275",
         "2000-04-15",
         "26",
@@ -1755,7 +1867,7 @@
         "Deportista",
         "Lautaro Palermo",
         "1120401968",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "36.176.276",
         "2008-05-15",
         "18",
@@ -1777,7 +1889,7 @@
         "Deportista",
         "Nicolas Torres",
         "1120407400",
-        "Bab-2015",
+        "FUTSALA-Prom2016",
         "37.177.277",
         "2015-06-15",
         "11",
@@ -1799,7 +1911,7 @@
         "Deportista",
         "Julian Francescoli",
         "1120412832",
-        "Fut-May+35",
+        "EDEFI-May35",
         "38.178.278",
         "1988-07-15",
         "38",
@@ -1821,7 +1933,7 @@
         "Deportista",
         "Lionel Gomez",
         "1120418264",
-        "Fut-May+42",
+        "EDEFI-May42",
         "39.179.279",
         "1980-08-15",
         "46",
@@ -1843,7 +1955,7 @@
         "Deportista",
         "Lautaro Fernandez",
         "1120423696",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "40.180.280",
         "2000-09-15",
         "26",
@@ -1865,7 +1977,7 @@
         "Deportista",
         "Geronimo Banini",
         "1120429128",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "41.181.281",
         "2008-01-15",
         "18",
@@ -1887,7 +1999,7 @@
         "Deportista",
         "Florencia Fernandez",
         "1120434560",
-        "Bab-2015",
+        "FUTSALA-Prom2017",
         "42.182.282",
         "2015-02-15",
         "11",
@@ -1909,7 +2021,7 @@
         "Deportista",
         "Enzo Bonsegundo",
         "1120439992",
-        "Fut-May+35",
+        "EDEFI-May30",
         "43.183.283",
         "1988-03-15",
         "38",
@@ -1931,7 +2043,7 @@
         "Deportista",
         "Ariel Rodriguez",
         "1120445424",
-        "Fut-May+42",
+        "EDEFI-May35",
         "44.184.284",
         "1980-04-15",
         "46",
@@ -1953,7 +2065,7 @@
         "Deportista",
         "Florencia Bonsegundo",
         "1120450856",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "45.185.285",
         "2000-05-15",
         "26",
@@ -1975,7 +2087,7 @@
         "Deportista",
         "Lautaro Alvarez",
         "1120456288",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "46.186.286",
         "2008-06-15",
         "18",
@@ -1997,7 +2109,7 @@
         "Deportista",
         "Thiago Gonzalez",
         "1120461720",
-        "Bab-2015",
+        "EDEFI-Baby",
         "47.187.287",
         "2015-07-15",
         "11",
@@ -2019,7 +2131,7 @@
         "Deportista",
         "Julian Alonso",
         "1120467152",
-        "Fut-May+42|Fut-Juv-5ta",
+        "EDEFI-May42",
         "48.188.288",
         "1988-08-15",
         "38",
@@ -2041,7 +2153,7 @@
         "Deportista",
         "Mateo Garnacho",
         "1120472584",
-        "Fut-May+42",
+        "EDEFI-May42",
         "49.189.289",
         "1980-09-15",
         "46",
@@ -2063,7 +2175,7 @@
         "Deportista",
         "Agustina Bonsegundo",
         "1120478016",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "35.190.290",
         "2000-01-15",
         "26",
@@ -2085,7 +2197,7 @@
         "Deportista",
         "Benjamin Rodriguez",
         "1120483448",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "36.191.291",
         "2008-02-15",
         "18",
@@ -2107,7 +2219,7 @@
         "Deportista",
         "Vanina Alvarez",
         "1120488880",
-        "Bab-2015",
+        "FUTSALA-Prom2016",
         "37.192.292",
         "2015-03-15",
         "11",
@@ -2129,7 +2241,7 @@
         "Deportista",
         "Lucia Riquelme",
         "1120494312",
-        "Fut-May+35",
+        "EDEFI-May35",
         "38.193.293",
         "1988-04-15",
         "38",
@@ -2151,7 +2263,7 @@
         "Deportista",
         "Diego Aguero",
         "1120499744",
-        "Fut-May+42",
+        "EDEFI-May35",
         "39.194.294",
         "1980-05-15",
         "46",
@@ -2173,7 +2285,7 @@
         "Deportista",
         "Franco Romero",
         "1120505176",
-        "Fut-Fem-1ra",
+        "BAFI-FemRes",
         "40.195.295",
         "2000-06-15",
         "26",
@@ -2195,7 +2307,7 @@
         "Deportista",
         "Bautista Francescoli",
         "1120510608",
-        "Fut-Juv-5ta",
+        "BAFI-Masc5ta",
         "41.196.296",
         "2008-07-15",
         "18",
@@ -2217,7 +2329,7 @@
         "Deportista",
         "Mateo Zanetti",
         "1120516040",
-        "Bab-2015",
+        "FUTSALA-Prom2017",
         "42.197.297",
         "2015-08-15",
         "11",
@@ -2239,7 +2351,7 @@
         "Deportista",
         "Sofia Ruiz",
         "1120521472",
-        "Fut-May+35",
+        "EDEFI-May30",
         "43.198.298",
         "1988-09-15",
         "38",
@@ -2261,7 +2373,7 @@
         "Deportista",
         "Ariel Lopez",
         "1120526904",
-        "Fut-May+42",
+        "EDEFI-May42",
         "44.199.299",
         "1980-01-15",
         "46",
@@ -2283,7 +2395,7 @@
         "Deportista",
         "Camila Francescoli",
         "1120532336",
-        "Fut-Fem-1ra",
+        "BAFI-Fem1ra",
         "45.200.300",
         "2000-02-15",
         "26",
@@ -2305,7 +2417,7 @@
         "Deportista",
         "Sofia Gonzalez",
         "1120537768",
-        "Fut-Juv-5ta",
+        "FUTSALA-Masc5ta",
         "46.201.301",
         "2008-03-15",
         "18",
@@ -2327,7 +2439,7 @@
         "Deportista",
         "Diego Rodriguez",
         "1120543200",
-        "Bab-2015",
+        "EDEFI-Baby",
         "47.202.302",
         "2015-04-15",
         "11",
@@ -2369,7 +2481,7 @@
         "Deportista",
         "Perez, Carlos Alberto",
         "1144556677",
-        "Fut-May+35",
+        "EDEFI-May35",
         "35.123.456",
         "",
         "",
@@ -2391,7 +2503,7 @@
         "Deportista",
         "Molina, Mariela",
         "1199887766",
-        "Fut-May+35",
+        "EDEFI-May30",
         "38123456",
         "1992-05-14",
         "34",
@@ -8602,29 +8714,109 @@
     ],
     "rows": [
       [
-        "T-001",
-        "Torneo EDEFI +35 [Precio: 0]",
-        "Fut-May+35"
+        "T-EDEFI-May30",
+        "EDEFI - Futsal Mayores +30 [Precio: 0]",
+        "EDEFI-May30"
       ],
       [
-        "T-002",
-        "Torneo EDEFI +42 [Precio: 0]",
-        "Fut-May+42"
+        "T-EDEFI-May35",
+        "EDEFI - Futsal Mayores +35 [Precio: 0]",
+        "EDEFI-May35"
       ],
       [
-        "T-003",
-        "Liga Femenina FutFEM [Precio: 0]",
-        "Fut-Fem-1ra"
+        "T-EDEFI-May42",
+        "EDEFI - Futsal Mayores +42 [Precio: 0]",
+        "EDEFI-May42"
       ],
       [
-        "T-004",
-        "Liga Juvenil FUTSALA [Precio: 0]",
-        "Fut-Juv-5ta"
+        "T-EDEFI-Baby",
+        "EDEFI - Baby [Precio: 0]",
+        "EDEFI-Baby"
       ],
       [
-        "T-005",
-        "Liga Baby EDEFI [Precio: 0]",
-        "Bab-2015"
+        "T-BAFI-Masc5ta",
+        "BAFI - Masculino 5ta [Precio: 0]",
+        "BAFI-Masc5ta"
+      ],
+      [
+        "T-BAFI-Masc4ta",
+        "BAFI - Masculino 4ta [Precio: 0]",
+        "BAFI-Masc4ta"
+      ],
+      [
+        "T-BAFI-Masc3ra",
+        "BAFI - Masculino 3ra [Precio: 0]",
+        "BAFI-Masc3ra"
+      ],
+      [
+        "T-BAFI-MascRes",
+        "BAFI - Masculino Reserva [Precio: 0]",
+        "BAFI-MascRes"
+      ],
+      [
+        "T-BAFI-Masc1ra",
+        "BAFI - Masculino 1ra [Precio: 0]",
+        "BAFI-Masc1ra"
+      ],
+      [
+        "T-BAFI-FemRes",
+        "BAFI - Femenino Reserva [Precio: 0]",
+        "BAFI-FemRes"
+      ],
+      [
+        "T-BAFI-Fem1ra",
+        "BAFI - Femenino 1ra [Precio: 0]",
+        "BAFI-Fem1ra"
+      ],
+      [
+        "T-FUTSALA-Prom2016",
+        "FUTSALA - Promocionales 2016 [Precio: 0]",
+        "FUTSALA-Prom2016"
+      ],
+      [
+        "T-FUTSALA-Prom2017",
+        "FUTSALA - Promocionales 2017 [Precio: 0]",
+        "FUTSALA-Prom2017"
+      ],
+      [
+        "T-FUTSALA-Prom2018",
+        "FUTSALA - Promocionales 2018 [Precio: 0]",
+        "FUTSALA-Prom2018"
+      ],
+      [
+        "T-FUTSALA-Masc8va",
+        "FUTSALA - Masculino 8va [Precio: 0]",
+        "FUTSALA-Masc8va"
+      ],
+      [
+        "T-FUTSALA-Masc7ma",
+        "FUTSALA - Masculino 7ma [Precio: 0]",
+        "FUTSALA-Masc7ma"
+      ],
+      [
+        "T-FUTSALA-Masc6ta",
+        "FUTSALA - Masculino 6ta [Precio: 0]",
+        "FUTSALA-Masc6ta"
+      ],
+      [
+        "T-FUTSALA-Masc5ta",
+        "FUTSALA - Masculino 5ta [Precio: 0]",
+        "FUTSALA-Masc5ta"
+      ],
+      [
+        "T-FUTSALA-Masc4ta",
+        "FUTSALA - Masculino 4ta [Precio: 0]",
+        "FUTSALA-Masc4ta"
+      ],
+      [
+        "T-FUTSALA-Masc3ra",
+        "FUTSALA - Masculino 3ra [Precio: 0]",
+        "FUTSALA-Masc3ra"
+      ],
+      [
+        "T-FUTSALA-Masc1ra",
+        "FUTSALA - Masculino 1ra [Precio: 0]",
+        "FUTSALA-Masc1ra"
       ]
     ]
   },
@@ -8641,7 +8833,7 @@
     "rows": [
       [
         "MOV-0001",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 1 vs Huracán",
         8737,
@@ -8650,7 +8842,7 @@
       ],
       [
         "MOV-0002",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 1 vs Huracán",
         5527,
@@ -8659,7 +8851,7 @@
       ],
       [
         "MOV-0003",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 1 vs Huracán",
         12429,
@@ -8668,7 +8860,7 @@
       ],
       [
         "MOV-0004",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 1 vs Huracán",
         8601,
@@ -8677,7 +8869,7 @@
       ],
       [
         "MOV-0005",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 2 vs Morón",
         4455,
@@ -8686,7 +8878,7 @@
       ],
       [
         "MOV-0006",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 2 vs Morón",
         5502,
@@ -8695,7 +8887,7 @@
       ],
       [
         "MOV-0007",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 3 vs Gimnasia",
         8181,
@@ -8704,7 +8896,7 @@
       ],
       [
         "MOV-0008",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 3 vs Gimnasia",
         5570,
@@ -8713,7 +8905,7 @@
       ],
       [
         "MOV-0009",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 3 vs Gimnasia",
         13595,
@@ -8722,7 +8914,7 @@
       ],
       [
         "MOV-0010",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 3 vs Gimnasia",
         9004,
@@ -8731,7 +8923,7 @@
       ],
       [
         "MOV-0011",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 4 vs Ramos Mejía",
         4257,
@@ -8740,7 +8932,7 @@
       ],
       [
         "MOV-0012",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 4 vs Ramos Mejía",
         5619,
@@ -8749,7 +8941,7 @@
       ],
       [
         "MOV-0013",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 5 vs San Justo",
         8614,
@@ -8758,7 +8950,7 @@
       ],
       [
         "MOV-0014",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 5 vs San Justo",
         5352,
@@ -8767,7 +8959,7 @@
       ],
       [
         "MOV-0015",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 5 vs San Justo",
         14534,
@@ -8776,7 +8968,7 @@
       ],
       [
         "MOV-0016",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 5 vs San Justo",
         9592,
@@ -8785,7 +8977,7 @@
       ],
       [
         "MOV-0017",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 6 vs Ateneo",
         4173,
@@ -8794,7 +8986,7 @@
       ],
       [
         "MOV-0018",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 6 vs Ateneo",
         6577,
@@ -8803,7 +8995,7 @@
       ],
       [
         "MOV-0019",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 7 vs Almafuerte",
         8413,
@@ -8812,7 +9004,7 @@
       ],
       [
         "MOV-0020",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 7 vs Almafuerte",
         5599,
@@ -8821,7 +9013,7 @@
       ],
       [
         "MOV-0021",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 7 vs Almafuerte",
         15707,
@@ -8830,7 +9022,7 @@
       ],
       [
         "MOV-0022",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 7 vs Almafuerte",
         9771,
@@ -8839,7 +9031,7 @@
       ],
       [
         "MOV-0023",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 8 vs Ituzaingó",
         4454,
@@ -8848,7 +9040,7 @@
       ],
       [
         "MOV-0024",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 8 vs Ituzaingó",
         7622,
@@ -8857,7 +9049,7 @@
       ],
       [
         "MOV-0025",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 9 vs Liniers",
         8505,
@@ -8866,7 +9058,7 @@
       ],
       [
         "MOV-0026",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 9 vs Liniers",
         5041,
@@ -8875,7 +9067,7 @@
       ],
       [
         "MOV-0027",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 9 vs Liniers",
         16409,
@@ -8884,7 +9076,7 @@
       ],
       [
         "MOV-0028",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 9 vs Liniers",
         10954,
@@ -8893,7 +9085,7 @@
       ],
       [
         "MOV-0029",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 10 vs Almagro",
         4008,
@@ -8902,7 +9094,7 @@
       ],
       [
         "MOV-0030",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 10 vs Almagro",
         7889,
@@ -8911,7 +9103,7 @@
       ],
       [
         "MOV-0031",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 11 vs Pearson",
         8858,
@@ -8920,7 +9112,7 @@
       ],
       [
         "MOV-0032",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 11 vs Pearson",
         5335,
@@ -8929,7 +9121,7 @@
       ],
       [
         "MOV-0033",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 11 vs Pearson",
         16423,
@@ -8938,7 +9130,7 @@
       ],
       [
         "MOV-0034",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 11 vs Pearson",
         12934,
@@ -8947,7 +9139,7 @@
       ],
       [
         "MOV-0035",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 12 vs CIDECO",
         4162,
@@ -8956,7 +9148,7 @@
       ],
       [
         "MOV-0036",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 12 vs CIDECO",
         7841,
@@ -8965,7 +9157,7 @@
       ],
       [
         "MOV-0037",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 13 vs Estrella",
         8835,
@@ -8974,7 +9166,7 @@
       ],
       [
         "MOV-0038",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 13 vs Estrella",
         5023,
@@ -8983,7 +9175,7 @@
       ],
       [
         "MOV-0039",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 13 vs Estrella",
         18389,
@@ -8992,7 +9184,7 @@
       ],
       [
         "MOV-0040",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 13 vs Estrella",
         12248,
@@ -9001,7 +9193,7 @@
       ],
       [
         "MOV-0041",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 14 vs Defensores",
         4110,
@@ -9010,7 +9202,7 @@
       ],
       [
         "MOV-0042",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 14 vs Defensores",
         9499,
@@ -9019,7 +9211,7 @@
       ],
       [
         "MOV-0043",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 15 vs Porteño",
         8140,
@@ -9028,7 +9220,7 @@
       ],
       [
         "MOV-0044",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 15 vs Porteño",
         5007,
@@ -9037,7 +9229,7 @@
       ],
       [
         "MOV-0045",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 15 vs Porteño",
         19354,
@@ -9046,7 +9238,7 @@
       ],
       [
         "MOV-0046",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 15 vs Porteño",
         14360,
@@ -9055,7 +9247,7 @@
       ],
       [
         "MOV-0047",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 16 vs Leloir",
         4311,
@@ -9064,7 +9256,7 @@
       ],
       [
         "MOV-0048",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 16 vs Leloir",
         9601,
@@ -9073,7 +9265,7 @@
       ],
       [
         "MOV-0049",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 17 vs UAI",
         8223,
@@ -9082,7 +9274,7 @@
       ],
       [
         "MOV-0050",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 17 vs UAI",
         5568,
@@ -9091,7 +9283,7 @@
       ],
       [
         "MOV-0051",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 17 vs UAI",
         19297,
@@ -9100,7 +9292,7 @@
       ],
       [
         "MOV-0052",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 17 vs UAI",
         13583,
@@ -9109,7 +9301,7 @@
       ],
       [
         "MOV-0053",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 18 vs Pearson Juv",
         4191,
@@ -9118,7 +9310,7 @@
       ],
       [
         "MOV-0054",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 18 vs Pearson Juv",
         10915,
@@ -9127,7 +9319,7 @@
       ],
       [
         "MOV-0055",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 19 vs Moron Futsal A",
         8072,
@@ -9136,7 +9328,7 @@
       ],
       [
         "MOV-0056",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 19 vs Moron Futsal A",
         5217,
@@ -9145,7 +9337,7 @@
       ],
       [
         "MOV-0057",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 19 vs Moron Futsal A",
         21172,
@@ -9154,7 +9346,7 @@
       ],
       [
         "MOV-0058",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 19 vs Moron Futsal A",
         15098,
@@ -9163,7 +9355,7 @@
       ],
       [
         "MOV-0059",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 20 vs Almafuerte Baby A",
         4120,
@@ -9172,7 +9364,7 @@
       ],
       [
         "MOV-0060",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 20 vs Almafuerte Baby A",
         11215,
@@ -9181,7 +9373,7 @@
       ],
       [
         "MOV-0061",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 21 vs Lomas Futbol",
         8036,
@@ -9190,7 +9382,7 @@
       ],
       [
         "MOV-0062",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 21 vs Lomas Futbol",
         5088,
@@ -9199,7 +9391,7 @@
       ],
       [
         "MOV-0063",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 21 vs Lomas Futbol",
         21157,
@@ -9208,7 +9400,7 @@
       ],
       [
         "MOV-0064",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 21 vs Lomas Futbol",
         15400,
@@ -9217,7 +9409,7 @@
       ],
       [
         "MOV-0065",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 22 vs Porteño FutFem",
         4009,
@@ -9226,7 +9418,7 @@
       ],
       [
         "MOV-0066",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 22 vs Porteño FutFem",
         10970,
@@ -9235,7 +9427,7 @@
       ],
       [
         "MOV-0067",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 23 vs Huracan San Justo Juv",
         8293,
@@ -9244,7 +9436,7 @@
       ],
       [
         "MOV-0068",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 23 vs Huracan San Justo Juv",
         5058,
@@ -9253,7 +9445,7 @@
       ],
       [
         "MOV-0069",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 23 vs Huracan San Justo Juv",
         22477,
@@ -9262,7 +9454,7 @@
       ],
       [
         "MOV-0070",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 23 vs Huracan San Justo Juv",
         16356,
@@ -9271,7 +9463,7 @@
       ],
       [
         "MOV-0071",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 24 vs Defensores Haedo Baby",
         4493,
@@ -9280,7 +9472,7 @@
       ],
       [
         "MOV-0072",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 24 vs Defensores Haedo Baby",
         12304,
@@ -9289,7 +9481,7 @@
       ],
       [
         "MOV-0073",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Alquiler Cancha - Fecha 25 vs San Justo Baby",
         8043,
@@ -9298,7 +9490,7 @@
       ],
       [
         "MOV-0074",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Arbitraje - Fecha 25 vs San Justo Baby",
         5079,
@@ -9307,7 +9499,7 @@
       ],
       [
         "MOV-0075",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Venta Entradas - Fecha 25 vs San Justo Baby",
         24959,
@@ -9316,7 +9508,7 @@
       ],
       [
         "MOV-0076",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Buffet/Cantina - Fecha 25 vs San Justo Baby",
         17846,
@@ -9325,7 +9517,7 @@
       ],
       [
         "MOV-0077",
-        "T-001",
+        "T-EDEFI-May35",
         "Gasto",
         "Traslado Delegación - Fecha 26 vs Huracán",
         4165,
@@ -9334,7 +9526,7 @@
       ],
       [
         "MOV-0078",
-        "T-001",
+        "T-EDEFI-May35",
         "Ingreso",
         "Rifas y Buffet - Fecha 26 vs Huracán",
         12666,
@@ -9343,7 +9535,7 @@
       ],
       [
         "MOV-0079",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 1 vs Morón",
         5069,
@@ -9352,7 +9544,7 @@
       ],
       [
         "MOV-0080",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 1 vs Morón",
         6274,
@@ -9361,7 +9553,7 @@
       ],
       [
         "MOV-0081",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 2 vs Gimnasia",
         9755,
@@ -9370,7 +9562,7 @@
       ],
       [
         "MOV-0082",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 2 vs Gimnasia",
         5835,
@@ -9379,7 +9571,7 @@
       ],
       [
         "MOV-0083",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 2 vs Gimnasia",
         14027,
@@ -9388,7 +9580,7 @@
       ],
       [
         "MOV-0084",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 2 vs Gimnasia",
         10768,
@@ -9397,7 +9589,7 @@
       ],
       [
         "MOV-0085",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 3 vs Ramos Mejía",
         4998,
@@ -9406,7 +9598,7 @@
       ],
       [
         "MOV-0086",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 3 vs Ramos Mejía",
         6303,
@@ -9415,7 +9607,7 @@
       ],
       [
         "MOV-0087",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 4 vs San Justo",
         9412,
@@ -9424,7 +9616,7 @@
       ],
       [
         "MOV-0088",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 4 vs San Justo",
         5970,
@@ -9433,7 +9625,7 @@
       ],
       [
         "MOV-0089",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 4 vs San Justo",
         14932,
@@ -9442,7 +9634,7 @@
       ],
       [
         "MOV-0090",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 4 vs San Justo",
         11062,
@@ -9451,7 +9643,7 @@
       ],
       [
         "MOV-0091",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 5 vs Ateneo",
         5033,
@@ -9460,7 +9652,7 @@
       ],
       [
         "MOV-0092",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 5 vs Ateneo",
         7273,
@@ -9469,7 +9661,7 @@
       ],
       [
         "MOV-0093",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 6 vs Almafuerte",
         9554,
@@ -9478,7 +9670,7 @@
       ],
       [
         "MOV-0094",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 6 vs Almafuerte",
         5451,
@@ -9487,7 +9679,7 @@
       ],
       [
         "MOV-0095",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 6 vs Almafuerte",
         15459,
@@ -9496,7 +9688,7 @@
       ],
       [
         "MOV-0096",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 6 vs Almafuerte",
         11573,
@@ -9505,7 +9697,7 @@
       ],
       [
         "MOV-0097",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 7 vs Ituzaingó",
         4965,
@@ -9514,7 +9706,7 @@
       ],
       [
         "MOV-0098",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 7 vs Ituzaingó",
         7418,
@@ -9523,7 +9715,7 @@
       ],
       [
         "MOV-0099",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 8 vs Liniers",
         9679,
@@ -9532,7 +9724,7 @@
       ],
       [
         "MOV-0100",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 8 vs Liniers",
         5547,
@@ -9541,7 +9733,7 @@
       ],
       [
         "MOV-0101",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 8 vs Liniers",
         16764,
@@ -9550,7 +9742,7 @@
       ],
       [
         "MOV-0102",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 8 vs Liniers",
         13034,
@@ -9559,7 +9751,7 @@
       ],
       [
         "MOV-0103",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 9 vs Almagro",
         5014,
@@ -9568,7 +9760,7 @@
       ],
       [
         "MOV-0104",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 9 vs Almagro",
         8445,
@@ -9577,7 +9769,7 @@
       ],
       [
         "MOV-0105",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 10 vs Pearson",
         9798,
@@ -9586,7 +9778,7 @@
       ],
       [
         "MOV-0106",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 10 vs Pearson",
         5883,
@@ -9595,7 +9787,7 @@
       ],
       [
         "MOV-0107",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 10 vs Pearson",
         17762,
@@ -9604,7 +9796,7 @@
       ],
       [
         "MOV-0108",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 10 vs Pearson",
         12113,
@@ -9613,7 +9805,7 @@
       ],
       [
         "MOV-0109",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 11 vs CIDECO",
         4986,
@@ -9622,7 +9814,7 @@
       ],
       [
         "MOV-0110",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 11 vs CIDECO",
         9017,
@@ -9631,7 +9823,7 @@
       ],
       [
         "MOV-0111",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 12 vs Estrella",
         8905,
@@ -9640,7 +9832,7 @@
       ],
       [
         "MOV-0112",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 12 vs Estrella",
         5707,
@@ -9649,7 +9841,7 @@
       ],
       [
         "MOV-0113",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 12 vs Estrella",
         18761,
@@ -9658,7 +9850,7 @@
       ],
       [
         "MOV-0114",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 12 vs Estrella",
         13497,
@@ -9667,7 +9859,7 @@
       ],
       [
         "MOV-0115",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 13 vs Defensores",
         4984,
@@ -9676,7 +9868,7 @@
       ],
       [
         "MOV-0116",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 13 vs Defensores",
         10503,
@@ -9685,7 +9877,7 @@
       ],
       [
         "MOV-0117",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 14 vs Porteño",
         8863,
@@ -9694,7 +9886,7 @@
       ],
       [
         "MOV-0118",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 14 vs Porteño",
         5418,
@@ -9703,7 +9895,7 @@
       ],
       [
         "MOV-0119",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 14 vs Porteño",
         18932,
@@ -9712,7 +9904,7 @@
       ],
       [
         "MOV-0120",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 14 vs Porteño",
         15289,
@@ -9721,7 +9913,7 @@
       ],
       [
         "MOV-0121",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 15 vs Leloir",
         4880,
@@ -9730,7 +9922,7 @@
       ],
       [
         "MOV-0122",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 15 vs Leloir",
         10788,
@@ -9739,7 +9931,7 @@
       ],
       [
         "MOV-0123",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 16 vs UAI",
         9637,
@@ -9748,7 +9940,7 @@
       ],
       [
         "MOV-0124",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 16 vs UAI",
         5548,
@@ -9757,7 +9949,7 @@
       ],
       [
         "MOV-0125",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 16 vs UAI",
         20343,
@@ -9766,7 +9958,7 @@
       ],
       [
         "MOV-0126",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 16 vs UAI",
         15439,
@@ -9775,7 +9967,7 @@
       ],
       [
         "MOV-0127",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 17 vs Pearson Juv",
         4972,
@@ -9784,7 +9976,7 @@
       ],
       [
         "MOV-0128",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 17 vs Pearson Juv",
         10904,
@@ -9793,7 +9985,7 @@
       ],
       [
         "MOV-0129",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 18 vs Moron Futsal A",
         9328,
@@ -9802,7 +9994,7 @@
       ],
       [
         "MOV-0130",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 18 vs Moron Futsal A",
         5996,
@@ -9811,7 +10003,7 @@
       ],
       [
         "MOV-0131",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 18 vs Moron Futsal A",
         21771,
@@ -9820,7 +10012,7 @@
       ],
       [
         "MOV-0132",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 18 vs Moron Futsal A",
         16214,
@@ -9829,7 +10021,7 @@
       ],
       [
         "MOV-0133",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 19 vs Almafuerte Baby A",
         5098,
@@ -9838,7 +10030,7 @@
       ],
       [
         "MOV-0134",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 19 vs Almafuerte Baby A",
         12060,
@@ -9847,7 +10039,7 @@
       ],
       [
         "MOV-0135",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 20 vs Lomas Futbol",
         9797,
@@ -9856,7 +10048,7 @@
       ],
       [
         "MOV-0136",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 20 vs Lomas Futbol",
         5909,
@@ -9865,7 +10057,7 @@
       ],
       [
         "MOV-0137",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 20 vs Lomas Futbol",
         23273,
@@ -9874,7 +10066,7 @@
       ],
       [
         "MOV-0138",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 20 vs Lomas Futbol",
         17984,
@@ -9883,7 +10075,7 @@
       ],
       [
         "MOV-0139",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 21 vs Porteño FutFem",
         4711,
@@ -9892,7 +10084,7 @@
       ],
       [
         "MOV-0140",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 21 vs Porteño FutFem",
         11637,
@@ -9901,7 +10093,7 @@
       ],
       [
         "MOV-0141",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 22 vs Huracan San Justo Juv",
         9528,
@@ -9910,7 +10102,7 @@
       ],
       [
         "MOV-0142",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 22 vs Huracan San Justo Juv",
         5427,
@@ -9919,7 +10111,7 @@
       ],
       [
         "MOV-0143",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 22 vs Huracan San Justo Juv",
         24475,
@@ -9928,7 +10120,7 @@
       ],
       [
         "MOV-0144",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 22 vs Huracan San Justo Juv",
         18412,
@@ -9937,7 +10129,7 @@
       ],
       [
         "MOV-0145",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 23 vs Defensores Haedo Baby",
         4720,
@@ -9946,7 +10138,7 @@
       ],
       [
         "MOV-0146",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 23 vs Defensores Haedo Baby",
         12696,
@@ -9955,7 +10147,7 @@
       ],
       [
         "MOV-0147",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 24 vs San Justo Baby",
         9353,
@@ -9964,7 +10156,7 @@
       ],
       [
         "MOV-0148",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 24 vs San Justo Baby",
         5970,
@@ -9973,7 +10165,7 @@
       ],
       [
         "MOV-0149",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 24 vs San Justo Baby",
         23687,
@@ -9982,7 +10174,7 @@
       ],
       [
         "MOV-0150",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 24 vs San Justo Baby",
         19016,
@@ -9991,7 +10183,7 @@
       ],
       [
         "MOV-0151",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Traslado Delegación - Fecha 25 vs Huracán",
         5070,
@@ -10000,7 +10192,7 @@
       ],
       [
         "MOV-0152",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Rifas y Buffet - Fecha 25 vs Huracán",
         14193,
@@ -10009,7 +10201,7 @@
       ],
       [
         "MOV-0153",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Alquiler Cancha - Fecha 26 vs Morón",
         9788,
@@ -10018,7 +10210,7 @@
       ],
       [
         "MOV-0154",
-        "T-002",
+        "T-EDEFI-May42",
         "Gasto",
         "Arbitraje - Fecha 26 vs Morón",
         5442,
@@ -10027,7 +10219,7 @@
       ],
       [
         "MOV-0155",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Venta Entradas - Fecha 26 vs Morón",
         26308,
@@ -10036,7 +10228,7 @@
       ],
       [
         "MOV-0156",
-        "T-002",
+        "T-EDEFI-May42",
         "Ingreso",
         "Buffet/Cantina - Fecha 26 vs Morón",
         20258,
@@ -10045,7 +10237,7 @@
       ],
       [
         "MOV-0157",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 1 vs Gimnasia Fem",
         10475,
@@ -10054,7 +10246,7 @@
       ],
       [
         "MOV-0158",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 1 vs Gimnasia Fem",
         6165,
@@ -10063,7 +10255,7 @@
       ],
       [
         "MOV-0159",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 1 vs Gimnasia Fem",
         14898,
@@ -10072,7 +10264,7 @@
       ],
       [
         "MOV-0160",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 1 vs Gimnasia Fem",
         11553,
@@ -10081,7 +10273,7 @@
       ],
       [
         "MOV-0161",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 2 vs Ramos Mejía Fem",
         5439,
@@ -10090,7 +10282,7 @@
       ],
       [
         "MOV-0162",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 2 vs Ramos Mejía Fem",
         8145,
@@ -10099,7 +10291,7 @@
       ],
       [
         "MOV-0163",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 3 vs San Justo Fem",
         9900,
@@ -10108,7 +10300,7 @@
       ],
       [
         "MOV-0164",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 3 vs San Justo Fem",
         6197,
@@ -10117,7 +10309,7 @@
       ],
       [
         "MOV-0165",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 3 vs San Justo Fem",
         14936,
@@ -10126,7 +10318,7 @@
       ],
       [
         "MOV-0166",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 3 vs San Justo Fem",
         11952,
@@ -10135,7 +10327,7 @@
       ],
       [
         "MOV-0167",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 4 vs Ateneo Fem",
         5402,
@@ -10144,7 +10336,7 @@
       ],
       [
         "MOV-0168",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 4 vs Ateneo Fem",
         7654,
@@ -10153,7 +10345,7 @@
       ],
       [
         "MOV-0169",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 5 vs Almafuerte Fem",
         9846,
@@ -10162,7 +10354,7 @@
       ],
       [
         "MOV-0170",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 5 vs Almafuerte Fem",
         6333,
@@ -10171,7 +10363,7 @@
       ],
       [
         "MOV-0171",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 5 vs Almafuerte Fem",
         15710,
@@ -10180,7 +10372,7 @@
       ],
       [
         "MOV-0172",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 5 vs Almafuerte Fem",
         12279,
@@ -10189,7 +10381,7 @@
       ],
       [
         "MOV-0173",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 6 vs Ituzaingó Fem",
         5639,
@@ -10198,7 +10390,7 @@
       ],
       [
         "MOV-0174",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 6 vs Ituzaingó Fem",
         8199,
@@ -10207,7 +10399,7 @@
       ],
       [
         "MOV-0175",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 7 vs Liniers Fem",
         9857,
@@ -10216,7 +10408,7 @@
       ],
       [
         "MOV-0176",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 7 vs Liniers Fem",
         6306,
@@ -10225,7 +10417,7 @@
       ],
       [
         "MOV-0177",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 7 vs Liniers Fem",
         17098,
@@ -10234,7 +10426,7 @@
       ],
       [
         "MOV-0178",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 7 vs Liniers Fem",
         12589,
@@ -10243,7 +10435,7 @@
       ],
       [
         "MOV-0179",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 8 vs Almagro Fem",
         5455,
@@ -10252,7 +10444,7 @@
       ],
       [
         "MOV-0180",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 8 vs Almagro Fem",
         8765,
@@ -10261,7 +10453,7 @@
       ],
       [
         "MOV-0181",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 9 vs Pearson Fem",
         9759,
@@ -10270,7 +10462,7 @@
       ],
       [
         "MOV-0182",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 9 vs Pearson Fem",
         6309,
@@ -10279,7 +10471,7 @@
       ],
       [
         "MOV-0183",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 9 vs Pearson Fem",
         18810,
@@ -10288,7 +10480,7 @@
       ],
       [
         "MOV-0184",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 9 vs Pearson Fem",
         15194,
@@ -10297,7 +10489,7 @@
       ],
       [
         "MOV-0185",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 10 vs CIDECO Fem",
         5315,
@@ -10306,7 +10498,7 @@
       ],
       [
         "MOV-0186",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 10 vs CIDECO Fem",
         10259,
@@ -10315,7 +10507,7 @@
       ],
       [
         "MOV-0187",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 11 vs Estrella Fem",
         9847,
@@ -10324,7 +10516,7 @@
       ],
       [
         "MOV-0188",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 11 vs Estrella Fem",
         6132,
@@ -10333,7 +10525,7 @@
       ],
       [
         "MOV-0189",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 11 vs Estrella Fem",
         18672,
@@ -10342,7 +10534,7 @@
       ],
       [
         "MOV-0190",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 11 vs Estrella Fem",
         14274,
@@ -10351,7 +10543,7 @@
       ],
       [
         "MOV-0191",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 12 vs Defensores Fem",
         5555,
@@ -10360,7 +10552,7 @@
       ],
       [
         "MOV-0192",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 12 vs Defensores Fem",
         9845,
@@ -10369,7 +10561,7 @@
       ],
       [
         "MOV-0193",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 13 vs Porteño Fem",
         9705,
@@ -10378,7 +10570,7 @@
       ],
       [
         "MOV-0194",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 13 vs Porteño Fem",
         6047,
@@ -10387,7 +10579,7 @@
       ],
       [
         "MOV-0195",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 13 vs Porteño Fem",
         19727,
@@ -10396,7 +10588,7 @@
       ],
       [
         "MOV-0196",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 13 vs Porteño Fem",
         15953,
@@ -10405,7 +10597,7 @@
       ],
       [
         "MOV-0197",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 14 vs Leloir Fem",
         5422,
@@ -10414,7 +10606,7 @@
       ],
       [
         "MOV-0198",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 14 vs Leloir Fem",
         10634,
@@ -10423,7 +10615,7 @@
       ],
       [
         "MOV-0199",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 15 vs UAI Fem",
         9752,
@@ -10432,7 +10624,7 @@
       ],
       [
         "MOV-0200",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 15 vs UAI Fem",
         6314,
@@ -10441,7 +10633,7 @@
       ],
       [
         "MOV-0201",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 15 vs UAI Fem",
         20701,
@@ -10450,7 +10642,7 @@
       ],
       [
         "MOV-0202",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 15 vs UAI Fem",
         16932,
@@ -10459,7 +10651,7 @@
       ],
       [
         "MOV-0203",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 16 vs Pearson Juv Fem",
         5418,
@@ -10468,7 +10660,7 @@
       ],
       [
         "MOV-0204",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 16 vs Pearson Juv Fem",
         11306,
@@ -10477,7 +10669,7 @@
       ],
       [
         "MOV-0205",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 17 vs Moron Futsal A Fem",
         9928,
@@ -10486,7 +10678,7 @@
       ],
       [
         "MOV-0206",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 17 vs Moron Futsal A Fem",
         5913,
@@ -10495,7 +10687,7 @@
       ],
       [
         "MOV-0207",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 17 vs Moron Futsal A Fem",
         21896,
@@ -10504,7 +10696,7 @@
       ],
       [
         "MOV-0208",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 17 vs Moron Futsal A Fem",
         16564,
@@ -10513,7 +10705,7 @@
       ],
       [
         "MOV-0209",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 18 vs Almafuerte Baby A Fem",
         5370,
@@ -10522,7 +10714,7 @@
       ],
       [
         "MOV-0210",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 18 vs Almafuerte Baby A Fem",
         12087,
@@ -10531,7 +10723,7 @@
       ],
       [
         "MOV-0211",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 19 vs Lomas Futbol Fem",
         10102,
@@ -10540,7 +10732,7 @@
       ],
       [
         "MOV-0212",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 19 vs Lomas Futbol Fem",
         6391,
@@ -10549,7 +10741,7 @@
       ],
       [
         "MOV-0213",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 19 vs Lomas Futbol Fem",
         23990,
@@ -10558,7 +10750,7 @@
       ],
       [
         "MOV-0214",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 19 vs Lomas Futbol Fem",
         19130,
@@ -10567,7 +10759,7 @@
       ],
       [
         "MOV-0215",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 20 vs Porteño FutFem Fem",
         5602,
@@ -10576,7 +10768,7 @@
       ],
       [
         "MOV-0216",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 20 vs Porteño FutFem Fem",
         13086,
@@ -10585,7 +10777,7 @@
       ],
       [
         "MOV-0217",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 21 vs Huracan San Justo Juv Fem",
         10242,
@@ -10594,7 +10786,7 @@
       ],
       [
         "MOV-0218",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 21 vs Huracan San Justo Juv Fem",
         5841,
@@ -10603,7 +10795,7 @@
       ],
       [
         "MOV-0219",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 21 vs Huracan San Justo Juv Fem",
         24205,
@@ -10612,7 +10804,7 @@
       ],
       [
         "MOV-0220",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 21 vs Huracan San Justo Juv Fem",
         18344,
@@ -10621,7 +10813,7 @@
       ],
       [
         "MOV-0221",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 22 vs Defensores Haedo Baby Fem",
         5679,
@@ -10630,7 +10822,7 @@
       ],
       [
         "MOV-0222",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 22 vs Defensores Haedo Baby Fem",
         13398,
@@ -10639,7 +10831,7 @@
       ],
       [
         "MOV-0223",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 23 vs San Justo Baby Fem",
         10516,
@@ -10648,7 +10840,7 @@
       ],
       [
         "MOV-0224",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 23 vs San Justo Baby Fem",
         5988,
@@ -10657,7 +10849,7 @@
       ],
       [
         "MOV-0225",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 23 vs San Justo Baby Fem",
         25353,
@@ -10666,7 +10858,7 @@
       ],
       [
         "MOV-0226",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 23 vs San Justo Baby Fem",
         19836,
@@ -10675,7 +10867,7 @@
       ],
       [
         "MOV-0227",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 24 vs Huracán Fem",
         5475,
@@ -10684,7 +10876,7 @@
       ],
       [
         "MOV-0228",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 24 vs Huracán Fem",
         14421,
@@ -10693,7 +10885,7 @@
       ],
       [
         "MOV-0229",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Alquiler Cancha - Fecha 25 vs Morón Fem",
         9715,
@@ -10702,7 +10894,7 @@
       ],
       [
         "MOV-0230",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Arbitraje - Fecha 25 vs Morón Fem",
         6260,
@@ -10711,7 +10903,7 @@
       ],
       [
         "MOV-0231",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Venta Entradas - Fecha 25 vs Morón Fem",
         26205,
@@ -10720,7 +10912,7 @@
       ],
       [
         "MOV-0232",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Buffet/Cantina - Fecha 25 vs Morón Fem",
         19948,
@@ -10729,7 +10921,7 @@
       ],
       [
         "MOV-0233",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Gasto",
         "Traslado Delegación - Fecha 26 vs Gimnasia Fem",
         5294,
@@ -10738,7 +10930,7 @@
       ],
       [
         "MOV-0234",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "Ingreso",
         "Rifas y Buffet - Fecha 26 vs Gimnasia Fem",
         14370,
@@ -10747,7 +10939,7 @@
       ],
       [
         "MOV-0235",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 1 vs Ramos Mejía Juv",
         6259,
@@ -10756,7 +10948,7 @@
       ],
       [
         "MOV-0236",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 1 vs Ramos Mejía Juv",
         8928,
@@ -10765,7 +10957,7 @@
       ],
       [
         "MOV-0237",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 2 vs San Justo Juv",
         11122,
@@ -10774,7 +10966,7 @@
       ],
       [
         "MOV-0238",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 2 vs San Justo Juv",
         6544,
@@ -10783,7 +10975,7 @@
       ],
       [
         "MOV-0239",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 2 vs San Justo Juv",
         15591,
@@ -10792,7 +10984,7 @@
       ],
       [
         "MOV-0240",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 2 vs San Justo Juv",
         13135,
@@ -10801,7 +10993,7 @@
       ],
       [
         "MOV-0241",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 3 vs Ateneo Juv",
         6255,
@@ -10810,7 +11002,7 @@
       ],
       [
         "MOV-0242",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 3 vs Ateneo Juv",
         9161,
@@ -10819,7 +11011,7 @@
       ],
       [
         "MOV-0243",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 4 vs Almafuerte Juv",
         10616,
@@ -10828,7 +11020,7 @@
       ],
       [
         "MOV-0244",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 4 vs Almafuerte Juv",
         6764,
@@ -10837,7 +11029,7 @@
       ],
       [
         "MOV-0245",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 4 vs Almafuerte Juv",
         17306,
@@ -10846,7 +11038,7 @@
       ],
       [
         "MOV-0246",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 4 vs Almafuerte Juv",
         14039,
@@ -10855,7 +11047,7 @@
       ],
       [
         "MOV-0247",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 5 vs Ituzaingó Juv",
         6063,
@@ -10864,7 +11056,7 @@
       ],
       [
         "MOV-0248",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 5 vs Ituzaingó Juv",
         9784,
@@ -10873,7 +11065,7 @@
       ],
       [
         "MOV-0249",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 6 vs Liniers Juv",
         10604,
@@ -10882,7 +11074,7 @@
       ],
       [
         "MOV-0250",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 6 vs Liniers Juv",
         6490,
@@ -10891,7 +11083,7 @@
       ],
       [
         "MOV-0251",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 6 vs Liniers Juv",
         16693,
@@ -10900,7 +11092,7 @@
       ],
       [
         "MOV-0252",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 6 vs Liniers Juv",
         15170,
@@ -10909,7 +11101,7 @@
       ],
       [
         "MOV-0253",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 7 vs Almagro Juv",
         5963,
@@ -10918,7 +11110,7 @@
       ],
       [
         "MOV-0254",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 7 vs Almagro Juv",
         9917,
@@ -10927,7 +11119,7 @@
       ],
       [
         "MOV-0255",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 8 vs Pearson Juv",
         10614,
@@ -10936,7 +11128,7 @@
       ],
       [
         "MOV-0256",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 8 vs Pearson Juv",
         6430,
@@ -10945,7 +11137,7 @@
       ],
       [
         "MOV-0257",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 8 vs Pearson Juv",
         18176,
@@ -10954,7 +11146,7 @@
       ],
       [
         "MOV-0258",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 8 vs Pearson Juv",
         16296,
@@ -10963,7 +11155,7 @@
       ],
       [
         "MOV-0259",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 9 vs CIDECO Juv",
         5910,
@@ -10972,7 +11164,7 @@
       ],
       [
         "MOV-0260",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 9 vs CIDECO Juv",
         11271,
@@ -10981,7 +11173,7 @@
       ],
       [
         "MOV-0261",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 10 vs Estrella Juv",
         10589,
@@ -10990,7 +11182,7 @@
       ],
       [
         "MOV-0262",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 10 vs Estrella Juv",
         6265,
@@ -10999,7 +11191,7 @@
       ],
       [
         "MOV-0263",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 10 vs Estrella Juv",
         20343,
@@ -11008,7 +11200,7 @@
       ],
       [
         "MOV-0264",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 10 vs Estrella Juv",
         16278,
@@ -11017,7 +11209,7 @@
       ],
       [
         "MOV-0265",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 11 vs Defensores Juv",
         6136,
@@ -11026,7 +11218,7 @@
       ],
       [
         "MOV-0266",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 11 vs Defensores Juv",
         10929,
@@ -11035,7 +11227,7 @@
       ],
       [
         "MOV-0267",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 12 vs Porteño Juv",
         10494,
@@ -11044,7 +11236,7 @@
       ],
       [
         "MOV-0268",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 12 vs Porteño Juv",
         6449,
@@ -11053,7 +11245,7 @@
       ],
       [
         "MOV-0269",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 12 vs Porteño Juv",
         21319,
@@ -11062,7 +11254,7 @@
       ],
       [
         "MOV-0270",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 12 vs Porteño Juv",
         16663,
@@ -11071,7 +11263,7 @@
       ],
       [
         "MOV-0271",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 13 vs Leloir Juv",
         5844,
@@ -11080,7 +11272,7 @@
       ],
       [
         "MOV-0272",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 13 vs Leloir Juv",
         12415,
@@ -11089,7 +11281,7 @@
       ],
       [
         "MOV-0273",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 14 vs UAI Juv",
         11220,
@@ -11098,7 +11290,7 @@
       ],
       [
         "MOV-0274",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 14 vs UAI Juv",
         6429,
@@ -11107,7 +11299,7 @@
       ],
       [
         "MOV-0275",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 14 vs UAI Juv",
         22133,
@@ -11116,7 +11308,7 @@
       ],
       [
         "MOV-0276",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 14 vs UAI Juv",
         16720,
@@ -11125,7 +11317,7 @@
       ],
       [
         "MOV-0277",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 15 vs Pearson Juv Juv",
         6040,
@@ -11134,7 +11326,7 @@
       ],
       [
         "MOV-0278",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 15 vs Pearson Juv Juv",
         12635,
@@ -11143,7 +11335,7 @@
       ],
       [
         "MOV-0279",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 16 vs Moron Futsal A Juv",
         11171,
@@ -11152,7 +11344,7 @@
       ],
       [
         "MOV-0280",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 16 vs Moron Futsal A Juv",
         6476,
@@ -11161,7 +11353,7 @@
       ],
       [
         "MOV-0281",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 16 vs Moron Futsal A Juv",
         23432,
@@ -11170,7 +11362,7 @@
       ],
       [
         "MOV-0282",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 16 vs Moron Futsal A Juv",
         19353,
@@ -11179,7 +11371,7 @@
       ],
       [
         "MOV-0283",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 17 vs Almafuerte Baby A Juv",
         6208,
@@ -11188,7 +11380,7 @@
       ],
       [
         "MOV-0284",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 17 vs Almafuerte Baby A Juv",
         12674,
@@ -11197,7 +11389,7 @@
       ],
       [
         "MOV-0285",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 18 vs Lomas Futbol Juv",
         10412,
@@ -11206,7 +11398,7 @@
       ],
       [
         "MOV-0286",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 18 vs Lomas Futbol Juv",
         6781,
@@ -11215,7 +11407,7 @@
       ],
       [
         "MOV-0287",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 18 vs Lomas Futbol Juv",
         23009,
@@ -11224,7 +11416,7 @@
       ],
       [
         "MOV-0288",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 18 vs Lomas Futbol Juv",
         18488,
@@ -11233,7 +11425,7 @@
       ],
       [
         "MOV-0289",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 19 vs Porteño FutFem Juv",
         6220,
@@ -11242,7 +11434,7 @@
       ],
       [
         "MOV-0290",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 19 vs Porteño FutFem Juv",
         13130,
@@ -11251,7 +11443,7 @@
       ],
       [
         "MOV-0291",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 20 vs Huracan San Justo Juv Juv",
         11149,
@@ -11260,7 +11452,7 @@
       ],
       [
         "MOV-0292",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 20 vs Huracan San Justo Juv Juv",
         6718,
@@ -11269,7 +11461,7 @@
       ],
       [
         "MOV-0293",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 20 vs Huracan San Justo Juv Juv",
         23643,
@@ -11278,7 +11470,7 @@
       ],
       [
         "MOV-0294",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 20 vs Huracan San Justo Juv Juv",
         19596,
@@ -11287,7 +11479,7 @@
       ],
       [
         "MOV-0295",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 21 vs Defensores Haedo Baby Juv",
         6180,
@@ -11296,7 +11488,7 @@
       ],
       [
         "MOV-0296",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 21 vs Defensores Haedo Baby Juv",
         14169,
@@ -11305,7 +11497,7 @@
       ],
       [
         "MOV-0297",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 22 vs San Justo Baby Juv",
         11000,
@@ -11314,7 +11506,7 @@
       ],
       [
         "MOV-0298",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 22 vs San Justo Baby Juv",
         6624,
@@ -11323,7 +11515,7 @@
       ],
       [
         "MOV-0299",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 22 vs San Justo Baby Juv",
         25629,
@@ -11332,7 +11524,7 @@
       ],
       [
         "MOV-0300",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 22 vs San Justo Baby Juv",
         20913,
@@ -11341,7 +11533,7 @@
       ],
       [
         "MOV-0301",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 23 vs Huracán Juv",
         6235,
@@ -11350,7 +11542,7 @@
       ],
       [
         "MOV-0302",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 23 vs Huracán Juv",
         14522,
@@ -11359,7 +11551,7 @@
       ],
       [
         "MOV-0303",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 24 vs Morón Juv",
         11337,
@@ -11368,7 +11560,7 @@
       ],
       [
         "MOV-0304",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 24 vs Morón Juv",
         6796,
@@ -11377,7 +11569,7 @@
       ],
       [
         "MOV-0305",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 24 vs Morón Juv",
         25849,
@@ -11386,7 +11578,7 @@
       ],
       [
         "MOV-0306",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 24 vs Morón Juv",
         21696,
@@ -11395,7 +11587,7 @@
       ],
       [
         "MOV-0307",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Traslado Delegación - Fecha 25 vs Gimnasia Juv",
         5801,
@@ -11404,7 +11596,7 @@
       ],
       [
         "MOV-0308",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Rifas y Buffet - Fecha 25 vs Gimnasia Juv",
         15197,
@@ -11413,7 +11605,7 @@
       ],
       [
         "MOV-0309",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Alquiler Cancha - Fecha 26 vs Ramos Mejía Juv",
         10797,
@@ -11422,7 +11614,7 @@
       ],
       [
         "MOV-0310",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Gasto",
         "Arbitraje - Fecha 26 vs Ramos Mejía Juv",
         6755,
@@ -11431,7 +11623,7 @@
       ],
       [
         "MOV-0311",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Venta Entradas - Fecha 26 vs Ramos Mejía Juv",
         28129,
@@ -11440,7 +11632,7 @@
       ],
       [
         "MOV-0312",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "Ingreso",
         "Buffet/Cantina - Fecha 26 vs Ramos Mejía Juv",
         23285,
@@ -11449,7 +11641,7 @@
       ],
       [
         "MOV-0313",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 1 vs San Justo Baby",
         11962,
@@ -11458,7 +11650,7 @@
       ],
       [
         "MOV-0314",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 1 vs San Justo Baby",
         6795,
@@ -11467,7 +11659,7 @@
       ],
       [
         "MOV-0315",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 1 vs San Justo Baby",
         15080,
@@ -11476,7 +11668,7 @@
       ],
       [
         "MOV-0316",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 1 vs San Justo Baby",
         13004,
@@ -11485,7 +11677,7 @@
       ],
       [
         "MOV-0317",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 2 vs Ateneo Baby",
         6860,
@@ -11494,7 +11686,7 @@
       ],
       [
         "MOV-0318",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 2 vs Ateneo Baby",
         9187,
@@ -11503,7 +11695,7 @@
       ],
       [
         "MOV-0319",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 3 vs Almafuerte Baby",
         11600,
@@ -11512,7 +11704,7 @@
       ],
       [
         "MOV-0320",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 3 vs Almafuerte Baby",
         6646,
@@ -11521,7 +11713,7 @@
       ],
       [
         "MOV-0321",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 3 vs Almafuerte Baby",
         16674,
@@ -11530,7 +11722,7 @@
       ],
       [
         "MOV-0322",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 3 vs Almafuerte Baby",
         14764,
@@ -11539,7 +11731,7 @@
       ],
       [
         "MOV-0323",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 4 vs Ituzaingó Baby",
         6772,
@@ -11548,7 +11740,7 @@
       ],
       [
         "MOV-0324",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 4 vs Ituzaingó Baby",
         10016,
@@ -11557,7 +11749,7 @@
       ],
       [
         "MOV-0325",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 5 vs Liniers Baby",
         11506,
@@ -11566,7 +11758,7 @@
       ],
       [
         "MOV-0326",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 5 vs Liniers Baby",
         7149,
@@ -11575,7 +11767,7 @@
       ],
       [
         "MOV-0327",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 5 vs Liniers Baby",
         18247,
@@ -11584,7 +11776,7 @@
       ],
       [
         "MOV-0328",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 5 vs Liniers Baby",
         15863,
@@ -11593,7 +11785,7 @@
       ],
       [
         "MOV-0329",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 6 vs Almagro Baby",
         6409,
@@ -11602,7 +11794,7 @@
       ],
       [
         "MOV-0330",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 6 vs Almagro Baby",
         10604,
@@ -11611,7 +11803,7 @@
       ],
       [
         "MOV-0331",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 7 vs Pearson Baby",
         11399,
@@ -11620,7 +11812,7 @@
       ],
       [
         "MOV-0332",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 7 vs Pearson Baby",
         6686,
@@ -11629,7 +11821,7 @@
       ],
       [
         "MOV-0333",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 7 vs Pearson Baby",
         19783,
@@ -11638,7 +11830,7 @@
       ],
       [
         "MOV-0334",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 7 vs Pearson Baby",
         16490,
@@ -11647,7 +11839,7 @@
       ],
       [
         "MOV-0335",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 8 vs CIDECO Baby",
         6811,
@@ -11656,7 +11848,7 @@
       ],
       [
         "MOV-0336",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 8 vs CIDECO Baby",
         10780,
@@ -11665,7 +11857,7 @@
       ],
       [
         "MOV-0337",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 9 vs Estrella Baby",
         11210,
@@ -11674,7 +11866,7 @@
       ],
       [
         "MOV-0338",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 9 vs Estrella Baby",
         6709,
@@ -11683,7 +11875,7 @@
       ],
       [
         "MOV-0339",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 9 vs Estrella Baby",
         20796,
@@ -11692,7 +11884,7 @@
       ],
       [
         "MOV-0340",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 9 vs Estrella Baby",
         16763,
@@ -11701,7 +11893,7 @@
       ],
       [
         "MOV-0341",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 10 vs Defensores Baby",
         6457,
@@ -11710,7 +11902,7 @@
       ],
       [
         "MOV-0342",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 10 vs Defensores Baby",
         12258,
@@ -11719,7 +11911,7 @@
       ],
       [
         "MOV-0343",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 11 vs Porteño Baby",
         12183,
@@ -11728,7 +11920,7 @@
       ],
       [
         "MOV-0344",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 11 vs Porteño Baby",
         7043,
@@ -11737,7 +11929,7 @@
       ],
       [
         "MOV-0345",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 11 vs Porteño Baby",
         21511,
@@ -11746,7 +11938,7 @@
       ],
       [
         "MOV-0346",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 11 vs Porteño Baby",
         18886,
@@ -11755,7 +11947,7 @@
       ],
       [
         "MOV-0347",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 12 vs Leloir Baby",
         6561,
@@ -11764,7 +11956,7 @@
       ],
       [
         "MOV-0348",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 12 vs Leloir Baby",
         12223,
@@ -11773,7 +11965,7 @@
       ],
       [
         "MOV-0349",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 13 vs UAI Baby",
         12092,
@@ -11782,7 +11974,7 @@
       ],
       [
         "MOV-0350",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 13 vs UAI Baby",
         6881,
@@ -11791,7 +11983,7 @@
       ],
       [
         "MOV-0351",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 13 vs UAI Baby",
         22135,
@@ -11800,7 +11992,7 @@
       ],
       [
         "MOV-0352",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 13 vs UAI Baby",
         18111,
@@ -11809,7 +12001,7 @@
       ],
       [
         "MOV-0353",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 14 vs Pearson Juv Baby",
         6696,
@@ -11818,7 +12010,7 @@
       ],
       [
         "MOV-0354",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 14 vs Pearson Juv Baby",
         12819,
@@ -11827,7 +12019,7 @@
       ],
       [
         "MOV-0355",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 15 vs Moron Futsal A Baby",
         11727,
@@ -11836,7 +12028,7 @@
       ],
       [
         "MOV-0356",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 15 vs Moron Futsal A Baby",
         6836,
@@ -11845,7 +12037,7 @@
       ],
       [
         "MOV-0357",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 15 vs Moron Futsal A Baby",
         23032,
@@ -11854,7 +12046,7 @@
       ],
       [
         "MOV-0358",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 15 vs Moron Futsal A Baby",
         19104,
@@ -11863,7 +12055,7 @@
       ],
       [
         "MOV-0359",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 16 vs Almafuerte Baby A Baby",
         6582,
@@ -11872,7 +12064,7 @@
       ],
       [
         "MOV-0360",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 16 vs Almafuerte Baby A Baby",
         14339,
@@ -11881,7 +12073,7 @@
       ],
       [
         "MOV-0361",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 17 vs Lomas Futbol Baby",
         11503,
@@ -11890,7 +12082,7 @@
       ],
       [
         "MOV-0362",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 17 vs Lomas Futbol Baby",
         6780,
@@ -11899,7 +12091,7 @@
       ],
       [
         "MOV-0363",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 17 vs Lomas Futbol Baby",
         23264,
@@ -11908,7 +12100,7 @@
       ],
       [
         "MOV-0364",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 17 vs Lomas Futbol Baby",
         19477,
@@ -11917,7 +12109,7 @@
       ],
       [
         "MOV-0365",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 18 vs Porteño FutFem Baby",
         6717,
@@ -11926,7 +12118,7 @@
       ],
       [
         "MOV-0366",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 18 vs Porteño FutFem Baby",
         14856,
@@ -11935,7 +12127,7 @@
       ],
       [
         "MOV-0367",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 19 vs Huracan San Justo Juv Baby",
         11381,
@@ -11944,7 +12136,7 @@
       ],
       [
         "MOV-0368",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 19 vs Huracan San Justo Juv Baby",
         6812,
@@ -11953,7 +12145,7 @@
       ],
       [
         "MOV-0369",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 19 vs Huracan San Justo Juv Baby",
         25137,
@@ -11962,7 +12154,7 @@
       ],
       [
         "MOV-0370",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 19 vs Huracan San Justo Juv Baby",
         20343,
@@ -11971,7 +12163,7 @@
       ],
       [
         "MOV-0371",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 20 vs Defensores Haedo Baby Baby",
         6853,
@@ -11980,7 +12172,7 @@
       ],
       [
         "MOV-0372",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 20 vs Defensores Haedo Baby Baby",
         14761,
@@ -11989,7 +12181,7 @@
       ],
       [
         "MOV-0373",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 21 vs San Justo Baby Baby",
         11315,
@@ -11998,7 +12190,7 @@
       ],
       [
         "MOV-0374",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 21 vs San Justo Baby Baby",
         6662,
@@ -12007,7 +12199,7 @@
       ],
       [
         "MOV-0375",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 21 vs San Justo Baby Baby",
         26512,
@@ -12016,7 +12208,7 @@
       ],
       [
         "MOV-0376",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 21 vs San Justo Baby Baby",
         22776,
@@ -12025,7 +12217,7 @@
       ],
       [
         "MOV-0377",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 22 vs Huracán Baby",
         6839,
@@ -12034,7 +12226,7 @@
       ],
       [
         "MOV-0378",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 22 vs Huracán Baby",
         15081,
@@ -12043,7 +12235,7 @@
       ],
       [
         "MOV-0379",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 23 vs Morón Baby",
         11530,
@@ -12052,7 +12244,7 @@
       ],
       [
         "MOV-0380",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 23 vs Morón Baby",
         7196,
@@ -12061,7 +12253,7 @@
       ],
       [
         "MOV-0381",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 23 vs Morón Baby",
         27261,
@@ -12070,7 +12262,7 @@
       ],
       [
         "MOV-0382",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 23 vs Morón Baby",
         22983,
@@ -12079,7 +12271,7 @@
       ],
       [
         "MOV-0383",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 24 vs Gimnasia Baby",
         6576,
@@ -12088,7 +12280,7 @@
       ],
       [
         "MOV-0384",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 24 vs Gimnasia Baby",
         16676,
@@ -12097,7 +12289,7 @@
       ],
       [
         "MOV-0385",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Alquiler Cancha - Fecha 25 vs Ramos Mejía Baby",
         11582,
@@ -12106,7 +12298,7 @@
       ],
       [
         "MOV-0386",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Arbitraje - Fecha 25 vs Ramos Mejía Baby",
         6615,
@@ -12115,7 +12307,7 @@
       ],
       [
         "MOV-0387",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Venta Entradas - Fecha 25 vs Ramos Mejía Baby",
         28682,
@@ -12124,7 +12316,7 @@
       ],
       [
         "MOV-0388",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Buffet/Cantina - Fecha 25 vs Ramos Mejía Baby",
         23066,
@@ -12133,7 +12325,7 @@
       ],
       [
         "MOV-0389",
-        "T-005",
+        "T-EDEFI-Baby",
         "Gasto",
         "Traslado Delegación - Fecha 26 vs San Justo Baby",
         6617,
@@ -12142,7 +12334,7 @@
       ],
       [
         "MOV-0390",
-        "T-005",
+        "T-EDEFI-Baby",
         "Ingreso",
         "Rifas y Buffet - Fecha 26 vs San Justo Baby",
         16662,
@@ -12176,7 +12368,7 @@
     "rows": [
       [
         "PAR-0001",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-01-03",
         "Huracán",
         "Local",
@@ -12188,7 +12380,7 @@
       ],
       [
         "PAR-0002",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-01-10",
         "Morón",
         "Visitante",
@@ -12200,7 +12392,7 @@
       ],
       [
         "PAR-0003",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-01-17",
         "Gimnasia",
         "Local",
@@ -12212,7 +12404,7 @@
       ],
       [
         "PAR-0004",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-01-24",
         "Ramos Mejía",
         "Visitante",
@@ -12224,7 +12416,7 @@
       ],
       [
         "PAR-0005",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-01-31",
         "San Justo",
         "Local",
@@ -12236,7 +12428,7 @@
       ],
       [
         "PAR-0006",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-02-07",
         "Ateneo",
         "Visitante",
@@ -12248,7 +12440,7 @@
       ],
       [
         "PAR-0007",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-02-14",
         "Almafuerte",
         "Local",
@@ -12260,7 +12452,7 @@
       ],
       [
         "PAR-0008",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-02-21",
         "Ituzaingó",
         "Visitante",
@@ -12272,7 +12464,7 @@
       ],
       [
         "PAR-0009",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-02-28",
         "Liniers",
         "Local",
@@ -12284,7 +12476,7 @@
       ],
       [
         "PAR-0010",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-03-07",
         "Almagro",
         "Visitante",
@@ -12296,7 +12488,7 @@
       ],
       [
         "PAR-0011",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-03-14",
         "Pearson",
         "Local",
@@ -12308,7 +12500,7 @@
       ],
       [
         "PAR-0012",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-03-21",
         "CIDECO",
         "Visitante",
@@ -12320,7 +12512,7 @@
       ],
       [
         "PAR-0013",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-03-28",
         "Estrella",
         "Local",
@@ -12332,7 +12524,7 @@
       ],
       [
         "PAR-0014",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-04-04",
         "Defensores",
         "Visitante",
@@ -12344,7 +12536,7 @@
       ],
       [
         "PAR-0015",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-04-11",
         "Porteño",
         "Local",
@@ -12356,7 +12548,7 @@
       ],
       [
         "PAR-0016",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-04-18",
         "Leloir",
         "Visitante",
@@ -12368,7 +12560,7 @@
       ],
       [
         "PAR-0017",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-04-25",
         "UAI",
         "Local",
@@ -12380,7 +12572,7 @@
       ],
       [
         "PAR-0018",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-05-02",
         "Pearson Juv",
         "Visitante",
@@ -12392,7 +12584,7 @@
       ],
       [
         "PAR-0019",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-05-09",
         "Moron Futsal A",
         "Local",
@@ -12404,7 +12596,7 @@
       ],
       [
         "PAR-0020",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-05-16",
         "Almafuerte Baby A",
         "Visitante",
@@ -12416,7 +12608,7 @@
       ],
       [
         "PAR-0021",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-05-23",
         "Lomas Futbol",
         "Local",
@@ -12428,7 +12620,7 @@
       ],
       [
         "PAR-0022",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-05-30",
         "Porteño FutFem",
         "Visitante",
@@ -12440,7 +12632,7 @@
       ],
       [
         "PAR-0023",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-06-06",
         "Huracan San Justo Juv",
         "Local",
@@ -12452,7 +12644,7 @@
       ],
       [
         "PAR-0024",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-06-13",
         "Defensores Haedo Baby",
         "Visitante",
@@ -12464,7 +12656,7 @@
       ],
       [
         "PAR-0025",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-06-20",
         "San Justo Baby",
         "Local",
@@ -12476,7 +12668,7 @@
       ],
       [
         "PAR-0026",
-        "T-001",
+        "T-EDEFI-May35",
         "2026-06-27",
         "Huracán",
         "Visitante",
@@ -12488,7 +12680,7 @@
       ],
       [
         "PAR-0027",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-01-03",
         "Morón",
         "Visitante",
@@ -12500,7 +12692,7 @@
       ],
       [
         "PAR-0028",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-01-10",
         "Gimnasia",
         "Local",
@@ -12512,7 +12704,7 @@
       ],
       [
         "PAR-0029",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-01-17",
         "Ramos Mejía",
         "Visitante",
@@ -12524,7 +12716,7 @@
       ],
       [
         "PAR-0030",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-01-24",
         "San Justo",
         "Local",
@@ -12536,7 +12728,7 @@
       ],
       [
         "PAR-0031",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-01-31",
         "Ateneo",
         "Visitante",
@@ -12548,7 +12740,7 @@
       ],
       [
         "PAR-0032",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-02-07",
         "Almafuerte",
         "Local",
@@ -12560,7 +12752,7 @@
       ],
       [
         "PAR-0033",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-02-14",
         "Ituzaingó",
         "Visitante",
@@ -12572,7 +12764,7 @@
       ],
       [
         "PAR-0034",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-02-21",
         "Liniers",
         "Local",
@@ -12584,7 +12776,7 @@
       ],
       [
         "PAR-0035",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-02-28",
         "Almagro",
         "Visitante",
@@ -12596,7 +12788,7 @@
       ],
       [
         "PAR-0036",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-03-07",
         "Pearson",
         "Local",
@@ -12608,7 +12800,7 @@
       ],
       [
         "PAR-0037",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-03-14",
         "CIDECO",
         "Visitante",
@@ -12620,7 +12812,7 @@
       ],
       [
         "PAR-0038",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-03-21",
         "Estrella",
         "Local",
@@ -12632,7 +12824,7 @@
       ],
       [
         "PAR-0039",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-03-28",
         "Defensores",
         "Visitante",
@@ -12644,7 +12836,7 @@
       ],
       [
         "PAR-0040",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-04-04",
         "Porteño",
         "Local",
@@ -12656,7 +12848,7 @@
       ],
       [
         "PAR-0041",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-04-11",
         "Leloir",
         "Visitante",
@@ -12668,7 +12860,7 @@
       ],
       [
         "PAR-0042",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-04-18",
         "UAI",
         "Local",
@@ -12680,7 +12872,7 @@
       ],
       [
         "PAR-0043",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-04-25",
         "Pearson Juv",
         "Visitante",
@@ -12692,7 +12884,7 @@
       ],
       [
         "PAR-0044",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-05-02",
         "Moron Futsal A",
         "Local",
@@ -12704,7 +12896,7 @@
       ],
       [
         "PAR-0045",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-05-09",
         "Almafuerte Baby A",
         "Visitante",
@@ -12716,7 +12908,7 @@
       ],
       [
         "PAR-0046",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-05-16",
         "Lomas Futbol",
         "Local",
@@ -12728,7 +12920,7 @@
       ],
       [
         "PAR-0047",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-05-23",
         "Porteño FutFem",
         "Visitante",
@@ -12740,7 +12932,7 @@
       ],
       [
         "PAR-0048",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-05-30",
         "Huracan San Justo Juv",
         "Local",
@@ -12752,7 +12944,7 @@
       ],
       [
         "PAR-0049",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-06-06",
         "Defensores Haedo Baby",
         "Visitante",
@@ -12764,7 +12956,7 @@
       ],
       [
         "PAR-0050",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-06-13",
         "San Justo Baby",
         "Local",
@@ -12776,7 +12968,7 @@
       ],
       [
         "PAR-0051",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-06-20",
         "Huracán",
         "Visitante",
@@ -12788,7 +12980,7 @@
       ],
       [
         "PAR-0052",
-        "T-002",
+        "T-EDEFI-May42",
         "2026-06-27",
         "Morón",
         "Local",
@@ -12800,7 +12992,7 @@
       ],
       [
         "PAR-0053",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-01-03",
         "Gimnasia Fem",
         "Local",
@@ -12812,7 +13004,7 @@
       ],
       [
         "PAR-0054",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-01-10",
         "Ramos Mejía Fem",
         "Visitante",
@@ -12824,7 +13016,7 @@
       ],
       [
         "PAR-0055",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-01-17",
         "San Justo Fem",
         "Local",
@@ -12836,7 +13028,7 @@
       ],
       [
         "PAR-0056",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-01-24",
         "Ateneo Fem",
         "Visitante",
@@ -12848,7 +13040,7 @@
       ],
       [
         "PAR-0057",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-01-31",
         "Almafuerte Fem",
         "Local",
@@ -12860,7 +13052,7 @@
       ],
       [
         "PAR-0058",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-02-07",
         "Ituzaingó Fem",
         "Visitante",
@@ -12872,7 +13064,7 @@
       ],
       [
         "PAR-0059",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-02-14",
         "Liniers Fem",
         "Local",
@@ -12884,7 +13076,7 @@
       ],
       [
         "PAR-0060",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-02-21",
         "Almagro Fem",
         "Visitante",
@@ -12896,7 +13088,7 @@
       ],
       [
         "PAR-0061",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-02-28",
         "Pearson Fem",
         "Local",
@@ -12908,7 +13100,7 @@
       ],
       [
         "PAR-0062",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-03-07",
         "CIDECO Fem",
         "Visitante",
@@ -12920,7 +13112,7 @@
       ],
       [
         "PAR-0063",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-03-14",
         "Estrella Fem",
         "Local",
@@ -12932,7 +13124,7 @@
       ],
       [
         "PAR-0064",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-03-21",
         "Defensores Fem",
         "Visitante",
@@ -12944,7 +13136,7 @@
       ],
       [
         "PAR-0065",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-03-28",
         "Porteño Fem",
         "Local",
@@ -12956,7 +13148,7 @@
       ],
       [
         "PAR-0066",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-04-04",
         "Leloir Fem",
         "Visitante",
@@ -12968,7 +13160,7 @@
       ],
       [
         "PAR-0067",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-04-11",
         "UAI Fem",
         "Local",
@@ -12980,7 +13172,7 @@
       ],
       [
         "PAR-0068",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-04-18",
         "Pearson Juv Fem",
         "Visitante",
@@ -12992,7 +13184,7 @@
       ],
       [
         "PAR-0069",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-04-25",
         "Moron Futsal A Fem",
         "Local",
@@ -13004,7 +13196,7 @@
       ],
       [
         "PAR-0070",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-05-02",
         "Almafuerte Baby A Fem",
         "Visitante",
@@ -13016,7 +13208,7 @@
       ],
       [
         "PAR-0071",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-05-09",
         "Lomas Futbol Fem",
         "Local",
@@ -13028,7 +13220,7 @@
       ],
       [
         "PAR-0072",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-05-16",
         "Porteño FutFem Fem",
         "Visitante",
@@ -13040,7 +13232,7 @@
       ],
       [
         "PAR-0073",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-05-23",
         "Huracan San Justo Juv Fem",
         "Local",
@@ -13052,7 +13244,7 @@
       ],
       [
         "PAR-0074",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-05-30",
         "Defensores Haedo Baby Fem",
         "Visitante",
@@ -13064,7 +13256,7 @@
       ],
       [
         "PAR-0075",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-06-06",
         "San Justo Baby Fem",
         "Local",
@@ -13076,7 +13268,7 @@
       ],
       [
         "PAR-0076",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-06-13",
         "Huracán Fem",
         "Visitante",
@@ -13088,7 +13280,7 @@
       ],
       [
         "PAR-0077",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-06-20",
         "Morón Fem",
         "Local",
@@ -13100,7 +13292,7 @@
       ],
       [
         "PAR-0078",
-        "T-003",
+        "T-BAFI-Fem1ra",
         "2026-06-27",
         "Gimnasia Fem",
         "Visitante",
@@ -13112,7 +13304,7 @@
       ],
       [
         "PAR-0079",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-01-03",
         "Ramos Mejía Juv",
         "Visitante",
@@ -13124,7 +13316,7 @@
       ],
       [
         "PAR-0080",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-01-10",
         "San Justo Juv",
         "Local",
@@ -13136,7 +13328,7 @@
       ],
       [
         "PAR-0081",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-01-17",
         "Ateneo Juv",
         "Visitante",
@@ -13148,7 +13340,7 @@
       ],
       [
         "PAR-0082",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-01-24",
         "Almafuerte Juv",
         "Local",
@@ -13160,7 +13352,7 @@
       ],
       [
         "PAR-0083",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-01-31",
         "Ituzaingó Juv",
         "Visitante",
@@ -13172,7 +13364,7 @@
       ],
       [
         "PAR-0084",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-02-07",
         "Liniers Juv",
         "Local",
@@ -13184,7 +13376,7 @@
       ],
       [
         "PAR-0085",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-02-14",
         "Almagro Juv",
         "Visitante",
@@ -13196,7 +13388,7 @@
       ],
       [
         "PAR-0086",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-02-21",
         "Pearson Juv",
         "Local",
@@ -13208,7 +13400,7 @@
       ],
       [
         "PAR-0087",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-02-28",
         "CIDECO Juv",
         "Visitante",
@@ -13220,7 +13412,7 @@
       ],
       [
         "PAR-0088",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-03-07",
         "Estrella Juv",
         "Local",
@@ -13232,7 +13424,7 @@
       ],
       [
         "PAR-0089",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-03-14",
         "Defensores Juv",
         "Visitante",
@@ -13244,7 +13436,7 @@
       ],
       [
         "PAR-0090",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-03-21",
         "Porteño Juv",
         "Local",
@@ -13256,7 +13448,7 @@
       ],
       [
         "PAR-0091",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-03-28",
         "Leloir Juv",
         "Visitante",
@@ -13268,7 +13460,7 @@
       ],
       [
         "PAR-0092",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-04-04",
         "UAI Juv",
         "Local",
@@ -13280,7 +13472,7 @@
       ],
       [
         "PAR-0093",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-04-11",
         "Pearson Juv Juv",
         "Visitante",
@@ -13292,7 +13484,7 @@
       ],
       [
         "PAR-0094",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-04-18",
         "Moron Futsal A Juv",
         "Local",
@@ -13304,7 +13496,7 @@
       ],
       [
         "PAR-0095",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-04-25",
         "Almafuerte Baby A Juv",
         "Visitante",
@@ -13316,7 +13508,7 @@
       ],
       [
         "PAR-0096",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-05-02",
         "Lomas Futbol Juv",
         "Local",
@@ -13328,7 +13520,7 @@
       ],
       [
         "PAR-0097",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-05-09",
         "Porteño FutFem Juv",
         "Visitante",
@@ -13340,7 +13532,7 @@
       ],
       [
         "PAR-0098",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-05-16",
         "Huracan San Justo Juv Juv",
         "Local",
@@ -13352,7 +13544,7 @@
       ],
       [
         "PAR-0099",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-05-23",
         "Defensores Haedo Baby Juv",
         "Visitante",
@@ -13364,7 +13556,7 @@
       ],
       [
         "PAR-0100",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-05-30",
         "San Justo Baby Juv",
         "Local",
@@ -13376,7 +13568,7 @@
       ],
       [
         "PAR-0101",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-06-06",
         "Huracán Juv",
         "Visitante",
@@ -13388,7 +13580,7 @@
       ],
       [
         "PAR-0102",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-06-13",
         "Morón Juv",
         "Local",
@@ -13400,7 +13592,7 @@
       ],
       [
         "PAR-0103",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-06-20",
         "Gimnasia Juv",
         "Visitante",
@@ -13412,7 +13604,7 @@
       ],
       [
         "PAR-0104",
-        "T-004",
+        "T-FUTSALA-Masc5ta",
         "2026-06-27",
         "Ramos Mejía Juv",
         "Local",
@@ -13424,7 +13616,7 @@
       ],
       [
         "PAR-0105",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-01-03",
         "San Justo Baby",
         "Local",
@@ -13436,7 +13628,7 @@
       ],
       [
         "PAR-0106",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-01-10",
         "Ateneo Baby",
         "Visitante",
@@ -13448,7 +13640,7 @@
       ],
       [
         "PAR-0107",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-01-17",
         "Almafuerte Baby",
         "Local",
@@ -13460,7 +13652,7 @@
       ],
       [
         "PAR-0108",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-01-24",
         "Ituzaingó Baby",
         "Visitante",
@@ -13472,7 +13664,7 @@
       ],
       [
         "PAR-0109",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-01-31",
         "Liniers Baby",
         "Local",
@@ -13484,7 +13676,7 @@
       ],
       [
         "PAR-0110",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-02-07",
         "Almagro Baby",
         "Visitante",
@@ -13496,7 +13688,7 @@
       ],
       [
         "PAR-0111",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-02-14",
         "Pearson Baby",
         "Local",
@@ -13508,7 +13700,7 @@
       ],
       [
         "PAR-0112",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-02-21",
         "CIDECO Baby",
         "Visitante",
@@ -13520,7 +13712,7 @@
       ],
       [
         "PAR-0113",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-02-28",
         "Estrella Baby",
         "Local",
@@ -13532,7 +13724,7 @@
       ],
       [
         "PAR-0114",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-03-07",
         "Defensores Baby",
         "Visitante",
@@ -13544,7 +13736,7 @@
       ],
       [
         "PAR-0115",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-03-14",
         "Porteño Baby",
         "Local",
@@ -13556,7 +13748,7 @@
       ],
       [
         "PAR-0116",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-03-21",
         "Leloir Baby",
         "Visitante",
@@ -13568,7 +13760,7 @@
       ],
       [
         "PAR-0117",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-03-28",
         "UAI Baby",
         "Local",
@@ -13580,7 +13772,7 @@
       ],
       [
         "PAR-0118",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-04-04",
         "Pearson Juv Baby",
         "Visitante",
@@ -13592,7 +13784,7 @@
       ],
       [
         "PAR-0119",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-04-11",
         "Moron Futsal A Baby",
         "Local",
@@ -13604,7 +13796,7 @@
       ],
       [
         "PAR-0120",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-04-18",
         "Almafuerte Baby A Baby",
         "Visitante",
@@ -13616,7 +13808,7 @@
       ],
       [
         "PAR-0121",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-04-25",
         "Lomas Futbol Baby",
         "Local",
@@ -13628,7 +13820,7 @@
       ],
       [
         "PAR-0122",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-05-02",
         "Porteño FutFem Baby",
         "Visitante",
@@ -13640,7 +13832,7 @@
       ],
       [
         "PAR-0123",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-05-09",
         "Huracan San Justo Juv Baby",
         "Local",
@@ -13652,7 +13844,7 @@
       ],
       [
         "PAR-0124",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-05-16",
         "Defensores Haedo Baby Baby",
         "Visitante",
@@ -13664,7 +13856,7 @@
       ],
       [
         "PAR-0125",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-05-23",
         "San Justo Baby Baby",
         "Local",
@@ -13676,7 +13868,7 @@
       ],
       [
         "PAR-0126",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-05-30",
         "Huracán Baby",
         "Visitante",
@@ -13688,7 +13880,7 @@
       ],
       [
         "PAR-0127",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-06-06",
         "Morón Baby",
         "Local",
@@ -13700,7 +13892,7 @@
       ],
       [
         "PAR-0128",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-06-13",
         "Gimnasia Baby",
         "Visitante",
@@ -13712,7 +13904,7 @@
       ],
       [
         "PAR-0129",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-06-20",
         "Ramos Mejía Baby",
         "Local",
@@ -13724,7 +13916,7 @@
       ],
       [
         "PAR-0130",
-        "T-005",
+        "T-EDEFI-Baby",
         "2026-06-27",
         "San Justo Baby",
         "Visitante",
