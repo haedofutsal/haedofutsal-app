@@ -1106,6 +1106,213 @@ function registrarPagoTransferenciaComprobante(paymentId, email, amount, month, 
 }
 
 /**
+ * Intenta conciliar de forma automática el pago por transferencia del socio
+ * contrastando contra la API de Mercado Pago. Si tiene éxito, acredita la cuota al instante.
+ */
+function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, paymentMethod, base64Receipt, transactionId) {
+  try {
+    const ss = getSpreadsheet();
+    
+    // 1. Obtener Token de Mercado Pago
+    let token = "";
+    try {
+      token = getMercadoPagoToken();
+    } catch(e) {}
+    if (!token || token === "MOCK_MP_ACCESS_TOKEN_DEVELOPMENT") {
+      token = "APP_USR-3796695277109598-062312-3b036573c099307abf18c869ea76c0f6-1868352613";
+    }
+    
+    // 2. Obtener datos de la cuota y de los socios
+    const sheetPagos = ss.getSheetByName(HOJA_PAGOS);
+    if (!sheetPagos) throw new Error("No se encontró la hoja de pagos.");
+    const pagosData = sheetPagos.getDataRange().getValues();
+    const pHeaders = pagosData[0];
+    const pIdCol = pHeaders.indexOf("Payment_ID");
+    const pStatusCol = pHeaders.indexOf("Status");
+    const pByCol = pHeaders.indexOf("Collected_By");
+    const pAtCol = pHeaders.indexOf("Collected_At");
+    const pLinkCol = pHeaders.indexOf("MP_Link");
+    const pEmailCol = pHeaders.indexOf("Email");
+    
+    let filaIndex = -1;
+    for (let i = 1; i < pagosData.length; i++) {
+      if (pagosData[i][pIdCol].toString().trim() === paymentId.toString().trim()) {
+        filaIndex = i;
+        break;
+      }
+    }
+    if (filaIndex === -1) throw new Error("No se encontró el registro de pago.");
+    
+    const targetAmount = parseFloat(amount || 0);
+    const socioEmail = pagosData[filaIndex][pEmailCol] || email;
+    
+    // Buscar nombre del socio
+    const sheetUsers = ss.getSheetByName(HOJA_USUARIOS);
+    let athleteName = "";
+    if (sheetUsers) {
+      const usersData = sheetUsers.getDataRange().getValues();
+      const uHeaders = usersData[0];
+      const uEmailCol = uHeaders.indexOf("Email");
+      const uNameCol = uHeaders.indexOf("Name");
+      for (let i = 1; i < usersData.length; i++) {
+        if (usersData[i][uEmailCol].toString().toLowerCase().trim() === socioEmail.toLowerCase().trim()) {
+          athleteName = usersData[i][uNameCol] || "";
+          break;
+        }
+      }
+    }
+    
+    let matchedPayment = null;
+    
+    // Caso A: El usuario ingresó un Nro. de Operación
+    if (transactionId && transactionId.trim().length > 0) {
+      const cleanTxId = transactionId.trim();
+      
+      // Verificar si ya fue acreditado en nuestra BD para evitar duplicados
+      for (let i = 1; i < pagosData.length; i++) {
+        const collectedBy = pagosData[i][pByCol] || "";
+        if (collectedBy.includes(cleanTxId)) {
+          return { success: false, message: `La transacción #${cleanTxId} ya fue acreditada anteriormente para otra cuota.` };
+        }
+      }
+      
+      const url = `https://api.mercadopago.com/v1/payments/${cleanTxId}`;
+      const options = {
+        method: "get",
+        headers: { "Authorization": "Bearer " + token },
+        muteHttpExceptions: true
+      };
+      
+      const response = UrlFetchApp.fetch(url, options);
+      if (response.getResponseCode() === 200) {
+        const paymentInfo = JSON.parse(response.getContentText());
+        if (paymentInfo.status === 'approved') {
+          const mpAmount = parseFloat(paymentInfo.transaction_amount || 0);
+          if (Math.abs(mpAmount - targetAmount) < 10.0) { // Tolerancia de 10 pesos
+            matchedPayment = paymentInfo;
+          } else {
+            return { success: false, message: `El monto de la transacción #${cleanTxId} ($${mpAmount}) no coincide con el de la cuota ($${targetAmount}).` };
+          }
+        } else {
+          return { success: false, message: `La transacción #${cleanTxId} se encuentra en estado '${paymentInfo.status}' (debe estar approved).` };
+        }
+      } else {
+        return { success: false, message: `No se pudo encontrar la transacción #${cleanTxId} en Mercado Pago. Verificá el número e intentá de nuevo.` };
+      }
+    } else {
+      // Caso B: Buscar en los últimos 50 movimientos
+      const url = "https://api.mercadopago.com/v1/payments?sort=date_created&criteria=desc&limit=50";
+      const options = {
+        method: "get",
+        headers: { "Authorization": "Bearer " + token },
+        muteHttpExceptions: true
+      };
+      
+      const response = UrlFetchApp.fetch(url, options);
+      if (response.getResponseCode() === 200) {
+        const resultInfo = JSON.parse(response.getContentText());
+        const paymentsList = resultInfo.results || [];
+        
+        // Filtrar candidatos aprobados con el monto correcto que no hayan sido acreditados
+        const candidates = paymentsList.filter(p => {
+          if (p.status !== 'approved') return false;
+          const mpAmount = parseFloat(p.transaction_amount || 0);
+          if (Math.abs(mpAmount - targetAmount) >= 10.0) return false;
+          
+          // Verificar que este ID de pago de MP no esté en nuestra BD
+          const mpTxId = p.id.toString();
+          const alreadyUsed = pagosData.some(row => row[pByCol].toString().includes(mpTxId));
+          if (alreadyUsed) return false;
+          
+          return true;
+        });
+        
+        if (candidates.length === 0) {
+          return { success: false, message: `No se encontró ninguna transferencia aprobada por $${targetAmount} libre de acreditación en tu cuenta.` };
+        }
+        
+        // Buscar coincidencia por nombre o email
+        const nameMatches = [];
+        const cleanAthleteName = athleteName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+        const cleanAthleteEmail = socioEmail.toLowerCase().trim();
+        
+        candidates.forEach(p => {
+          let matches = false;
+          // Payer Email
+          const payerEmail = p.payer && p.payer.email ? p.payer.email.toLowerCase().trim() : "";
+          if (payerEmail && (payerEmail === cleanAthleteEmail || payerEmail.includes(cleanAthleteEmail.split('@')[0]))) {
+            matches = true;
+          }
+          // Payer Name
+          const payerName = (p.description || (p.payer && (p.payer.first_name + ' ' + (p.payer.last_name || '')) || '')).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+          if (payerName && cleanAthleteName) {
+            const parts = cleanAthleteName.split(" ");
+            parts.forEach(part => {
+              if (part.length > 2 && payerName.includes(part)) {
+                matches = true;
+              }
+            });
+          }
+          if (matches) {
+            nameMatches.push(p);
+          }
+        });
+        
+        if (nameMatches.length === 1) {
+          matchedPayment = nameMatches[0];
+        } else if (nameMatches.length > 1) {
+          return { success: false, message: `Se detectaron múltiples transferencias por el monto exacto. Por favor, ingresá tu Nro. de Operación para validar cuál te corresponde.` };
+        } else {
+          return { success: false, message: `Encontramos transferencias de ese valor pero los datos del titular no coinciden con los tuyos. Por favor, ingresá el Nro. de Operación de tu comprobante.` };
+        }
+      } else {
+        return { success: false, message: "Error al conectar con la API de Mercado Pago. Por favor, intentá ingresando tu Nro. de Operación." };
+      }
+    }
+    
+    // 3. Si encontramos la coincidencia, acreditar automáticamente
+    if (matchedPayment) {
+      const txId = matchedPayment.id.toString();
+      const rowNum = filaIndex + 1;
+      const nowStr = new Date().toISOString().replace("T", " ").substring(0, 16);
+      const methodStr = paymentMethod || "Transferencia MP";
+      
+      // Marcar como pagado
+      sheetPagos.getRange(rowNum, pStatusCol + 1).setValue("Pagado");
+      sheetPagos.getRange(rowNum, pByCol + 1).setValue(`Auto MP (ID: ${txId})`);
+      sheetPagos.getRange(rowNum, pAtCol + 1).setValue(nowStr);
+      sheetPagos.getRange(rowNum, pLinkCol + 1).setValue(base64Receipt || "");
+      
+      // Registrar Finanzas
+      const sheetFinanzas = ss.getSheetByName(HOJA_FINANZAS);
+      if (sheetFinanzas) {
+        const movId = `MOV-${Date.now().toString().slice(-6)}`;
+        const dateFormatted = new Date().toISOString().split("T")[0];
+        const concept = `Cuota Social ${month} - Socio: ${socioEmail} (Auto MP ID: ${txId})`;
+        
+        sheetFinanzas.appendRow([movId, "General", "Ingreso", concept, targetAmount, dateFormatted, methodStr]);
+        const lastRow = sheetFinanzas.getLastRow();
+        if (sheetFinanzas.getRange(lastRow, 5).setNumberFormat) {
+          sheetFinanzas.getRange(lastRow, 5).setNumberFormat("$#,##0.00");
+        }
+      }
+      
+      SpreadsheetApp.flush();
+      
+      registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Conciliación AUTOMÁTICA exitosa para cuota ${month} por $${targetAmount.toLocaleString('es-AR')}. MP ID: ${txId}`);
+      
+      return { success: true, message: `¡Pago conciliado y acreditado automáticamente! Se encontró la transferencia #${txId} por $${targetAmount.toLocaleString('es-AR')} en la cuenta del club.` };
+    }
+    
+    return { success: false, message: "No se pudo validar tu transferencia de forma automática. Intentá ingresando tu Nro. de Operación." };
+    
+  } catch(error) {
+    console.error("Error en conciliarPagoTransferenciaAutomatico:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
  * Registra la solicitud de revisión del pago de una cuota enviando un comprobante.
  * Coloca la cuota en estado 'Revision' y guarda la imagen/PDF base64 en la columna MP_Link.
  */
