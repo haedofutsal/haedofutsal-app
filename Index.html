@@ -4849,7 +4849,7 @@
       const torneos = data.torneos || [];
       const torneo = torneos.find(t => t.Torneo_ID === p.Torneo_ID);
 
-      document.getElementById("partido-modal-torneo").innerText = torneo ? torneo.Name : (p.Torneo_Name || "Partido");
+      document.getElementById("partido-modal-torneo").innerText = (torneo ? torneo.Name : (p.Torneo_Name || "Partido")).split(" [Precio:")[0];
       document.getElementById("partido-modal-cat").innerText = torneo ? `Categoría: ${torneo.Category}` : "";
       document.getElementById("partido-modal-rival").innerText = `vs. ${p.Opponent}`;
       document.getElementById("partido-modal-loc").innerText = p.Location || "Local";
@@ -5596,7 +5596,7 @@
 
     function construirTarjetaPartidoHTML(p, torneosMap) {
       const torneo = torneosMap ? torneosMap[p.Torneo_ID] : null;
-      const torneoName = torneo ? torneo.Name : (p.Torneo_Name || "Torneo");
+      const torneoName = (torneo ? torneo.Name : (p.Torneo_Name || "Torneo")).split(" [Precio:")[0];
       const catName = torneo ? torneo.Category : "";
       const tIconHTML = obtenerIconoTorneo(p.Torneo_ID, torneoName);
 
@@ -5686,7 +5686,7 @@
       const torneos = (estadoApp.datosAdmin ? estadoApp.datosAdmin.torneos : []) || [];
       torneos.forEach(t => torneosMap[t.Torneo_ID] = t);
       const tObj = torneosMap[p.Torneo_ID];
-      const torneoName = tObj ? tObj.Name : (p.Torneo_Name || "Torneo");
+      const torneoName = (tObj ? tObj.Name : (p.Torneo_Name || "Torneo")).split(" [Precio:")[0];
       const catLabel = tObj ? ` (${tObj.Category})` : "";
 
       const isLocal = (p.Location || "").toLowerCase() === "local";
@@ -6953,6 +6953,11 @@
           torneosContainer.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:10px;">No hay torneos activos cargados.</div>`;
         } else {
           torneos.forEach(t => {
+            const rawName = t.Name || "";
+            const nameLimpio = rawName.split(" [Precio:")[0].trim();
+            const match = rawName.match(/\[Precio:\s*(\d+)\]/);
+            const ticketPrice = match ? parseFloat(match[1]) : 0;
+            
             const div = document.createElement("div");
             div.style.display = "flex";
             div.style.justifyContent = "space-between";
@@ -6961,11 +6966,11 @@
             div.style.borderBottom = "1px solid rgba(0,0,0,0.05)";
             div.innerHTML = `
               <span style="font-size:0.82rem; font-weight:600; color:#334155;">
-                <i class="fa-solid fa-trophy" style="color:var(--text-muted); font-size:0.75rem; margin-right:4px;"></i> ${t.Name}
+                <i class="fa-solid fa-trophy" style="color:var(--text-muted); font-size:0.75rem; margin-right:4px;"></i> ${nameLimpio}
               </span>
               <div style="display:flex; align-items:center; gap:6px;">
                 <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">$</span>
-                <input type="number" class="precio-torneo-input" data-id="${t.Torneo_ID}" value="${t.Ticket_Price || 0}" style="width: 100px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; text-align: right;" />
+                <input type="number" class="precio-torneo-input" data-id="${t.Torneo_ID}" value="${ticketPrice}" style="width: 100px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; text-align: right;" />
               </div>
             `;
             torneosContainer.appendChild(div);
@@ -7016,7 +7021,9 @@
               if (estadoApp.datosAdmin.torneos) {
                 estadoApp.datosAdmin.torneos.forEach(t => {
                   if (torneosObj[t.Torneo_ID] !== undefined) {
-                    t.Ticket_Price = torneosObj[t.Torneo_ID];
+                    const nameLimpio = (t.Name || "").split(" [Precio:")[0].trim();
+                    const newPrice = torneosObj[t.Torneo_ID];
+                    t.Name = `${nameLimpio} [Precio: ${newPrice}]`;
                   }
                 });
               }
