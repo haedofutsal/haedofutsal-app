@@ -3367,19 +3367,15 @@
               <div>Coincidencia:</div>
               <div style="font-weight: 700; color: #10b981;" id="comprobante-res-coincidencia">✅ Monto Correcto</div>
             </div>
-            <div class="form-group" style="margin-top: 10px;">
-              <label class="form-label" style="font-size: 0.72rem; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Nro. de Operación / ID de Transferencia (Recomendado):</label>
-              <input type="text" id="comprobante-input-txid" class="form-input" placeholder="Ej: 83294821034" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding: 8px; font-size: 0.82rem; width:100%; border-radius:8px;">
-              <span style="font-size: 0.65rem; color:#64748b; margin-top: 2px; display: block;">Se validará al instante contra los movimientos reales de la cuenta de Mercado Pago del club.</span>
-            </div>
+
           </div>
         </div>
         
         <!-- Botones -->
         <div style="display: flex; gap: 10px; margin-top: 1rem;">
-          <button class="btn-secondary" style="flex: 1; padding: 10px 0; justify-content: center; font-size: 0.9rem;" onclick="cerrarModalValidarComprobante()">Cancelar</button>
-          <button id="comprobante-btn-confirmar" class="btn-primary" style="flex: 1.5; background: #10b981; border: none; justify-content: center; display: none; padding: 10px 0; font-size: 0.9rem;" onclick="confirmarAcreditacionComprobante()">
-            <i class="fa-solid fa-check-double" style="margin-right: 4px;"></i> Acreditar Pago
+          <button id="comprobante-btn-cancelar" class="btn-secondary" style="flex: 1; padding: 10px 0; justify-content: center; font-size: 0.9rem;" onclick="cerrarModalValidarComprobante()">Cancelar</button>
+          <button id="comprobante-btn-listo" class="btn-primary" style="flex: 1; background: #10b981; border: none; justify-content: center; display: none; padding: 10px 0; font-size: 0.9rem;" onclick="cerrarModalValidarComprobante()">
+            Listo
           </button>
         </div>
       </div>
@@ -4256,35 +4252,11 @@
       if (!file) return;
       fileComprobanteActual = file;
       cerrarModalMetodoPago();
-      const txInput = document.getElementById("comprobante-input-txid");
-      if (txInput) txInput.value = "";
       
       const modal = document.getElementById("modal-validar-comprobante");
       if (!modal) return;
       
       modal.style.display = "flex";
-      
-      const previewImg = document.getElementById("comprobante-preview-img");
-      const previewPdf = document.getElementById("comprobante-preview-pdf");
-      const previewPdfName = document.getElementById("comprobante-preview-pdf-name");
-      const scannerLine = document.getElementById("comprobante-scanner-line");
-      
-      previewImg.style.display = "none";
-      previewPdf.style.display = "none";
-      scannerLine.style.display = "block";
-      scannerLine.style.animation = "laser-scan 1.5s linear infinite";
-      
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          previewImg.src = e.target.result;
-          previewImg.style.display = "block";
-        }
-        reader.readAsDataURL(file);
-      } else {
-        previewPdfName.textContent = file.name;
-        previewPdf.style.display = "flex";
-      }
       
       const selectCuota = document.getElementById("comprobante-select-cuota");
       selectCuota.innerHTML = "";
@@ -4293,41 +4265,150 @@
       const deudas = pagos.filter(p => p.Status === "Pendiente");
       
       if (deudas.length === 0) {
-        const option = document.createElement("option");
-        option.value = "";
-        option.textContent = "Sin cuotas pendientes";
-        selectCuota.appendChild(option);
-      } else {
-        deudas.forEach(p => {
-          const option = document.createElement("option");
-          option.value = p.Payment_ID;
-          option.setAttribute("data-month", p.Month);
-          option.setAttribute("data-amount", p.Amount);
-          option.textContent = `Cuota ${p.Month} - $${parseFloat(p.Amount).toLocaleString('es-AR')}`;
-          selectCuota.appendChild(option);
-        });
+        alert("No tenés cuotas pendientes de pago.");
+        cerrarModalValidarComprobante();
+        return;
       }
       
-      document.getElementById("comprobante-status-loading").style.display = "flex";
-      document.getElementById("comprobante-status-result").style.display = "none";
-      document.getElementById("comprobante-btn-confirmar").style.display = "none";
+      deudas.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p.Payment_ID;
+        option.setAttribute("data-month", p.Month);
+        option.setAttribute("data-amount", p.Amount);
+        option.textContent = `Cuota ${p.Month} - $${parseFloat(p.Amount).toLocaleString('es-AR')}`;
+        selectCuota.appendChild(option);
+      });
       
-      setTimeout(() => {
-        scannerLine.style.display = "none";
-        scannerLine.style.animation = "";
-        document.getElementById("comprobante-status-loading").style.display = "none";
-        
-        const selectedOption = selectCuota.options[selectCuota.selectedIndex];
-        const month = selectedOption ? selectedOption.getAttribute("data-month") : "Cuota";
-        const amount = selectedOption ? parseFloat(selectedOption.getAttribute("data-amount")) : 0;
-        
-        document.getElementById("comprobante-res-concepto").textContent = `Cuota Social ${month}`;
-        document.getElementById("comprobante-res-monto").textContent = `$${amount.toLocaleString('es-AR')}`;
-        document.getElementById("comprobante-res-coincidencia").textContent = "✅ Monto Correcto";
-        
-        document.getElementById("comprobante-status-result").style.display = "block";
-        document.getElementById("comprobante-btn-confirmar").style.display = "flex";
-      }, 2500);
+      // Auto-seleccionar cuota correspondiente y deshabilitar para evitar cambios mid-proceso
+      if (cuotaSeleccionadaPago) {
+        selectCuota.value = cuotaSeleccionadaPago.paymentId;
+      }
+      selectCuota.disabled = true;
+      
+      // Configurar estado inicial del modal
+      document.getElementById("comprobante-status-loading").style.display = "flex";
+      const statusText = document.querySelector("#comprobante-status-loading p");
+      if (statusText) statusText.textContent = "Escaneando comprobante y conciliando pago...";
+      document.getElementById("comprobante-status-result").style.display = "none";
+      
+      document.getElementById("comprobante-btn-cancelar").style.display = "flex";
+      document.getElementById("comprobante-btn-listo").style.display = "none";
+      
+      // Leer archivo y disparar conciliación inmediata
+      const selectedOption = selectCuota.options[selectCuota.selectedIndex];
+      const paymentId = selectedOption.value;
+      const month = selectedOption.getAttribute("data-month");
+      const amount = selectedOption.getAttribute("data-amount");
+      const email = estadoApp.userEmail;
+      
+      const transferTypeEl = document.querySelector('input[name="modal-transfer-method"]:checked');
+      const transferMethod = transferTypeEl ? transferTypeEl.value : "Transferencia MP";
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Data = e.target.result;
+        ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data);
+      };
+      reader.onerror = function() {
+        alert("No se pudo leer el archivo de comprobante. Intentá con otra imagen.");
+        cerrarModalValidarComprobante();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data) {
+      google.script.run
+        .withSuccessHandler(function(response) {
+          const scannerLine = document.getElementById("comprobante-scanner-line");
+          if (scannerLine) {
+            scannerLine.style.display = "none";
+            scannerLine.style.animation = "";
+          }
+          
+          if (response && response.success) {
+            // Éxito: Conciliación automática instantánea exitosa
+            document.getElementById("comprobante-status-loading").style.display = "none";
+            
+            document.getElementById("comprobante-res-concepto").textContent = `Cuota Social ${month}`;
+            document.getElementById("comprobante-res-monto").textContent = `$${parseFloat(amount).toLocaleString('es-AR')}`;
+            
+            const coincidenciaEl = document.getElementById("comprobante-res-coincidencia");
+            coincidenciaEl.textContent = "✅ Conciliado y Acreditado Al Instante";
+            coincidenciaEl.style.color = "#10b981";
+            
+            document.getElementById("comprobante-status-result").style.display = "block";
+            
+            // Cambiar botones
+            document.getElementById("comprobante-btn-cancelar").style.display = "none";
+            document.getElementById("comprobante-btn-listo").style.display = "flex";
+            
+            cargarDatosSocioEnPantalla();
+          } else {
+            // Falló la conciliación automática: registrar automáticamente para revisión manual
+            const statusText = document.querySelector("#comprobante-status-loading p");
+            if (statusText) statusText.textContent = "Buscando transacciones... Registrando para revisión manual...";
+            
+            // Re-encender animación laser brevemente para dar feedback visual
+            if (scannerLine) {
+              scannerLine.style.display = "block";
+              scannerLine.style.animation = "laser-scan 1s linear infinite";
+            }
+            
+            google.script.run
+              .withSuccessHandler(function(manResponse) {
+                if (scannerLine) {
+                  scannerLine.style.display = "none";
+                  scannerLine.style.animation = "";
+                }
+                document.getElementById("comprobante-status-loading").style.display = "none";
+                
+                document.getElementById("comprobante-res-concepto").textContent = `Cuota Social ${month}`;
+                document.getElementById("comprobante-res-monto").textContent = `$${parseFloat(amount).toLocaleString('es-AR')}`;
+                
+                const coincidenciaEl = document.getElementById("comprobante-res-coincidencia");
+                coincidenciaEl.textContent = "⚠️ Acreditación Automática Pendiente";
+                coincidenciaEl.style.color = "#f59e0b";
+                
+                // Mostrar explicación en el resultado
+                const resultBox = document.getElementById("comprobante-status-result");
+                resultBox.style.display = "block";
+                
+                // Agregar una aclaración amigable
+                let infoText = resultBox.querySelector(".manual-review-info");
+                if (!infoText) {
+                  infoText = document.createElement("div");
+                  infoText.className = "manual-review-info";
+                  infoText.style.marginTop = "10px";
+                  infoText.style.fontSize = "0.75rem";
+                  infoText.style.color = "#64748b";
+                  infoText.style.borderTop = "1px solid rgba(0,0,0,0.05)";
+                  infoText.style.paddingTop = "8px";
+                  resultBox.appendChild(infoText);
+                }
+                infoText.innerHTML = `<i class="fa-solid fa-clock"></i> No pudimos verificar la transferencia en tiempo real en nuestra cuenta aún. El comprobante fue enviado para verificación manual administrativa. Tu cuota quedará "En Revisión".`;
+                
+                document.getElementById("comprobante-btn-cancelar").style.display = "none";
+                document.getElementById("comprobante-btn-listo").style.display = "flex";
+                
+                cargarDatosSocioEnPantalla();
+              })
+              .withFailureHandler(function(err) {
+                if (scannerLine) {
+                  scannerLine.style.display = "none";
+                }
+                document.getElementById("comprobante-status-loading").style.display = "none";
+                alert("Error de conexión al enviar comprobante: " + err.toString());
+                cerrarModalValidarComprobante();
+              })
+              .solicitarRevisionTransferencia(paymentId, email, amount, month, transferMethod, base64Data);
+          }
+        })
+        .withFailureHandler(function(err) {
+          document.getElementById("comprobante-status-loading").style.display = "none";
+          alert("Error de conexión al conciliar: " + err.toString());
+          cerrarModalValidarComprobante();
+        })
+        .conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, transferMethod, base64Data, "");
     }
 
     function actualizarMontoEsperadoComprobante() {
@@ -4350,73 +4431,6 @@
       if (input.files && input.files[0]) {
         mostrarModalValidarComprobanteCompartido(input.files[0]);
       }
-    }
-
-    function confirmarAcreditacionComprobante() {
-      const selectCuota = document.getElementById("comprobante-select-cuota");
-      const selectedOption = selectCuota.options[selectCuota.selectedIndex];
-      if (!selectedOption || !selectedOption.value) {
-        alert("Seleccioná una cuota válida para acreditar.");
-        return;
-      }
-      
-      const paymentId = selectedOption.value;
-      const month = selectedOption.getAttribute("data-month");
-      const amount = selectedOption.getAttribute("data-amount");
-      const email = estadoApp.userEmail;
-      
-      const transferTypeEl = document.querySelector('input[name="modal-transfer-method"]:checked');
-      const transferMethod = transferTypeEl ? transferTypeEl.value : "Transferencia MP";
-      
-      if (!fileComprobanteActual) {
-        alert("Por favor, subí o seleccioná un comprobante válido antes de confirmar.");
-        return;
-      }
-      
-      const transactionId = (document.getElementById("comprobante-input-txid") ? document.getElementById("comprobante-input-txid").value.trim() : "");
-      
-      cerrarModalValidarComprobante();
-      mostrarCarga("Conciliando transferencia automáticamente con Mercado Pago...");
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const base64Data = e.target.result;
-        
-        google.script.run
-          .withSuccessHandler(function(response) {
-            ocultarCarga();
-            if (response && response.success) {
-              alert(response.message);
-              cargarDatosSocioEnPantalla();
-            } else {
-              const confirmManual = confirm(response.message + "\n\n¿Deseás enviar el comprobante a revisión manual para que la administración del club lo verifique?");
-              if (confirmManual) {
-                mostrarCarga("Enviando comprobante a revisión manual...");
-                google.script.run
-                  .withSuccessHandler(function(manResponse) {
-                    ocultarCarga();
-                    alert(manResponse.message);
-                    cargarDatosSocioEnPantalla();
-                  })
-                  .withFailureHandler(function(err) {
-                    ocultarCarga();
-                    alert("Error de conexión: " + err.toString());
-                  })
-                  .solicitarRevisionTransferencia(paymentId, email, amount, month, transferMethod, base64Data);
-              }
-            }
-          })
-          .withFailureHandler(function(err) {
-            ocultarCarga();
-            alert("Error de conexión: " + err.toString());
-          })
-          .conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, transferMethod, base64Data, transactionId);
-      };
-      reader.onerror = function() {
-        ocultarCarga();
-        alert("No se pudo leer el archivo de comprobante. Por favor intentá con otra imagen o PDF.");
-      };
-      reader.readAsDataURL(fileComprobanteActual);
     }
 
     // NAVEGACIÓN ENTORNO ADMINISTRADOR / COACH (única definición con route guard)
