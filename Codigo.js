@@ -1840,20 +1840,18 @@ function actualizarPrecios(categoriasObj, torneosObj) {
       const data = sheetTorneos.getDataRange().getValues();
       const headers = data[0];
       const idIdx = headers.indexOf("Torneo_ID");
-      const ticketIdx = headers.indexOf("Ticket_Price");
+      const nameIdx = headers.indexOf("Name");
       
-      if (idIdx !== -1) {
-        let targetCol = ticketIdx;
-        if (targetCol === -1) {
-          targetCol = headers.length;
-          sheetTorneos.getRange(1, targetCol + 1).setValue("Ticket_Price");
-        }
-        
+      if (idIdx !== -1 && nameIdx !== -1) {
         for (let i = 1; i < data.length; i++) {
           const torneoId = data[i][idIdx];
           if (torneosObj[torneoId] !== undefined) {
-            const newVal = parseFloat(torneosObj[torneoId]) || 0;
-            sheetTorneos.getRange(i + 1, targetCol + 1).setValue(newVal);
+            const rawName = data[i][nameIdx].toString();
+            const nameLimpio = rawName.split(" [Precio:")[0].trim();
+            const precio = parseFloat(torneosObj[torneoId]) || 0;
+            const nuevoNombre = `${nameLimpio} [Precio: ${precio}]`;
+            
+            sheetTorneos.getRange(i + 1, nameIdx + 1).setValue(nuevoNombre);
           }
         }
       }
