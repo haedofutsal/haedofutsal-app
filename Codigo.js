@@ -224,12 +224,24 @@ function obtenerDatosSocio(email) {
       const tCatCol = tHeaders.indexOf("Category");
       const tNameCol = tHeaders.indexOf("Name");
 
+      // Mapear cada sub-categoría del socio a su categoría padre
+      const parentCategories = socioCategories.map(sc => {
+        const s = sc.toLowerCase().trim();
+        if (s.includes("edefi") && (s.includes("+30") || s.includes("+35") || s.includes("+42") || s.includes("mayores"))) return "EDEFI-Mayores";
+        if (s.includes("edefi") && s.includes("baby")) return "EDEFI-Baby";
+        if (s.includes("bafi") && (s.includes("femenino") || s.includes("fem"))) return "BAFI-Femenino";
+        if (s.includes("bafi") && (s.includes("masculino") || s.includes("masc"))) return "BAFI-Masculino";
+        if (s.includes("futsala") && (s.includes("masculino") || s.includes("masc"))) return "FUTSALA-Masculino";
+        if (s.includes("futsala") && (s.includes("promocionales") || s.includes("prom"))) return "FUTSALA-Promocionales";
+        return "EDEFI-Mayores";
+      });
+
       // Obtener torneos que disputa cualquiera de sus categorías
       const misTorneosIds = [];
       const torneosMap = {};
       for (let i = 1; i < torneosData.length; i++) {
         const tCat = getVal(torneosData[i], tCatCol);
-        if (socioCategories.includes(tCat)) {
+        if (parentCategories.includes(tCat)) {
           const tId = getVal(torneosData[i], tIdCol);
           if (!misTorneosIds.includes(tId)) misTorneosIds.push(tId);
           torneosMap[tId] = {
