@@ -3911,29 +3911,68 @@
       const container = document.getElementById("socio-pagos-list");
       container.innerHTML = "";
       
-      const deudas = pagos.filter(p => p.Status === "Pendiente");
-      if (deudas.length === 0) {
+      if (!pagos || pagos.length === 0) {
         container.innerHTML = `
           <div class="empty-state">
             <i class="fa-solid fa-circle-check" style="color: var(--success); font-size: 1.6rem;"></i>
-            <p>¡Estás al día! No registrás deudas.</p>
+            <p>No registrás cuotas generadas en tu cuenta.</p>
           </div>
         `;
         return;
       }
       
-      deudas.forEach(p => {
+      // Ordenar por mes descendente (últimas cuotas primero)
+      pagos.sort((a, b) => (b.Month || "").localeCompare(a.Month || ""));
+      
+      // Tomar las últimas 6 cuotas
+      const ultimosPagos = pagos.slice(0, 6);
+      
+      ultimosPagos.forEach(p => {
         const row = document.createElement("div");
         row.className = "row-card";
-        row.innerHTML = `
-          <div class="row-info">
-            <h4>Cuota Mensual: ${p.Month}</h4>
-            <p>Monto: $${parseFloat(p.Amount).toLocaleString('es-AR')}</p>
-          </div>
-          <div class="row-action" id="pay-action-${p.Payment_ID}">
-            <button class="btn-sm-pay" onclick="abrirModalMetodoPago('${p.Payment_ID}', '${p.Month}', '${p.Amount}')">
-              <i class="fa-solid fa-wallet"></i> Pagar Cuota
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.alignItems = "center";
+        row.style.padding = "12px";
+        row.style.marginBottom = "8px";
+        row.style.borderRadius = "10px";
+        row.style.border = "1px solid rgba(0,0,0,0.06)";
+        row.style.background = "#ffffff";
+        
+        let statusBadgeHTML = "";
+        let actionHTML = "";
+        
+        if (p.Status === "Pagado") {
+          const fechaPago = p.Collected_At ? p.Collected_At.substring(0, 16) : "Fecha no registrada";
+          statusBadgeHTML = `
+            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+              <span class="badge" style="background-color:#dcfce7; color:#16a34a; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem; text-transform:uppercase;">Pagado</span>
+              <span style="font-size:0.65rem; color:var(--text-muted); font-weight:500;"><i class="fa-solid fa-calendar-check" style="color:#16a34a;"></i> ${fechaPago}</span>
+            </div>
+          `;
+        } else if (p.Status === "Pendiente") {
+          statusBadgeHTML = `
+            <span class="badge" style="background-color:#fef9c3; color:#ca8a04; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem; text-transform:uppercase; margin-bottom:2px;">Pendiente</span>
+          `;
+          actionHTML = `
+            <button class="btn-sm-pay" onclick="abrirModalMetodoPago('${p.Payment_ID}', '${p.Month}', '${p.Amount}')" style="margin-left:8px; display:flex; align-items:center; gap:4px; font-size:0.72rem; padding:6px 10px; border-radius:6px;">
+              <i class="fa-solid fa-wallet"></i> Pagar
             </button>
+          `;
+        } else {
+          statusBadgeHTML = `
+            <span class="badge" style="background-color:#dbeafe; color:#2563eb; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem; text-transform:uppercase;">En Revisión</span>
+          `;
+        }
+        
+        row.innerHTML = `
+          <div class="row-info" style="display:flex; flex-direction:column; gap:2px;">
+            <h4 style="margin:0; font-size:0.88rem; color:#1e293b; font-weight:700;">Cuota: ${p.Month}</h4>
+            <p style="margin:0; font-size:0.78rem; color:var(--text-muted); font-weight:600;">Monto: $${parseFloat(p.Amount).toLocaleString('es-AR')}</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            ${statusBadgeHTML}
+            ${actionHTML}
           </div>
         `;
         container.appendChild(row);
