@@ -1261,12 +1261,18 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
         if (nameMatches.length === 1) {
           matchedPayment = nameMatches[0];
         } else if (nameMatches.length > 1) {
-          return { success: false, message: `Se detectaron múltiples transferencias por el monto exacto. Por favor, ingresá tu Nro. de Operación para validar cuál te corresponde.` };
+          return { success: false, message: `Se detectaron múltiples transferencias recibidas por $${targetAmount}.` };
         } else {
-          return { success: false, message: `Encontramos transferencias de ese valor pero los datos del titular no coinciden con los tuyos. Por favor, ingresá el Nro. de Operación de tu comprobante.` };
+          // Si no hay coincidencia exacta de nombre, pero hay un ÚNICO candidato libre por ese monto en todo Mercado Pago
+          if (candidates.length === 1) {
+            matchedPayment = candidates[0];
+            console.log(`[MP SMART MATCH] Coincidencia por candidato único sin coincidencia de nombre para $${targetAmount}.`);
+          } else {
+            return { success: false, message: `No se encontró una transferencia única por $${targetAmount} que coincida con tus datos registrados.` };
+          }
         }
       } else {
-        return { success: false, message: "Error al conectar con la API de Mercado Pago. Por favor, intentá ingresando tu Nro. de Operación." };
+        return { success: false, message: "Error al conectar con la API de Mercado Pago." };
       }
     }
     
