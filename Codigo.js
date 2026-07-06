@@ -1106,6 +1106,178 @@ function registrarPagoTransferenciaComprobante(paymentId, email, amount, month, 
 }
 
 /**
+ * Registra la solicitud de revisión del pago de una cuota enviando un comprobante.
+ * Coloca la cuota en estado 'Revision' y guarda la imagen/PDF base64 en la columna MP_Link.
+ */
+function solicitarRevisionTransferencia(paymentId, email, amount, month, paymentMethod, base64Receipt) {
+  try {
+    const ss = getSpreadsheet();
+    const sheetPagos = ss.getSheetByName(HOJA_PAGOS);
+    if (!sheetPagos) throw new Error("No se encontró la hoja de pagos.");
+    
+    const pagosData = sheetPagos.getDataRange().getValues();
+    const headers = pagosData[0];
+    const pIdCol = headers.indexOf("Payment_ID");
+    const pStatusCol = headers.indexOf("Status");
+    const pByCol = headers.indexOf("Collected_By");
+    const pLinkCol = headers.indexOf("MP_Link");
+    const pEmailCol = headers.indexOf("Email");
+    
+    let filaIndex = -1;
+    for (let i = 1; i < pagosData.length; i++) {
+      if (pagosData[i][pIdCol].toString().trim() === paymentId.toString().trim()) {
+        filaIndex = i;
+        break;
+      }
+    }
+    
+    if (filaIndex === -1) {
+      throw new Error("No se encontró el registro de pago.");
+    }
+    
+    const rowNum = filaIndex + 1;
+    const socioEmail = pagosData[filaIndex][pEmailCol] || email;
+    const methodStr = paymentMethod || "Transferencia";
+    
+    sheetPagos.getRange(rowNum, pStatusCol + 1).setValue("Revision");
+    sheetPagos.getRange(rowNum, pByCol + 1).setValue(`Revision (${methodStr})`);
+    sheetPagos.getRange(rowNum, pLinkCol + 1).setValue(base64Receipt || "");
+    
+    SpreadsheetApp.flush();
+    
+    registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Socio envió comprobante para revisión de cuota ${month} por $${parseFloat(amount).toLocaleString('es-AR')} (${methodStr})`);
+    
+    return { success: true, message: "¡Comprobante enviado con éxito! Tu pago se encuentra 'En Revisión' y será verificado por la administración a la brevedad." };
+    
+  } catch (error) {
+    console.error("Error en solicitarRevisionTransferencia:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Aprueba un pago en revisión, cambiándolo a 'Pagado' y registrándolo en las finanzas del club.
+ */
+function aprobarRevisionPagoComprobante(paymentId, email, amount, month) {
+  try {
+    const ss = getSpreadsheet();
+    
+    // 1. Marcar pago como Pagado
+    const sheetPagos = ss.getSheetByName(HOJA_PAGOS);
+    if (!sheetPagos) throw new Error("No se encontró la hoja de pagos.");
+    const pagosData = sheetPagos.getDataRange().getValues();
+    const headers = pagosData[0];
+    const pIdCol = headers.indexOf("Payment_ID");
+    const pStatusCol = headers.indexOf("Status");
+    const pByCol = headers.indexOf("Collected_By");
+    const pAtCol = headers.indexOf("Collected_At");
+    const pEmailCol = headers.indexOf("Email");
+    
+    let filaIndex = -1;
+    for (let i = 1; i < pagosData.length; i++) {
+      if (pagosData[i][pIdCol].toString().trim() === paymentId.toString().trim()) {
+        filaIndex = i;
+        break;
+      }
+    }
+    
+    if (filaIndex === -1) {
+      throw new Error("No se encontró el registro de pago.");
+    }
+    
+    const rowNum = filaIndex + 1;
+    const nowStr = new Date().toISOString().replace("T", " ").substring(0, 16);
+    const socioEmail = pagosData[filaIndex][pEmailCol] || email;
+    const oldBy = pagosData[filaIndex][pByCol] || "";
+    let methodStr = "Transferencia";
+    if (oldBy.includes("MP") || oldBy.includes("Mercado")) {
+      methodStr = "Transferencia MP";
+    } else if (oldBy.includes("Banco")) {
+      methodStr = "Transferencia Bancaria";
+    }
+    
+    sheetPagos.getRange(rowNum, pStatusCol + 1).setValue("Pagado");
+    sheetPagos.getRange(rowNum, pByCol + 1).setValue(`Socio (${methodStr})`);
+    sheetPagos.getRange(rowNum, pAtCol + 1).setValue(nowStr);
+    
+    // 2. Registrar en Finanzas
+    const sheetFinanzas = ss.getSheetByName(HOJA_FINANZAS);
+    if (sheetFinanzas) {
+      const movId = `MOV-${Date.now().toString().slice(-6)}`;
+      const dateFormatted = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const concept = `Cuota Social ${month} - Socio: ${socioEmail}`;
+      const numericAmount = parseFloat(amount || 0);
+      
+      sheetFinanzas.appendRow([movId, "General", "Ingreso", concept, numericAmount, dateFormatted, methodStr]);
+      
+      const lastRowIndex = sheetFinanzas.getLastRow();
+      if (sheetFinanzas.getRange(lastRowIndex, 5).setNumberFormat) {
+        sheetFinanzas.getRange(lastRowIndex, 5).setNumberFormat("$#,##0.00");
+      }
+    }
+    
+    SpreadsheetApp.flush();
+    
+    registrarLogAuditoria("Admin", "MODIFICAR", "PAGO", `Administrador aprobó comprobante de transferencia para cuota ${month} de ${socioEmail} ($${parseFloat(amount).toLocaleString('es-AR')})`);
+    
+    return { success: true, message: "Comprobante aprobado. El pago fue registrado como acreditado en la cuenta del socio y en las finanzas del club." };
+    
+  } catch (error) {
+    console.error("Error en aprobarRevisionPagoComprobante:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
+ * Rechaza un pago en revisión, cambiándolo nuevamente a 'Pendiente' y registrando el motivo en auditoría.
+ */
+function rechazarRevisionPagoComprobante(paymentId, email, month, motivo) {
+  try {
+    const ss = getSpreadsheet();
+    const sheetPagos = ss.getSheetByName(HOJA_PAGOS);
+    if (!sheetPagos) throw new Error("No se encontró la hoja de pagos.");
+    const pagosData = sheetPagos.getDataRange().getValues();
+    const headers = pagosData[0];
+    const pIdCol = headers.indexOf("Payment_ID");
+    const pStatusCol = headers.indexOf("Status");
+    const pByCol = headers.indexOf("Collected_By");
+    const pAtCol = headers.indexOf("Collected_At");
+    const pLinkCol = headers.indexOf("MP_Link");
+    const pEmailCol = headers.indexOf("Email");
+    
+    let filaIndex = -1;
+    for (let i = 1; i < pagosData.length; i++) {
+      if (pagosData[i][pIdCol].toString().trim() === paymentId.toString().trim()) {
+        filaIndex = i;
+        break;
+      }
+    }
+    
+    if (filaIndex === -1) {
+      throw new Error("No se encontró el registro de pago.");
+    }
+    
+    const rowNum = filaIndex + 1;
+    const socioEmail = pagosData[filaIndex][pEmailCol] || email;
+    
+    sheetPagos.getRange(rowNum, pStatusCol + 1).setValue("Pendiente");
+    sheetPagos.getRange(rowNum, pByCol + 1).setValue("");
+    sheetPagos.getRange(rowNum, pAtCol + 1).setValue("");
+    sheetPagos.getRange(rowNum, pLinkCol + 1).setValue(""); // Limpiar comprobante para permitir volver a pagar / subir
+    
+    SpreadsheetApp.flush();
+    
+    registrarLogAuditoria("Admin", "MODIFICAR", "PAGO", `Administrador rechazó comprobante de transferencia para cuota ${month} de ${socioEmail}. Motivo: ${motivo}`);
+    
+    return { success: true, message: "Comprobante rechazado. La cuota del socio ha vuelto al estado 'Pendiente' para que pueda volver a abonarla." };
+    
+  } catch (error) {
+    console.error("Error en rechazarRevisionPagoComprobante:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+/**
  * Obtiene los datos personales de un socio por su Email, DNI, Teléfono o Username.
  */
 function obtenerDatosSocioPublico(identifier) {
