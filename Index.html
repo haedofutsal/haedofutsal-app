@@ -2669,11 +2669,12 @@
           <div class="form-group" style="margin-bottom:0;">
             <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Categorías Deportivas * <span style="font-weight:400; color:#64748b;">(puede elegir varias)</span></label>
             <div id="form-socio-category-checks" style="display:flex; flex-wrap:wrap; gap:8px; padding:8px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px;">
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Fut-May+35" class="cat-checkbox"> Futsal Mayores +35</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Fut-May+42" class="cat-checkbox"> Futsal Mayores +42</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Fut-Fem-1ra" class="cat-checkbox"> Futsal Femenino 1ra</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Fut-Juv-5ta" class="cat-checkbox"> Futsal Juveniles 5ta</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="Bab-2015" class="cat-checkbox"> Baby Fútbol 2015</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="EDEFI-Mayores" class="cat-checkbox"> EDEFI Mayores</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="EDEFI-Baby" class="cat-checkbox"> EDEFI Baby</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="BAFI-Femenino" class="cat-checkbox"> BAFI Femenino</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="BAFI-Masculino" class="cat-checkbox"> BAFI Masculino</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="FUTSALA-Masculino" class="cat-checkbox"> FUTSALA Masculino</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="FUTSALA-Promocionales" class="cat-checkbox"> FUTSALA Promocionales</label>
             </div>
           </div>
           <div class="form-group" style="margin-bottom:0;">
@@ -4508,25 +4509,27 @@
       if (!currentMonth) currentMonth = "2026-06";
 
       const catDisplayNames = {
-        "Fut-May+35":  "Futsal Mayores +35",
-        "Fut-May+42":  "Futsal Mayores +42",
-        "Fut-Fem-1ra": "Futsal Femenino 1ra",
-        "Fut-Juv-5ta": "Futsal Juveniles 5ta",
-        "Bab-2015":    "Baby Fútbol 2015"
+        "EDEFI-Mayores": "EDEFI Mayores",
+        "EDEFI-Baby": "EDEFI Baby",
+        "BAFI-Femenino": "BAFI Femenino",
+        "BAFI-Masculino": "BAFI Masculino",
+        "FUTSALA-Masculino": "FUTSALA Masculino",
+        "FUTSALA-Promocionales": "FUTSALA Promocionales"
       };
       const catIcons = {
-        "Fut-May+35":  "fa-futbol",
-        "Fut-May+42":  "fa-futbol",
-        "Fut-Fem-1ra": "fa-venus",
-        "Fut-Juv-5ta": "fa-child-reaching",
-        "Bab-2015":    "fa-baby"
+        "EDEFI-Mayores": "fa-user-group",
+        "EDEFI-Baby": "fa-baby",
+        "BAFI-Femenino": "fa-venus",
+        "BAFI-Masculino": "fa-mars",
+        "FUTSALA-Masculino": "fa-futbol",
+        "FUTSALA-Promocionales": "fa-child-reaching"
       };
 
       const porCat = {};
       socios.forEach(s => {
-        const cat = s.Category || "Sin Categoría";
-        if (!porCat[cat]) porCat[cat] = [];
-        porCat[cat].push(s);
+        const parentCat = obtenerCategoriaPadre(s.Category);
+        if (!porCat[parentCat]) porCat[parentCat] = [];
+        porCat[parentCat].push(s);
       });
 
       Object.entries(porCat).forEach(([catId, listaSocios]) => {
@@ -4591,7 +4594,7 @@
       if (!listEl) return;
       
       const data = estadoApp.datosAdmin;
-      const socios = (data.socios || []).filter(s => s.Category === catId);
+      const socios = (data.socios || []).filter(s => obtenerCategoriaPadre(s.Category) === catId);
       const pagos = data.pagos || [];
       const currentMonth = "2026-06";
       
@@ -4924,11 +4927,12 @@
       const currentMonth = "2026-06";
 
       const catNames = {
-        "Fut-May+35": "Futsal Mayores +35",
-        "Fut-May+42": "Futsal Mayores +42",
-        "Fut-Fem-1ra": "Futsal Femenino 1ra",
-        "Fut-Juv-5ta": "Futsal Juveniles 5ta",
-        "Bab-2015": "Baby Fútbol 2015"
+        "EDEFI-Mayores": "EDEFI Mayores",
+        "EDEFI-Baby": "EDEFI Baby",
+        "BAFI-Femenino": "BAFI Femenino",
+        "BAFI-Masculino": "BAFI Masculino",
+        "FUTSALA-Masculino": "FUTSALA Masculino",
+        "FUTSALA-Promocionales": "FUTSALA Promocionales"
       };
 
       socios.forEach((socio, index) => {
@@ -4984,6 +4988,23 @@
         `;
         container.appendChild(row);
       });
+    }
+
+    function obtenerCategoriaPadre(subCat) {
+      if (!subCat) return "EDEFI-Mayores";
+      const sc = subCat.toLowerCase().trim();
+      if (sc.includes("edefi") && (sc.includes("+30") || sc.includes("+35") || sc.includes("+42") || sc.includes("mayores"))) return "EDEFI-Mayores";
+      if (sc.includes("edefi") && sc.includes("baby")) return "EDEFI-Baby";
+      if (sc.includes("bafi") && (sc.includes("femenino") || sc.includes("fem"))) return "BAFI-Femenino";
+      if (sc.includes("bafi") && (sc.includes("masculino") || sc.includes("masc"))) return "BAFI-Masculino";
+      if (sc.includes("futsala") && (sc.includes("masculino") || sc.includes("masc"))) return "FUTSALA-Masculino";
+      if (sc.includes("futsala") && (sc.includes("promocionales") || sc.includes("prom"))) return "FUTSALA-Promocionales";
+      
+      // En caso de que ya sea el ID padre
+      if (subCat === "EDEFI-Mayores" || subCat === "EDEFI-Baby" || subCat === "BAFI-Femenino" || subCat === "BAFI-Masculino" || subCat === "FUTSALA-Masculino" || subCat === "FUTSALA-Promocionales") {
+        return subCat;
+      }
+      return "EDEFI-Mayores";
     }
 
     function actualizarOpcionesCategorias(selectLigaId, selectCatId, onCompleteCallback) {
@@ -5052,12 +5073,13 @@
         const textMatch = !query || `${socio.Name} ${socio.Email}`.toLowerCase().includes(query);
         if (!textMatch) return false;
         
-        if (filterCat !== "Todos" && socio.Category !== filterCat) {
+        const parentCat = obtenerCategoriaPadre(socio.Category);
+        if (filterCat !== "Todos" && parentCat !== filterCat) {
           return false;
         }
         
         if (filterTorneo !== "Todos") {
-          const catObj = (estadoApp.datosAdmin.categorias || []).find(c => c.Category_ID === socio.Category);
+          const catObj = (estadoApp.datosAdmin.categorias || []).find(c => c.Category_ID === parentCat);
           if (!catObj || catObj.Torneos !== filterTorneo) {
             return false;
           }
@@ -5102,10 +5124,10 @@
       document.getElementById("form-socio-email").value = "";
       if (document.getElementById("form-socio-role")) document.getElementById("form-socio-role").value = "Deportista";
       document.getElementById("form-socio-dni").value = "";
-      // Leer checkboxes de categorías (múltiple)
-      const checkedCats = Array.from(document.querySelectorAll('#form-socio-category-checks .cat-checkbox:checked')).map(cb => cb.value);
-      if (checkedCats.length === 0) checkedCats.push('Fut-May+35'); // default
-      document.querySelector('#form-socio-category-checks .cat-checkbox[value="Fut-May+35"]').checked = true;
+      // Resetear checkboxes y activar el por defecto
+      document.querySelectorAll('#form-socio-category-checks .cat-checkbox').forEach(cb => cb.checked = false);
+      const defaultCb = document.querySelector('#form-socio-category-checks .cat-checkbox[value="EDEFI-Mayores"]');
+      if (defaultCb) defaultCb.checked = true;
       document.getElementById("form-socio-birthdate").value = "";
       document.getElementById("form-socio-phone").value = "";
       document.getElementById("form-socio-blood").value = "O+";
@@ -5223,7 +5245,7 @@
       const role = document.getElementById("form-socio-role") ? document.getElementById("form-socio-role").value : "Deportista";
       const dni = document.getElementById("form-socio-dni").value.trim();
       const checkedCats = Array.from(document.querySelectorAll('#form-socio-category-checks .cat-checkbox:checked')).map(cb => cb.value);
-      const category = checkedCats.length > 0 ? checkedCats.join('|') : 'Fut-May+35';
+      const category = checkedCats.length > 0 ? checkedCats.join('|') : 'EDEFI-Mayores';
       const birthDate = document.getElementById("form-socio-birthdate").value;
       const phone = document.getElementById("form-socio-phone").value.trim();
       const bloodType = document.getElementById("form-socio-blood").value;
@@ -5400,13 +5422,14 @@
       const p = estadoApp.currentPerfilFicha;
       const container = document.getElementById("ficha-personal-content");
       
-      const isMinor = (p.Category || "").includes("Bab") || (p.Category || "").includes("Juv") || (parseInt(p.Age || "20") < 18);
+      const isMinor = (p.Category || "").toLowerCase().includes("baby") || (p.Category || "").toLowerCase().includes("promo") || (parseInt(p.Age || "20") < 18);
       const catNames = {
-        "Fut-May+35": "Futsal Mayores +35",
-        "Fut-May+42": "Futsal Mayores +42",
-        "Fut-Fem-1ra": "Futsal Femenino 1ra",
-        "Fut-Juv-5ta": "Futsal Juveniles 5ta",
-        "Bab-2015": "Baby Fútbol 2015"
+        "EDEFI-Mayores": "EDEFI Mayores",
+        "EDEFI-Baby": "EDEFI Baby",
+        "BAFI-Femenino": "BAFI Femenino",
+        "BAFI-Masculino": "BAFI Masculino",
+        "FUTSALA-Masculino": "FUTSALA Masculino",
+        "FUTSALA-Promocionales": "FUTSALA Promocionales"
       };
       const catLabel = catNames[p.Category] || p.Category || "Sin Categoría";
       const formattedName = typeof formatearApellidoNombre === "function" ? formatearApellidoNombre(p.Name) : p.Name;
@@ -5957,7 +5980,8 @@
       if (selectCat && selectCat.options.length <= 1) {
         const categories = new Set();
         movimientos.forEach(m => {
-          categories.add(m.Torneo_Name || "General");
+          const nameClean = (m.Torneo_Name || "General").split(" [Precio:")[0].trim();
+          categories.add(nameClean);
         });
         
         selectCat.innerHTML = `<option value="Todos">-- Todas las Categorías --</option>`;
@@ -6024,7 +6048,7 @@
           if (filterInicio && m.Date < filterInicio) return false;
           if (filterFin && m.Date > filterFin) return false;
           if (filterCat !== "Todos") {
-            const catName = m.Torneo_Name || "General";
+            const catName = (m.Torneo_Name || "General").split(" [Precio:")[0].trim();
             if (catName !== filterCat) return false;
           }
           return true;
@@ -6082,13 +6106,14 @@
       if (selectTiendaCat) selectTiendaCat.innerHTML = `<option value="Todos">-- Todas --</option><option value="General">General (Todo el Club)</option>`;
       
       torneos.forEach(t => {
-        const opt = `<option value="${t.Torneo_ID}">${t.Name}</option>`;
+        const nameClean = t.Name.split(" [Precio:")[0].trim();
+        const opt = `<option value="${t.Torneo_ID}">${nameClean}</option>`;
         if (selectMov) selectMov.innerHTML += opt;
         if (selectPart) selectPart.innerHTML += opt;
         if (selectFilter) selectFilter.innerHTML += opt;
-        if (selectSponsorsCat) selectSponsorsCat.innerHTML += `<option value="${t.Torneo_ID}">${t.Name}</option>`;
-        if (selectGastosCat) selectGastosCat.innerHTML += `<option value="${t.Torneo_ID}">${t.Name}</option>`;
-        if (selectTiendaCat) selectTiendaCat.innerHTML += `<option value="${t.Torneo_ID}">${t.Name}</option>`;
+        if (selectSponsorsCat) selectSponsorsCat.innerHTML += `<option value="${t.Torneo_ID}">${nameClean}</option>`;
+        if (selectGastosCat) selectGastosCat.innerHTML += `<option value="${t.Torneo_ID}">${nameClean}</option>`;
+        if (selectTiendaCat) selectTiendaCat.innerHTML += `<option value="${t.Torneo_ID}">${nameClean}</option>`;
       });
     }
 
