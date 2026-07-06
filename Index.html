@@ -2129,8 +2129,11 @@
           <button class="btn-secondary" onclick="abrirModalReportes()" style="font-size:0.75rem; padding:6px 12px; background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); color:#10b981; border-radius:10px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:6px;">
             <i class="fa-solid fa-chart-line"></i> Reportes
           </button>
+          <button class="btn-secondary" onclick="abrirModalPrecios()" style="font-size:0.75rem; padding:6px 12px; background:rgba(217,119,6,0.1); border:1px solid rgba(217,119,6,0.3); color:#b45309; border-radius:10px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-tags"></i> Precios
+          </button>
           <button class="btn-secondary" onclick="abrirModalLogAuditoria()" style="font-size:0.75rem; padding:6px 12px; background:rgba(37,99,235,0.1); border:1px solid rgba(37,99,235,0.3); color:#1d4ed8; border-radius:10px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:6px;">
-            <i class="fa-solid fa-clipboard-list"></i> Log General
+            <i class="fa-solid fa-clipboard-list"></i> Log
           </button>
           <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
             <i class="fa-solid fa-right-from-bracket"></i>
@@ -3005,6 +3008,47 @@
       </div>
       <div class="modal-footer" style="padding-top:10px;">
         <button class="modal-btn cancel" onclick="cerrarModalDesglose()">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIGURAR TARIFAS Y PRECIOS -->
+  <div id="precios-modal" class="modal-overlay">
+    <div class="modal" style="max-width: 600px; width: 98%;">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 10px;">
+        <h3 class="modal-title" style="font-size: 0.95rem; display:flex; align-items:center; gap:8px; color:#0f172a;">
+          <i class="fa-solid fa-tags" style="color:var(--primary);"></i> Tarifas y Precios del Club
+        </h3>
+        <button class="modal-close" onclick="cerrarModalPrecios()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="padding: 14px 0; max-height: 400px; overflow-y: auto;">
+        
+        <!-- Categorías Sección -->
+        <div style="margin-bottom: 20px;">
+          <h4 style="font-size: 0.85rem; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-people-group" style="color: var(--primary);"></i> Cuotas Mensuales de Socios
+          </h4>
+          <div id="precios-categorias-container" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Dinámico -->
+          </div>
+        </div>
+
+        <!-- Torneos Sección -->
+        <div>
+          <h4 style="font-size: 0.85rem; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-trophy" style="color: var(--primary);"></i> Entradas por Torneo / Jornada
+          </h4>
+          <div id="precios-torneos-container" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Dinámico -->
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer" style="padding-top: 10px; display: flex; justify-content: flex-end; gap: 8px; border-top: 1px solid rgba(0,0,0,0.08);">
+        <button class="modal-btn cancel" onclick="cerrarModalPrecios()">Cancelar</button>
+        <button class="modal-btn save" onclick="guardarCambiosPrecios()" style="background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+          Guardar Cambios
+        </button>
       </div>
     </div>
   </div>
@@ -6862,6 +6906,135 @@
 
     function cerrarModalDesglose() {
       document.getElementById("desglose-modal").style.display = "none";
+    }
+
+    function abrirModalPrecios() {
+      if (!estadoApp.datosAdmin) {
+        alert("Los datos aún no se han cargado. Intentá de nuevo en unos segundos.");
+        return;
+      }
+      
+      const cats = estadoApp.datosAdmin.categorias || [];
+      const torneos = estadoApp.datosAdmin.torneos || [];
+      
+      // 1. Cargar Categorías
+      const catsContainer = document.getElementById("precios-categorias-container");
+      if (catsContainer) {
+        catsContainer.innerHTML = "";
+        if (cats.length === 0) {
+          catsContainer.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:10px;">No hay categorías cargadas.</div>`;
+        } else {
+          cats.forEach(c => {
+            const div = document.createElement("div");
+            div.style.display = "flex";
+            div.style.justifyContent = "space-between";
+            div.style.alignItems = "center";
+            div.style.padding = "6px 0";
+            div.style.borderBottom = "1px solid rgba(0,0,0,0.05)";
+            div.innerHTML = `
+              <span style="font-size:0.82rem; font-weight:600; color:#334155;">
+                <i class="fa-solid fa-people-group" style="color:var(--text-muted); font-size:0.75rem; margin-right:4px;"></i> ${c.Name}
+              </span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">$</span>
+                <input type="number" class="precio-cat-input" data-id="${c.Category_ID}" value="${c.Monthly_Fee || 0}" style="width: 100px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; text-align: right;" />
+              </div>
+            `;
+            catsContainer.appendChild(div);
+          });
+        }
+      }
+      
+      // 2. Cargar Torneos
+      const torneosContainer = document.getElementById("precios-torneos-container");
+      if (torneosContainer) {
+        torneosContainer.innerHTML = "";
+        if (torneos.length === 0) {
+          torneosContainer.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:10px;">No hay torneos activos cargados.</div>`;
+        } else {
+          torneos.forEach(t => {
+            const div = document.createElement("div");
+            div.style.display = "flex";
+            div.style.justifyContent = "space-between";
+            div.style.alignItems = "center";
+            div.style.padding = "6px 0";
+            div.style.borderBottom = "1px solid rgba(0,0,0,0.05)";
+            div.innerHTML = `
+              <span style="font-size:0.82rem; font-weight:600; color:#334155;">
+                <i class="fa-solid fa-trophy" style="color:var(--text-muted); font-size:0.75rem; margin-right:4px;"></i> ${t.Name}
+              </span>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">$</span>
+                <input type="number" class="precio-torneo-input" data-id="${t.Torneo_ID}" value="${t.Ticket_Price || 0}" style="width: 100px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; text-align: right;" />
+              </div>
+            `;
+            torneosContainer.appendChild(div);
+          });
+        }
+      }
+      
+      document.getElementById("precios-modal").style.display = "flex";
+    }
+
+    function cerrarModalPrecios() {
+      document.getElementById("precios-modal").style.display = "none";
+    }
+
+    function guardarCambiosPrecios() {
+      const categoriasObj = {};
+      const inputsCats = document.querySelectorAll(".precio-cat-input");
+      inputsCats.forEach(input => {
+        const id = input.getAttribute("data-id");
+        const val = parseFloat(input.value) || 0;
+        categoriasObj[id] = val;
+      });
+      
+      const torneosObj = {};
+      const inputsTorneos = document.querySelectorAll(".precio-torneo-input");
+      inputsTorneos.forEach(input => {
+        const id = input.getAttribute("data-id");
+        const val = parseFloat(input.value) || 0;
+        torneosObj[id] = val;
+      });
+      
+      mostrarCarga("Actualizando precios...");
+      google.script.run
+        .withSuccessHandler(function(response) {
+          ocultarCarga();
+          if (response && response.success) {
+            cerrarModalPrecios();
+            
+            // Actualizar localmente en estadoApp.datosAdmin para evitar recargar
+            if (estadoApp.datosAdmin) {
+              if (estadoApp.datosAdmin.categorias) {
+                estadoApp.datosAdmin.categorias.forEach(c => {
+                  if (categoriasObj[c.Category_ID] !== undefined) {
+                    c.Monthly_Fee = categoriasObj[c.Category_ID];
+                  }
+                });
+              }
+              if (estadoApp.datosAdmin.torneos) {
+                estadoApp.datosAdmin.torneos.forEach(t => {
+                  if (torneosObj[t.Torneo_ID] !== undefined) {
+                    t.Ticket_Price = torneosObj[t.Torneo_ID];
+                  }
+                });
+              }
+            }
+            
+            alert(response.message || "Precios guardados correctamente.");
+            
+            // Volver a calcular finanzas para reflejar cambios en cuotas y deudas
+            filtrarYCalcularFinanzas();
+          } else {
+            alert("Error al guardar: " + (response ? response.message : "Respuesta vacía"));
+          }
+        })
+        .withFailureHandler(function(err) {
+          ocultarCarga();
+          alert("Error de conexión: " + err.message);
+        })
+        .actualizarPrecios(categoriasObj, torneosObj);
     }
 
     function sincronizarFiltrosBalance() {
