@@ -2100,6 +2100,7 @@
               <option value="Todos">-- Todos los Estados --</option>
               <option value="Pagado">Pagada / Al día</option>
               <option value="Pendiente">Pendiente / Moroso</option>
+              <option value="Revision">En Revisión (Comprobante Subido)</option>
             </select>
           </div>
         </div>
@@ -2609,6 +2610,45 @@
       </div>
       <div class="modal-footer">
         <button class="modal-btn cancel" onclick="cerrarFichaSocio()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REVISIÓN DE COMPROBANTE (ADMINISTRADOR) -->
+  <div id="admin-revision-modal" class="modal-overlay" style="z-index: 12000; display:none; align-items:center; justify-content:center;">
+    <div class="modal" style="max-width: 500px; width: 95%; padding: 20px; background:#ffffff; color:#0f172a; border-radius:18px; box-shadow:var(--shadow-premium);">
+      <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display:flex; justify-content:space-between; align-items:center;">
+        <h3 class="modal-title" style="display:flex; align-items:center; gap:8px; font-size:1.05rem; font-weight:800; margin:0;">
+          <i class="fa-solid fa-file-invoice-dollar" style="color:var(--primary);"></i> Revisar Comprobante
+        </h3>
+        <button class="modal-close" onclick="cerrarModalRevisionAdmin()" style="background:none; border:none; cursor:pointer; font-size:1.2rem;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="margin-top:14px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:0.8rem; line-height:1.4; color:#334155; background:#f8fafc; padding:10px; border-radius:8px; border:1px solid #e2e8f0;">
+          <div><strong>Socio:</strong> <span id="rev-admin-email"></span></div>
+          <div><strong>Cuota:</strong> <span id="rev-admin-month"></span></div>
+          <div><strong>Monto a Acreditar:</strong> <span id="rev-admin-amount"></span></div>
+        </div>
+        
+        <div style="text-align:center; background:#f1f5f9; border-radius:12px; padding:8px; min-height:180px; display:flex; align-items:center; justify-content:center; border:1px solid #cbd5e1; overflow:hidden;">
+          <img id="rev-admin-img" style="max-width:100%; max-height:280px; object-fit:contain; border-radius:8px;" alt="Comprobante de Transferencia">
+          <div id="rev-admin-fallback" style="display:none; flex-direction:column; align-items:center; color:#dc2626; gap:8px;">
+            <i class="fa-solid fa-file-pdf" style="font-size:3.5rem;"></i>
+            <span style="font-size:0.75rem; font-weight:700;">Comprobante en formato PDF</span>
+            <a id="rev-admin-download-btn" href="#" target="_blank" class="btn-primary" style="font-size:0.72rem; padding:6px 12px; border-radius:6px; background:#dc2626; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+              <i class="fa-solid fa-download"></i> Descargar / Ver PDF
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 14px; display:flex; gap:8px; justify-content:flex-end;">
+        <button class="modal-btn cancel" onclick="cerrarModalRevisionAdmin()">Cerrar</button>
+        <button class="modal-btn" onclick="confirmarRechazoRevisionAdmin()" style="background:#ef4444; color:#ffffff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
+          <i class="fa-solid fa-trash"></i> Rechazar
+        </button>
+        <button class="modal-btn" onclick="confirmarAprobacionRevisionAdmin()" style="background:#10b981; color:#ffffff; border:none; padding:8px 14px; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:4px;">
+          <i class="fa-solid fa-circle-check"></i> Aprobar Pago
+        </button>
       </div>
     </div>
   </div>
@@ -3942,10 +3982,22 @@
         
         if (p.Status === "Pagado") {
           const fechaPago = p.Collected_At ? p.Collected_At.substring(0, 16) : "Fecha no registrada";
+          let viewReceiptHTML = "";
+          if (p.MP_Link && p.MP_Link.startsWith("data:")) {
+            const safeBase64 = p.MP_Link.replace(/'/g, "\\'");
+            viewReceiptHTML = `
+              <button class="btn-action-icon" onclick="abrirModalRevisionAdmin('${p.Payment_ID}', '${p.Month}', '${p.Amount}', '${safeBase64}', '${p.Email}', true)" title="Ver Comprobante Guardado" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; width:26px; height:26px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; margin-right:6px; padding:0;">
+                <i class="fa-solid fa-receipt" style="font-size:0.65rem;"></i>
+              </button>
+            `;
+          }
           statusBadgeHTML = `
-            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
-              <span class="badge" style="background-color:#dcfce7; color:#16a34a; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem; text-transform:uppercase;">Pagado</span>
-              <span style="font-size:0.65rem; color:var(--text-muted); font-weight:500;"><i class="fa-solid fa-calendar-check" style="color:#16a34a;"></i> ${fechaPago}</span>
+            <div style="display:flex; align-items:center; gap:4px;">
+              ${viewReceiptHTML}
+              <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+                <span class="badge" style="background-color:#dcfce7; color:#16a34a; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem; text-transform:uppercase;">Pagado</span>
+                <span style="font-size:0.65rem; color:var(--text-muted); font-weight:500;"><i class="fa-solid fa-calendar-check" style="color:#16a34a;"></i> ${fechaPago}</span>
+              </div>
             </div>
           `;
         } else if (p.Status === "Pendiente") {
@@ -4309,24 +4361,39 @@
       const transferTypeEl = document.querySelector('input[name="modal-transfer-method"]:checked');
       const transferMethod = transferTypeEl ? transferTypeEl.value : "Transferencia MP";
       
-      cerrarModalValidarComprobante();
-      mostrarCarga("Acreditando y registrando cuota...");
+      if (!fileComprobanteActual) {
+        alert("Por favor, subí o seleccioná un comprobante válido antes de confirmar.");
+        return;
+      }
       
-      google.script.run
-        .withSuccessHandler(function(response) {
-          ocultarCarga();
-          if (response && response.success) {
-            alert(response.message);
-            cargarDatosSocioEnPantalla();
-          } else {
-            alert("Error al procesar: " + (response ? response.message : "Error del servidor."));
-          }
-        })
-        .withFailureHandler(function(err) {
-          ocultarCarga();
-          alert("Error de conexión: " + err.toString());
-        })
-        .registrarPagoTransferenciaComprobante(paymentId, email, amount, month, transferMethod);
+      cerrarModalValidarComprobante();
+      mostrarCarga("Subiendo comprobante para revisión...");
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Data = e.target.result;
+        
+        google.script.run
+          .withSuccessHandler(function(response) {
+            ocultarCarga();
+            if (response && response.success) {
+              alert(response.message);
+              cargarDatosSocioEnPantalla();
+            } else {
+              alert("Error al procesar: " + (response ? response.message : "Error del servidor."));
+            }
+          })
+          .withFailureHandler(function(err) {
+            ocultarCarga();
+            alert("Error de conexión: " + err.toString());
+          })
+          .solicitarRevisionTransferencia(paymentId, email, amount, month, transferMethod, base64Data);
+      };
+      reader.onerror = function() {
+        ocultarCarga();
+        alert("No se pudo leer el archivo de comprobante. Por favor intentá con otra imagen o PDF.");
+      };
+      reader.readAsDataURL(fileComprobanteActual);
     }
 
     // NAVEGACIÓN ENTORNO ADMINISTRADOR / COACH (única definición con route guard)
@@ -5373,11 +5440,33 @@
                       </button>
                     </div>
                   `;
+                } else if (p.Status === "Revision" || p.Status === "En Revisión") {
+                  const safeBase64 = (p.MP_Link || "").replace(/'/g, "\\'");
+                  actionHTML = `
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span class="badge pending" style="background:rgba(245,158,11,0.12); color:#d97706; border:1px solid rgba(245,158,11,0.25); font-weight:700; padding:4px 10px; border-radius:6px; font-size:0.75rem;"><i class="fa-solid fa-clock" style="margin-right:4px;"></i> En Revisión</span>
+                      <button class="btn-action-icon" onclick="abrirModalRevisionAdmin('${p.Payment_ID}', '${p.Month}', '${p.Amount}', '${safeBase64}', '${p.Email}')" title="Revisar Comprobante" style="background:#f59e0b; color:#ffffff; border:none; width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                      </button>
+                    </div>
+                  `;
                 } else {
                   let auditInfo = "";
+                  let viewReceiptHTML = "";
+                  
+                  if (p.MP_Link && p.MP_Link.startsWith("data:")) {
+                    const safeBase64 = p.MP_Link.replace(/'/g, "\\'");
+                    viewReceiptHTML = `
+                      <button class="btn-action-icon" onclick="abrirModalRevisionAdmin('${p.Payment_ID}', '${p.Month}', '${p.Amount}', '${safeBase64}', '${p.Email}', true)" title="Ver Comprobante Guardado" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1; width:28px; height:28px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; margin-right:6px;">
+                        <i class="fa-solid fa-receipt" style="font-size:0.7rem;"></i>
+                      </button>
+                    `;
+                  }
+                  
                   if (p.Collected_By) {
                     let cleanRole = p.Collected_By.split("(")[0].trim();
                     let emojiIcon = "💵";
+                    if (cleanRole.includes("Socio") || cleanRole.includes("Transferencia")) emojiIcon = "💳";
                     
                     auditInfo = `
                       <div style="font-size:0.65rem; color:#1d4ed8; margin-top:4px; text-align:right; line-height:1.2; font-weight:700; background:rgba(37,99,235,0.08); padding:3px 8px; border-radius:6px; border:1px solid rgba(37,99,235,0.2);">
@@ -5385,7 +5474,16 @@
                         <span style="font-size:0.58rem; color:#64748b; font-weight:400;">${p.Collected_At || ''}</span>
                       </div>`;
                   }
-                  actionHTML = `<div style="display:flex; flex-direction:column; align-items:flex-end;"><span class="badge paid" style="background:rgba(22,163,74,0.12); color:#15803d; border:1px solid rgba(22,163,74,0.25); font-weight:700; padding:4px 10px; border-radius:6px; font-size:0.75rem;"><i class="fa-solid fa-check" style="margin-right:4px;"></i> Pagado</span>${auditInfo}</div>`;
+                  
+                  actionHTML = `
+                    <div style="display:flex; align-items:center; gap:4px;">
+                      ${viewReceiptHTML}
+                      <div style="display:flex; flex-direction:column; align-items:flex-end;">
+                        <span class="badge paid" style="background:rgba(22,163,74,0.12); color:#15803d; border:1px solid rgba(22,163,74,0.25); font-weight:700; padding:4px 10px; border-radius:6px; font-size:0.75rem;"><i class="fa-solid fa-check" style="margin-right:4px;"></i> Pagado</span>
+                        ${auditInfo}
+                      </div>
+                    </div>
+                  `;
                 }
                 
                 row.innerHTML = `
@@ -5410,6 +5508,111 @@
           ocultarCarga();
         })
         .obtenerFichaSocioCompleta(email);
+    }
+
+    let revisionAdminSeleccionada = null;
+
+    function abrirModalRevisionAdmin(paymentId, month, amount, base64Receipt, email, readOnly = false) {
+      revisionAdminSeleccionada = { paymentId, month, amount, email };
+      
+      document.getElementById("rev-admin-email").innerText = email;
+      document.getElementById("rev-admin-month").innerText = month;
+      document.getElementById("rev-admin-amount").innerText = `$${parseFloat(amount).toLocaleString('es-AR')}`;
+      
+      const imgEl = document.getElementById("rev-admin-img");
+      const fallbackEl = document.getElementById("rev-admin-fallback");
+      const downloadBtn = document.getElementById("rev-admin-download-btn");
+      
+      if (base64Receipt.startsWith("data:application/pdf")) {
+        imgEl.style.display = "none";
+        fallbackEl.style.display = "flex";
+        downloadBtn.href = base64Receipt;
+        downloadBtn.download = `comprobante-${month}-${email.split('@')[0]}.pdf`;
+      } else {
+        imgEl.style.display = "block";
+        imgEl.src = base64Receipt || "https://placehold.co/400x300?text=Sin+Imagen";
+        fallbackEl.style.display = "none";
+      }
+      
+      const modal = document.getElementById("admin-revision-modal");
+      const footerButtons = modal.querySelectorAll(".modal-footer button");
+      if (readOnly) {
+        if (footerButtons[1]) footerButtons[1].style.display = "none"; // Reject
+        if (footerButtons[2]) footerButtons[2].style.display = "none"; // Approve
+      } else {
+        if (footerButtons[1]) footerButtons[1].style.display = "flex";
+        if (footerButtons[2]) footerButtons[2].style.display = "flex";
+      }
+      
+      modal.style.display = "flex";
+    }
+
+    function cerrarModalRevisionAdmin() {
+      document.getElementById("admin-revision-modal").style.display = "none";
+      revisionAdminSeleccionada = null;
+    }
+
+    function confirmarAprobacionRevisionAdmin() {
+      if (!revisionAdminSeleccionada) return;
+      const { paymentId, month, amount, email } = revisionAdminSeleccionada;
+      
+      cerrarModalRevisionAdmin();
+      mostrarCarga("Aprobando pago y registrando en finanzas...");
+      
+      google.script.run
+        .withSuccessHandler(function(response) {
+          ocultarCarga();
+          if (response && response.success) {
+            alert(response.message);
+            
+            // Actualizar la ficha del socio que está abierta de fondo
+            const currentEmailFicha = document.getElementById("ficha-socio-email").innerText;
+            if (currentEmailFicha) verFichaSocio(currentEmailFicha);
+            
+            // Actualizar dashboard
+            cargarDatosAdministracion();
+          } else {
+            alert("Error al aprobar: " + (response ? response.message : "Error del servidor."));
+          }
+        })
+        .withFailureHandler(function(err) {
+          ocultarCarga();
+          alert("Error de conexión: " + err.toString());
+        })
+        .aprobarRevisionPagoComprobante(paymentId, email, amount, month);
+    }
+
+    function confirmarRechazoRevisionAdmin() {
+      if (!revisionAdminSeleccionada) return;
+      const { paymentId, month, amount, email } = revisionAdminSeleccionada;
+      
+      const motivo = prompt("Ingresá el motivo del rechazo del comprobante (se registrará en la auditoría):", "Comprobante inválido o borroso");
+      if (motivo === null) return;
+      
+      cerrarModalRevisionAdmin();
+      mostrarCarga("Rechazando comprobante...");
+      
+      google.script.run
+        .withSuccessHandler(function(response) {
+          ocultarCarga();
+          if (response && response.success) {
+            alert(response.message);
+            
+            // Actualizar la ficha del socio que está abierta de fondo
+            const currentEmailFicha = document.getElementById("ficha-socio-email").innerText;
+            if (currentEmailFicha) verFichaSocio(currentEmailFicha);
+            
+            // Actualizar dashboard
+            cargarDatosAdministracion();
+          } else {
+            alert("Error al rechazar: " + (response ? response.message : "Error del servidor."));
+          }
+        })
+        .withFailureHandler(function(err) {
+          ocultarCarga();
+          alert("Error de conexión: " + err.toString());
+        })
+        .rechazarRevisionPagoComprobante(paymentId, email, month, motivo);
     }
 
     function cerrarFichaSocio() {
