@@ -3357,7 +3357,7 @@
             <h4 style="margin: 0 0 8px 0; color: #10b981; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
               <i class="fa-solid fa-circle-check"></i> Escaneo Completo
             </h4>
-            <div style="font-size: 0.85rem; display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 6px; color: var(--text-primary);">
+            <div style="font-size: 0.85rem; display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 6px; color: var(--text-primary); margin-bottom: 12px;">
               <div>Concepto:</div>
               <div style="font-weight: 600;" id="comprobante-res-concepto">Cuota Social</div>
               <div>Monto Extraído:</div>
@@ -3366,6 +3366,11 @@
               <div style="font-weight: 600;">Club Haedo Futsal</div>
               <div>Coincidencia:</div>
               <div style="font-weight: 700; color: #10b981;" id="comprobante-res-coincidencia">✅ Monto Correcto</div>
+            </div>
+            <div class="form-group" style="margin-top: 10px;">
+              <label class="form-label" style="font-size: 0.72rem; font-weight: 700; color: #334155; display: block; margin-bottom: 4px;">Nro. de Operación / ID de Transferencia (Recomendado):</label>
+              <input type="text" id="comprobante-input-txid" class="form-input" placeholder="Ej: 83294821034" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding: 8px; font-size: 0.82rem; width:100%; border-radius:8px;">
+              <span style="font-size: 0.65rem; color:#64748b; margin-top: 2px; display: block;">Se validará al instante contra los movimientos reales de la cuenta de Mercado Pago del club.</span>
             </div>
           </div>
         </div>
@@ -4251,6 +4256,8 @@
       if (!file) return;
       fileComprobanteActual = file;
       cerrarModalMetodoPago();
+      const txInput = document.getElementById("comprobante-input-txid");
+      if (txInput) txInput.value = "";
       
       const modal = document.getElementById("modal-validar-comprobante");
       if (!modal) return;
@@ -4366,8 +4373,10 @@
         return;
       }
       
+      const transactionId = (document.getElementById("comprobante-input-txid") ? document.getElementById("comprobante-input-txid").value.trim() : "");
+      
       cerrarModalValidarComprobante();
-      mostrarCarga("Subiendo comprobante para revisión...");
+      mostrarCarga("Conciliando transferencia automáticamente con Mercado Pago...");
       
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -4380,14 +4389,28 @@
               alert(response.message);
               cargarDatosSocioEnPantalla();
             } else {
-              alert("Error al procesar: " + (response ? response.message : "Error del servidor."));
+              const confirmManual = confirm(response.message + "\n\n¿Deseás enviar el comprobante a revisión manual para que la administración del club lo verifique?");
+              if (confirmManual) {
+                mostrarCarga("Enviando comprobante a revisión manual...");
+                google.script.run
+                  .withSuccessHandler(function(manResponse) {
+                    ocultarCarga();
+                    alert(manResponse.message);
+                    cargarDatosSocioEnPantalla();
+                  })
+                  .withFailureHandler(function(err) {
+                    ocultarCarga();
+                    alert("Error de conexión: " + err.toString());
+                  })
+                  .solicitarRevisionTransferencia(paymentId, email, amount, month, transferMethod, base64Data);
+              }
             }
           })
           .withFailureHandler(function(err) {
             ocultarCarga();
             alert("Error de conexión: " + err.toString());
           })
-          .solicitarRevisionTransferencia(paymentId, email, amount, month, transferMethod, base64Data);
+          .conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, transferMethod, base64Data, transactionId);
       };
       reader.onerror = function() {
         ocultarCarga();
