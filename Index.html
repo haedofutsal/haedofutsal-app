@@ -4816,11 +4816,32 @@
     function cargarSelectDashJornadasTorneo(torneos) {
       const select = document.getElementById("dash-jornadas-filter-torneo");
       if (!select) return;
-      select.innerHTML = `<option value="Todos">-- Todos los Torneos --</option>`;
+      select.innerHTML = `<option value="Todos">-- Todas las Categorías --</option>`;
+      
+      const parentCatNames = {
+        "EDEFI-Mayores": "EDEFI Mayores",
+        "EDEFI-Baby": "EDEFI Baby",
+        "BAFI-Femenino": "BAFI Femenino",
+        "BAFI-Masculino": "BAFI Masculino",
+        "FUTSALA-Masculino": "FUTSALA Masculino",
+        "FUTSALA-Promocionales": "FUTSALA Promocionales"
+      };
+      
+      const grouped = {};
       torneos.forEach(t => {
+        const parentId = obtenerCategoriaPadre(t.Category);
+        if (!grouped[parentId]) {
+          grouped[parentId] = {
+            id: parentId,
+            name: parentCatNames[parentId] || parentId.replace("-", " ")
+          };
+        }
+      });
+      
+      Object.values(grouped).forEach(g => {
         const opt = document.createElement("option");
-        opt.value = t.Torneo_ID;
-        opt.innerText = `${t.Name.split(" [Precio:")[0].trim()} (${t.Category})`;
+        opt.value = g.id;
+        opt.innerText = g.name;
         select.appendChild(opt);
       });
     }
@@ -4966,7 +4987,10 @@
       torneos.forEach(t => torneosMap[t.Torneo_ID] = t);
 
       if (filtroTorneoId && filtroTorneoId !== "Todos") {
-        partidos = partidos.filter(p => p.Torneo_ID === filtroTorneoId);
+        partidos = partidos.filter(p => {
+          const t = torneosMap[p.Torneo_ID];
+          return t && obtenerCategoriaPadre(t.Category) === filtroTorneoId;
+        });
       }
 
       if (partidos.length === 0) {
@@ -6354,15 +6378,34 @@
       if (selectGastosCat) selectGastosCat.innerHTML = `<option value="Todos">-- Todas --</option><option value="General">General (Todo el Club)</option>`;
       if (selectTiendaCat) selectTiendaCat.innerHTML = `<option value="Todos">-- Todas --</option><option value="General">General (Todo el Club)</option>`;
       
+      const parentCatNames = {
+        "EDEFI-Mayores": "EDEFI Mayores",
+        "EDEFI-Baby": "EDEFI Baby",
+        "BAFI-Femenino": "BAFI Femenino",
+        "BAFI-Masculino": "BAFI Masculino",
+        "FUTSALA-Masculino": "FUTSALA Masculino",
+        "FUTSALA-Promocionales": "FUTSALA Promocionales"
+      };
+      
+      const groupedTorneos = {};
       torneos.forEach(t => {
-        const nameClean = t.Name.split(" [Precio:")[0].trim();
-        const opt = `<option value="${t.Torneo_ID}">${nameClean}</option>`;
+        const parentId = obtenerCategoriaPadre(t.Category);
+        if (!groupedTorneos[parentId]) {
+          groupedTorneos[parentId] = {
+            Torneo_ID: t.Torneo_ID,
+            Name: parentCatNames[parentId] || parentId.replace("-", " ")
+          };
+        }
+      });
+      
+      Object.values(groupedTorneos).forEach(t => {
+        const opt = `<option value="${t.Torneo_ID}">${t.Name}</option>`;
         if (selectMov) selectMov.innerHTML += opt;
         if (selectPart) selectPart.innerHTML += opt;
         if (selectFilter) selectFilter.innerHTML += opt;
-        if (selectSponsorsCat) selectSponsorsCat.innerHTML += `<option value="${t.Torneo_ID}">${nameClean}</option>`;
-        if (selectGastosCat) selectGastosCat.innerHTML += `<option value="${t.Torneo_ID}">${nameClean}</option>`;
-        if (selectTiendaCat) selectTiendaCat.innerHTML += `<option value="${t.Torneo_ID}">${nameClean}</option>`;
+        if (selectSponsorsCat) selectSponsorsCat.innerHTML += opt;
+        if (selectGastosCat) selectGastosCat.innerHTML += opt;
+        if (selectTiendaCat) selectTiendaCat.innerHTML += opt;
       });
     }
 
@@ -7264,19 +7307,50 @@
         }
       }
       
-      // 2. Cargar Torneos
+      // 2. Cargar Torneos agrupados
       const torneosContainer = document.getElementById("precios-torneos-container");
       if (torneosContainer) {
         torneosContainer.innerHTML = "";
-        if (torneos.length === 0) {
-          torneosContainer.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:10px;">No hay torneos activos cargados.</div>`;
-        } else {
-          torneos.forEach(t => {
+        
+        const parentCatNames = {
+          "EDEFI-Mayores": "EDEFI Mayores",
+          "EDEFI-Baby": "EDEFI Baby",
+          "BAFI-Femenino": "BAFI Femenino",
+          "BAFI-Masculino": "BAFI Masculino",
+          "FUTSALA-Masculino": "FUTSALA Masculino",
+          "FUTSALA-Promocionales": "FUTSALA Promocionales"
+        };
+        
+        const parentTorneosGrouped = {};
+        Object.keys(parentCatNames).forEach(id => {
+          parentTorneosGrouped[id] = {
+            Category_ID: id,
+            Name: parentCatNames[id],
+            Ticket_Price: 0,
+            count: 0
+          };
+        });
+        
+        torneos.forEach(t => {
+          const parentId = obtenerCategoriaPadre(t.Category);
+          if (parentTorneosGrouped[parentId]) {
             const rawName = t.Name || "";
-            const nameLimpio = rawName.split(" [Precio:")[0].trim();
             const match = rawName.match(/\[Precio:\s*(\d+)\]/);
             const ticketPrice = match ? parseFloat(match[1]) : 0;
             
+            if (ticketPrice && (!parentTorneosGrouped[parentId].Ticket_Price || ticketPrice > parentTorneosGrouped[parentId].Ticket_Price)) {
+              parentTorneosGrouped[parentId].Ticket_Price = ticketPrice;
+            }
+            parentTorneosGrouped[parentId].count++;
+          }
+        });
+        
+        const finalTorneos = Object.values(parentTorneosGrouped).filter(t => t.count > 0);
+        
+        if (finalTorneos.length === 0) {
+          torneosContainer.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:10px;">No hay torneos activos cargados.</div>`;
+        } else {
+          finalTorneos.forEach(t => {
             const div = document.createElement("div");
             div.style.display = "flex";
             div.style.justifyContent = "space-between";
@@ -7285,11 +7359,11 @@
             div.style.borderBottom = "1px solid rgba(0,0,0,0.05)";
             div.innerHTML = `
               <span style="font-size:0.82rem; font-weight:600; color:#334155;">
-                <i class="fa-solid fa-trophy" style="color:var(--text-muted); font-size:0.75rem; margin-right:4px;"></i> ${nameLimpio}
+                <i class="fa-solid fa-trophy" style="color:var(--text-muted); font-size:0.75rem; margin-right:4px;"></i> ${t.Name}
               </span>
               <div style="display:flex; align-items:center; gap:6px;">
                 <span style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">$</span>
-                <input type="number" class="precio-torneo-input" data-id="${t.Torneo_ID}" value="${ticketPrice}" style="width: 100px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; text-align: right;" />
+                <input type="number" class="precio-torneo-input" data-id="${t.Category_ID}" value="${t.Ticket_Price}" style="width: 100px; padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.8rem; text-align: right;" />
               </div>
             `;
             torneosContainer.appendChild(div);
