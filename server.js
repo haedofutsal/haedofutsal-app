@@ -680,6 +680,83 @@ app.get('/run-migration', async (req, res) => {
   });
 });
 
+app.get('/run-regenerate-usernames', async (req, res) => {
+  const { Client } = require('pg');
+  const fs = require('fs');
+  const path = require('path');
+  
+  try {
+    const dbPath = path.join(__dirname, 'db.json');
+    if (!fs.existsSync(dbPath)) {
+      return res.status(404).send('db.json no encontrado.');
+    }
+    const db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
+    
+    const emailColIdx = db.Usuarios.headers.indexOf('Email');
+    const roleColIdx = db.Usuarios.headers.indexOf('Role');
+    const usernameColIdx = db.Usuarios.headers.indexOf('Username');
+    
+    const sqlStatements = [];
+    db.Usuarios.rows.forEach(r => {
+      const role = r[roleColIdx];
+      if (role !== 'Deportista') return;
+      const email = r[emailColIdx].trim().toLowerCase();
+      const username = r[usernameColIdx];
+      if (username) {
+        sqlStatements.push(`UPDATE usuarios SET username = '${username}' WHERE email = '${email}';`);
+      }
+    });
+    
+    if (sqlStatements.length === 0) {
+      return res.send('No hay deportistas para actualizar.');
+    }
+    
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://kjcnotrxxthnzpgljeus.supabase.co';
+    const match = supabaseUrl.match(/https:\/\/([^.]+)\.supabase\.co/);
+    const ref = match ? match[1] : 'kjcnotrxxthnzpgljeus';
+    
+    const targets = [
+      { host: `db.${ref}.supabase.co`, port: 5432, user: 'postgres' },
+      { host: `aws-0-ca-central-1.pooler.supabase.com`, port: 5432, user: `postgres.${ref}` },
+      { host: `aws-0-ca-central-1.pooler.supabase.com`, port: 6543, user: `postgres.${ref}` },
+      { host: `aws-0-sa-east-1.pooler.supabase.com`, port: 6543, user: `postgres.${ref}` },
+      { host: `aws-0-us-east-1.pooler.supabase.com`, port: 6543, user: `postgres.${ref}` },
+      { host: `aws-0-us-east-2.pooler.supabase.com`, port: 6543, user: `postgres.${ref}` },
+      { host: `aws-0-us-west-2.pooler.supabase.com`, port: 6543, user: `postgres.${ref}` }
+    ];
+    
+    let connected = false;
+    let errorMsgs = [];
+    
+    for (const t of targets) {
+      const client = new Client({
+        host: t.host,
+        port: t.port,
+        database: 'postgres',
+        user: t.user,
+        password: process.env.SUPABASE_DB_PASSWORD || 'HaedoFutsal.2026',
+        ssl: { rejectUnauthorized: false },
+        connectionTimeoutMillis: 4000
+      });
+      
+      try {
+        await client.connect();
+        const batchQuery = sqlStatements.join('\n');
+        await client.query(batchQuery);
+        await client.end();
+        connected = true;
+        return res.send(`✅ Nombres de usuario regenerados y actualizados con éxito en Supabase usando ${t.host}! Total: ${sqlStatements.length}`);
+      } catch (err) {
+        errorMsgs.push(`${t.host}: ${err.message}`);
+      }
+    }
+    
+    return res.status(500).send(`❌ Error de conexión a todas las bases de datos:\n` + errorMsgs.join('\n'));
+  } catch (err) {
+    return res.status(500).send(`❌ Excepción: ` + err.toString());
+  }
+});
+
 // Servidor fallback para Web Share Target (si no se intercepta por Service Worker)
 app.post('/share-receipt', (req, res) => {
   console.log('[SERVER] Recibido share target POST sin interceptar. Redirigiendo...');
