@@ -8598,39 +8598,33 @@
     "headers": [
       "Torneo_ID",
       "Name",
-      "Category",
-      "Ticket_Price"
+      "Category"
     ],
     "rows": [
       [
         "T-001",
-        "Torneo EDEFI +35",
-        "Fut-May+35",
-        0
+        "Torneo EDEFI +35 [Precio: 0]",
+        "Fut-May+35"
       ],
       [
         "T-002",
-        "Torneo EDEFI +42",
-        "Fut-May+42",
-        0
+        "Torneo EDEFI +42 [Precio: 0]",
+        "Fut-May+42"
       ],
       [
         "T-003",
-        "Liga Femenina FutFEM",
-        "Fut-Fem-1ra",
-        0
+        "Liga Femenina FutFEM [Precio: 0]",
+        "Fut-Fem-1ra"
       ],
       [
         "T-004",
-        "Liga Juvenil FUTSALA",
-        "Fut-Juv-5ta",
-        0
+        "Liga Juvenil FUTSALA [Precio: 0]",
+        "Fut-Juv-5ta"
       ],
       [
         "T-005",
-        "Liga Baby EDEFI",
-        "Bab-2015",
-        0
+        "Liga Baby EDEFI [Precio: 0]",
+        "Bab-2015"
       ]
     ]
   },
