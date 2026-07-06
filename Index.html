@@ -1922,7 +1922,6 @@
           <div class="profile-avatar" id="socio-avatar">D</div>
           <div class="profile-info">
             <h3 id="socio-profile-name">Cargando...</h3>
-            <p id="socio-profile-email">Cargando...</p>
             <div id="socio-profile-cats" style="display:flex; flex-wrap:wrap; gap:4px;"><span class="profile-badge" id="socio-profile-cat">Categoría</span></div>
           </div>
         </div>
@@ -3874,13 +3873,11 @@
             
             const welcomeEl = document.getElementById("socio-welcome-name");
             const nameEl = document.getElementById("socio-profile-name");
-            const emailEl = document.getElementById("socio-profile-email");
             const catEl = document.getElementById("socio-profile-cat");
             const avatarEl = document.getElementById("socio-avatar");
 
-            if (welcomeEl) welcomeEl.innerText = 'Hola, ' + (estadoApp.userName || '').split(' ')[0];
+            if (welcomeEl) welcomeEl.innerText = 'Hola ' + (estadoApp.userName || '').split(' ')[0];
             if (nameEl) nameEl.innerText = estadoApp.userName || '';
-            if (emailEl) emailEl.innerText = estadoApp.userEmail || '';
 
             const perfil = response.perfil || {};
             const categories = (perfil.Category || 'Sin Categoría').split('|').map(c => c.trim()).filter(Boolean);
