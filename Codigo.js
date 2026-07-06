@@ -1841,12 +1841,37 @@ function registrarSocioPublico(socioObj) {
       }
     }
 
-    const base = ((nombresArr[0][0] || "") + apellidoClean).toUpperCase();
-    let candidato = base;
-    let i = 1;
-    while (existingUsernames.has(candidato)) {
-      candidato = base + i;
-      i++;
+    // Algoritmo de generación de nombre de usuario (sin repetidos):
+    // 1. Inicial del primer nombre + Apellido completo (JLOPEZ)
+    // 2. Si ya existe:
+    //    a. Si tiene segundo nombre: iniciales de ambos nombres + Apellido (JJLOPEZ)
+    //    b. Si no tiene segundo nombre: primeras 2 letras del nombre + Apellido (JULOPEZ)
+    // 3. Si aún existe: inicial del primer nombre + Apellido + número incremental (JLOPEZ1, JLOPEZ2...)
+    const base1 = ((nombresArr[0][0] || "") + apellidoClean).toUpperCase();
+    let candidato = base1;
+    
+    if (existingUsernames.has(candidato)) {
+      // Intentar opción 2
+      let opcion2 = "";
+      if (nombresArr.length > 1) {
+        // Tiene segundo nombre: usar ambas iniciales
+        opcion2 = ((nombresArr[0][0] || "") + (nombresArr[1][0] || "") + apellidoClean).toUpperCase();
+      } else if (nombresArr[0].length >= 2) {
+        // Sin segundo nombre: usar primeras 2 letras
+        opcion2 = (nombresArr[0].substring(0, 2) + apellidoClean).toUpperCase();
+      }
+      
+      if (opcion2 && !existingUsernames.has(opcion2)) {
+        candidato = opcion2;
+      } else {
+        // Opción 3: sufijo numérico
+        let i = 1;
+        candidato = base1 + i;
+        while (existingUsernames.has(candidato)) {
+          i++;
+          candidato = base1 + i;
+        }
+      }
     }
 
     // Formatear nombre completo para la base (Apellido, Nombres)
