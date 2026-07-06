@@ -1841,45 +1841,12 @@ function registrarSocioPublico(socioObj) {
       }
     }
 
-    // Algoritmo de 5 combinaciones
-    const combinaciones = [];
-    const p1 = (nombresArr[0][0] || "") + apellidoClean;
-    combinaciones.push(p1.toUpperCase());
-
-    if (nombresArr.length > 1) {
-      const p2 = nombresArr.map(n => n[0] || "").join("") + apellidoClean;
-      combinaciones.push(p2.toUpperCase());
-    }
-
-    if (nombresArr[0].length >= 2) {
-      const p3 = nombresArr[0].substring(0, 2) + apellidoClean;
-      combinaciones.push(p3.toUpperCase());
-    }
-
-    if (nombresArr[0].length >= 3) {
-      const p4 = nombresArr[0].substring(0, 3) + apellidoClean;
-      combinaciones.push(p4.toUpperCase());
-    }
-
-    let candidato = "";
-    for (const comb of combinaciones) {
-      if (!existingUsernames.has(comb)) {
-        candidato = comb;
-        break;
-      }
-    }
-
-    if (!candidato) {
-      let i = 1;
-      const base = ((nombresArr[0][0] || "") + apellidoClean).toUpperCase();
-      while (true) {
-        const combNum = base + i;
-        if (!existingUsernames.has(combNum)) {
-          candidato = combNum;
-          break;
-        }
-        i++;
-      }
+    const base = ((nombresArr[0][0] || "") + apellidoClean).toUpperCase();
+    let candidato = base;
+    let i = 1;
+    while (existingUsernames.has(candidato)) {
+      candidato = base + i;
+      i++;
     }
 
     // Formatear nombre completo para la base (Apellido, Nombres)
