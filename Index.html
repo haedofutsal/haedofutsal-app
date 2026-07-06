@@ -2956,8 +2956,8 @@
   <!-- MODAL: DESGLOSE DE MEDIOS DE PAGO -->
   <div id="desglose-modal" class="modal-overlay">
     <div class="modal" style="max-width: 620px; width: 98%;">
-      <div class="modal-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
-        <h3 class="modal-title" id="lbl-desglose-titulo" style="font-size: 0.95rem; display:flex; align-items:center; gap:8px;">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.08); padding-bottom: 10px;">
+        <h3 class="modal-title" id="lbl-desglose-titulo" style="font-size: 0.95rem; display:flex; align-items:center; gap:8px; color:#0f172a;">
           <i class="fa-solid fa-chart-pie" style="color:var(--primary);"></i> Desglose de Medio de Pago
         </h3>
         <button class="modal-close" onclick="cerrarModalDesglose()"><i class="fa-solid fa-xmark"></i></button>
@@ -2965,7 +2965,7 @@
       <div style="padding: 14px 0;">
         <div style="text-align:center; margin-bottom: 16px;">
           <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Monto Total Evaluado</span>
-          <h2 id="lbl-desglose-total" style="font-size:1.6rem; font-weight:800; margin:4px 0 0 0; color:#ffffff;">$0</h2>
+          <h2 id="lbl-desglose-total" style="font-size:1.6rem; font-weight:800; margin:4px 0 0 0; color:#0f172a;">$0</h2>
         </div>
         
         <div style="display:flex; flex-direction:column; gap:10px;">
@@ -2974,7 +2974,7 @@
               <div style="display:flex; align-items:center; gap:10px;">
                 <span style="font-size:1.3rem;">💵</span>
                 <div>
-                  <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#ffffff;">Efectivo <span style="font-size:0.7rem; color:var(--success); font-weight:600; text-decoration:underline;">(Ver por Coach 👇)</span></h4>
+                  <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#0f172a;">Efectivo <span style="font-size:0.7rem; color:var(--success); font-weight:600; text-decoration:underline;">(Ver por Coach 👇)</span></h4>
                   <p style="margin:2px 0 0 0; font-size:0.7rem; color:var(--text-muted);" id="lbl-desglose-efectivo-pct">0% del total</p>
                 </div>
               </div>
@@ -2990,7 +2990,7 @@
             <div style="display:flex; align-items:center; gap:10px;">
               <span style="font-size:1.3rem;">🏦</span>
               <div>
-                <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#ffffff;">Transferencia / Banco</h4>
+                <h4 style="margin:0; font-size:0.85rem; font-weight:700; color:#0f172a;">Transferencia / Banco</h4>
                 <p style="margin:2px 0 0 0; font-size:0.7rem; color:var(--text-muted);" id="lbl-desglose-transf-pct">0% del total</p>
               </div>
             </div>
@@ -2999,7 +2999,7 @@
         </div>
         
         <!-- Desglose por Categoría (Cuotas, Ligas, Sponsors, etc.) -->
-        <div id="container-desglose-categorias" style="margin-top: 14px; padding: 12px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; display: none; flex-direction: column; gap: 8px;">
+        <div id="container-desglose-categorias" style="margin-top: 14px; padding: 12px 14px; background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; display: none; flex-direction: column; gap: 8px;">
           <!-- Se completa dinámicamente -->
         </div>
       </div>
@@ -6809,15 +6809,15 @@
       if (coachEntries.length === 0) {
         container.innerHTML = `<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:4px;">No hay registro de cobradores individuales para este periodo.</div>`;
       } else {
-        let listHTML = `<div style="font-size:0.68rem; font-weight:800; color:#a5b4fc; text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Recaudación por Coach / Administrador:</div>`;
-        listHTML += `<div style="display:flex; flex-direction:column; gap:6px;">`;
+        let listHTML = `<div style="font-size:0.68rem; font-weight:800; color:#475569; text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Recaudación por Coach / Administrador:</div>`;
+        listHTML += `<div style="display:flex; flex-direction:column; gap:4px;">`;
         coachEntries.forEach(([name, amount]) => {
           listHTML += `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(15, 23, 42, 0.7); border:1px solid rgba(255,255,255,0.08); padding:6px 10px; border-radius:8px;">
-              <span style="font-size:0.78rem; color:#e2e8f0; font-weight:600; display:flex; align-items:center; gap:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px dashed rgba(0,0,0,0.08);">
+              <span style="font-size:0.78rem; color:#334155; font-weight:600; display:flex; align-items:center; gap:6px;">
                 <i class="fa-solid fa-user-gear" style="color:var(--primary); font-size:0.75rem;"></i> ${name}
               </span>
-              <strong style="font-size:0.85rem; color:${amount >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">$${Math.abs(amount).toLocaleString('es-AR')}</strong>
+              <strong style="font-size:0.85rem; color:${amount >= 0 ? '#16a34a' : '#dc2626'}; font-weight:700;">$${Math.abs(amount).toLocaleString('es-AR')}</strong>
             </div>
           `;
         });
@@ -6836,13 +6836,13 @@
           catContainer.style.display = "none";
         } else {
           catContainer.style.display = "flex";
-          let listHTML = `<div style="font-size:0.68rem; font-weight:800; color:#94a3b8; text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Desglose por Origen / Destino:</div>`;
-          listHTML += `<div style="display:flex; flex-direction:column; gap:6px;">`;
+          let listHTML = `<div style="font-size:0.68rem; font-weight:800; color:#475569; text-transform:uppercase; margin-bottom:6px; letter-spacing:0.5px;">Desglose por Origen / Destino:</div>`;
+          listHTML += `<div style="display:flex; flex-direction:column; gap:4px;">`;
           catEntries.forEach(([name, amount]) => {
             listHTML += `
-              <div style="display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid rgba(255,255,255,0.08);">
-                <span style="font-size:0.8rem; color:#cbd5e1; font-weight:500;">${name}</span>
-                <strong style="font-size:0.85rem; color:#ffffff;">$${Math.abs(amount).toLocaleString('es-AR')}</strong>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(0,0,0,0.06);">
+                <span style="font-size:0.8rem; color:#334155; font-weight:500;">${name}</span>
+                <strong style="font-size:0.85rem; color:#0f172a; font-weight:700;">$${Math.abs(amount).toLocaleString('es-AR')}</strong>
               </div>
             `;
           });
