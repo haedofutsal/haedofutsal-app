@@ -1810,10 +1810,12 @@ function ejecutarMigracionSupabase() {
  * Actualiza los precios de cuotas de categorías y valor de entradas de torneos.
  * @param {Object} categoriasObj Mapa de Category_ID a Monthly_Fee
  * @param {Object} torneosObj Mapa de Torneo_ID a Ticket_Price
+ * @param {string} userEmail Email del administrador que realiza los cambios
  */
-function actualizarPrecios(categoriasObj, torneosObj) {
+function actualizarPrecios(categoriasObj, torneosObj, userEmail) {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const cambios = [];
     
     // 1. Actualizar Categorías
     const sheetCategorias = ss.getSheetByName(HOJA_CATEGORIAS);
@@ -1821,14 +1823,20 @@ function actualizarPrecios(categoriasObj, torneosObj) {
       const data = sheetCategorias.getDataRange().getValues();
       const headers = data[0];
       const idIdx = headers.indexOf("Category_ID");
+      const nameIdx = headers.indexOf("Name");
       const feeIdx = headers.indexOf("Monthly_Fee");
       
       if (idIdx !== -1 && feeIdx !== -1) {
         for (let i = 1; i < data.length; i++) {
           const catId = data[i][idIdx];
           if (categoriasObj[catId] !== undefined) {
+            const oldVal = parseFloat(data[i][feeIdx]) || 0;
             const newVal = parseFloat(categoriasObj[catId]) || 0;
-            sheetCategorias.getRange(i + 1, feeIdx + 1).setValue(newVal);
+            if (oldVal !== newVal) {
+              const catName = nameIdx !== -1 ? data[i][nameIdx] : catId;
+              sheetCategorias.getRange(i + 1, feeIdx + 1).setValue(newVal);
+              cambios.push(`Cuota ${catName}: $${oldVal.toLocaleString('es-AR')} -> $${newVal.toLocaleString('es-AR')}`);
+            }
           }
         }
       }
@@ -1848,13 +1856,24 @@ function actualizarPrecios(categoriasObj, torneosObj) {
           if (torneosObj[torneoId] !== undefined) {
             const rawName = data[i][nameIdx].toString();
             const nameLimpio = rawName.split(" [Precio:")[0].trim();
-            const precio = parseFloat(torneosObj[torneoId]) || 0;
-            const nuevoNombre = `${nameLimpio} [Precio: ${precio}]`;
+            const match = rawName.match(/\[Precio:\s*(\d+)\]/);
+            const oldVal = match ? parseFloat(match[1]) : 0;
+            const newVal = parseFloat(torneosObj[torneoId]) || 0;
             
-            sheetTorneos.getRange(i + 1, nameIdx + 1).setValue(nuevoNombre);
+            if (oldVal !== newVal) {
+              const nuevoNombre = `${nameLimpio} [Precio: ${newVal}]`;
+              sheetTorneos.getRange(i + 1, nameIdx + 1).setValue(nuevoNombre);
+              cambios.push(`Entrada ${nameLimpio}: $${oldVal.toLocaleString('es-AR')} -> $${newVal.toLocaleString('es-AR')}`);
+            }
           }
         }
       }
+    }
+    
+    // 3. Registrar en el Log General si hubo cambios
+    if (cambios.length > 0) {
+      const details = "Cambios de tarifas realizados:\n- " + cambios.join("\n- ");
+      registrarLogAuditoria(userEmail || "Admin", "MODIFICAR", "TARIFAS_PRECIOS", details);
     }
     
     return { success: true, message: "Precios actualizados correctamente." };
