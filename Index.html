@@ -3253,6 +3253,29 @@
               <button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem; border-radius:4px;" onclick="copiarTexto('0000003100098098995218', 'CVU')"><i class="fa-regular fa-copy"></i> Copiar</button>
             </div>
           </div>
+          
+          <!-- Selector rápido de Billetera -->
+          <div style="margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+            <p style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin: 0 0 8px 0; text-transform: uppercase; text-align: left;"><i class="fa-solid fa-up-right-from-square"></i> Copiar Alias y abrir en tu cel:</p>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+              <button onclick="copiarYAbrirBilletera('mercadopago://', 'https://www.mercadopago.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
+                <i class="fa-solid fa-wallet text-success" style="font-size: 1.1rem;"></i>
+                <span style="font-weight: 600; color: var(--text-primary);">MP</span>
+              </button>
+              <button onclick="copiarYAbrirBilletera('personalpay://', 'https://www.personalpay.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
+                <i class="fa-solid fa-mobile-screen text-primary" style="font-size: 1.1rem;"></i>
+                <span style="font-weight: 600; color: var(--text-primary);">P. Pay</span>
+              </button>
+              <button onclick="copiarYAbrirBilletera('cuentadni://', 'https://www.bancoprovincia.com.ar/cuentadni')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
+                <i class="fa-solid fa-building-columns text-success" style="font-size: 1.1rem;"></i>
+                <span style="font-weight: 600; color: var(--text-primary);">C. DNI</span>
+              </button>
+              <button onclick="copiarYAbrirBilletera('modo://', 'https://www.modo.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
+                <i class="fa-solid fa-qrcode text-warning" style="font-size: 1.1rem;"></i>
+                <span style="font-weight: 600; color: var(--text-primary);">MODO</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Detalles Mercado Pago Transferencia -->
@@ -3260,7 +3283,7 @@
           <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 0.95rem;">Datos de Mercado Pago</h4>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 10px 0;">Transferí el monto exacto y luego cargá el comprobante abajo.</p>
           
-          <button onclick="copiarYAbrirMercadoPago()" class="btn-primary" style="background: #009ee3; border:none; width:100%; justify-content:center; padding: 10px; font-size: 0.82rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-radius: 8px; cursor: pointer; color: white;">
+          <button onclick="copiarYAbrirBilletera('mercadopago://', 'https://www.mercadopago.com.ar')" class="btn-primary" style="background: #009ee3; border:none; width:100%; justify-content:center; padding: 10px; font-size: 0.82rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-radius: 8px; cursor: pointer; color: white;">
             <i class="fa-solid fa-mobile-screen-button" style="font-size: 1rem;"></i> Copiar Alias y Abrir Mercado Pago
           </button>
 
@@ -3290,6 +3313,29 @@
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; flex-wrap:wrap; gap:6px;">
               <span>CVU: <code id="cvu-billeteras" style="color:var(--text-primary); font-family:monospace; word-break:break-all;">0000003100098098995218</code></span>
               <button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem; border-radius:4px;" onclick="copiarTexto('0000003100098098995218', 'CVU')"><i class="fa-regular fa-copy"></i> Copiar</button>
+            </div>
+          </div>
+          
+          <!-- Selector rápido de Billetera -->
+          <div style="margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+            <p style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin: 0 0 8px 0; text-transform: uppercase; text-align: left;"><i class="fa-solid fa-up-right-from-square"></i> Copiar Alias y abrir en tu cel:</p>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+              <button onclick="copiarYAbrirBilletera('mercadopago://', 'https://www.mercadopago.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
+                <i class="fa-solid fa-wallet text-success" style="font-size: 1.1rem;"></i>
+                <span style="font-weight: 600; color: var(--text-primary);">MP</span>
+              </button>
+              <button onclick="copiarYAbrirBilletera('personalpay://', 'https://www.personalpay.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
+                <i class="fa-solid fa-mobile-screen text-primary" style="font-size: 1.1rem;"></i>
+                <span style="font-weight: 600; color: var(--text-primary);">P. Pay</span>
+              </button>
+              <button onclick="copiarYAbrirBilletera('cuentadni://', 'https://www.bancoprovincia.com.ar/cuentadni')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
+                <i class="fa-solid fa-building-columns text-success" style="font-size: 1.1rem;"></i>
+                <span style="font-weight: 600; color: var(--text-primary);">C. DNI</span>
+              </button>
+              <button onclick="copiarYAbrirBilletera('modo://', 'https://www.modo.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
+                <i class="fa-solid fa-qrcode text-warning" style="font-size: 1.1rem;"></i>
+                <span style="font-weight: 600; color: var(--text-primary);">MODO</span>
+              </button>
             </div>
           </div>
         </div>
@@ -4065,14 +4111,26 @@
       });
     }
 
-    function copiarYAbrirMercadoPago() {
+    function abrirAppBilletera(scheme, fallbackUrl) {
+      const start = Date.now();
+      window.location.href = scheme;
+      
+      setTimeout(function() {
+        if (Date.now() - start < 1500) {
+          window.open(fallbackUrl, "_blank");
+        }
+      }, 1000);
+    }
+
+    function copiarYAbrirBilletera(scheme, fallbackUrl) {
       const alias = "willy.78.mp";
       navigator.clipboard.writeText(alias).then(() => {
-        alert("¡Alias '" + alias + "' copiado! Redirigiendo a Mercado Pago para que lo pegues en Transferir.");
-        window.open("https://www.mercadopago.com.ar", "_blank");
+        // Notificación rápida no intrusiva y abrir app
+        const statusText = document.querySelector("#comprobante-status-loading p");
+        console.log("¡Alias copiado!");
+        abrirAppBilletera(scheme, fallbackUrl);
       }).catch(() => {
-        alert("Copiar Alias: " + alias);
-        window.open("https://www.mercadopago.com.ar", "_blank");
+        abrirAppBilletera(scheme, fallbackUrl);
       });
     }
 
