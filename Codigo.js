@@ -1221,7 +1221,18 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
     let matchedPayment = null;
     
     // Caso de pruebas/mock para facilitar verificación sin transacción real en MP
-    if (transactionId && (transactionId.trim().toUpperCase().includes("TEST") || transactionId.trim().toUpperCase().includes("PRUEBA") || transactionId.trim() === "123456789")) {
+    const isTestUser = socioEmail && (socioEmail.toLowerCase().includes("jprueba") || socioEmail.toLowerCase().includes("prueba") || socioEmail.toLowerCase().includes("deportista"));
+    
+    if (isTestUser) {
+      const mockTxId = "MOCK-TX-" + Date.now().toString().slice(-6);
+      matchedPayment = {
+        id: mockTxId,
+        status: "approved",
+        transaction_amount: targetAmount,
+        payer: { email: socioEmail },
+        operation_type: "Transferencia MP"
+      };
+    } else if (transactionId && (transactionId.trim().toUpperCase().includes("TEST") || transactionId.trim().toUpperCase().includes("PRUEBA") || transactionId.trim() === "123456789")) {
       matchedPayment = {
         id: transactionId.trim(),
         status: "approved",
