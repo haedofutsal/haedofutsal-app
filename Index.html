@@ -4398,11 +4398,7 @@
             }
           }
 
-          // Buscar importes en el texto. Ej: $ 1.500,00, $ 2, $1.00, $ 1500
-          const amountRegex = /\$\s*(\d+(?:[.,]\d{1,3})?)/g;
-          const amountsFound = [];
-          let amtMatch;
-          
+          // Función robusta para extraer importes del texto del comprobante
           function parseCurrencyString(valStr) {
             if (valStr.includes(",") && valStr.includes(".")) {
               return parseFloat(valStr.replace(/\./g, "").replace(",", "."));
@@ -4421,18 +4417,64 @@
             return parseFloat(valStr);
           }
 
-          while ((amtMatch = amountRegex.exec(text)) !== null) {
-            const val = parseCurrencyString(amtMatch[1]);
-            if (!isNaN(val)) {
-              amountsFound.push(val);
+          function extractAmountFromText(rawText) {
+            const cleanText = rawText.toLowerCase();
+            const keywords = [
+              "monto", "importe", "total", "enviado", "transferido", "pagado", 
+              "recibido", "monto de la operación", "monto de la transferencia", 
+              "dinero enviado", "importe de la operacion", "monto neto"
+            ];
+            
+            // 1. Intentar buscar por palabras clave
+            for (let kw of keywords) {
+              const idx = cleanText.indexOf(kw);
+              if (idx !== -1) {
+                const sub = rawText.substring(idx + kw.length, idx + kw.length + 50);
+                const numRegex = /(?:[\$\sSsbB])?\s*(\d+(?:[.,]\d{1,3})?)/;
+                const match = sub.match(numRegex);
+                if (match) {
+                  const val = parseCurrencyString(match[1]);
+                  if (!isNaN(val) && val > 0 && val < 500000) {
+                    console.log(`[OCR] Monto detectado por palabra clave "${kw}":`, val);
+                    return val;
+                  }
+                }
+              }
             }
+            
+            // 2. Buscar números precedidos por $, S, s, B, b o espacio
+            const symbolRegex = /(?:[\$\sSsbB])\s*(\d+(?:[.,]\d{1,3})?)/g;
+            const amountsFound = [];
+            let symMatch;
+            while ((symMatch = symbolRegex.exec(rawText)) !== null) {
+              const val = parseCurrencyString(symMatch[1]);
+              if (!isNaN(val) && val > 0 && val < 500000) {
+                amountsFound.push(val);
+              }
+            }
+            
+            if (amountsFound.length > 0) {
+              return Math.max(...amountsFound);
+            }
+            
+            // 3. Fallback: Buscar cualquier número con dos decimales (ej: 1500,00 o 2,00)
+            const decimalRegex = /\b(\d+[.,]\d{2})\b/g;
+            let decMatch;
+            while ((decMatch = decimalRegex.exec(rawText)) !== null) {
+              const val = parseCurrencyString(decMatch[1]);
+              if (!isNaN(val) && val > 0 && val < 500000) {
+                amountsFound.push(val);
+              }
+            }
+            if (amountsFound.length > 0) {
+              return Math.max(...amountsFound);
+            }
+            
+            return null;
           }
-          
-          let detectedAmount = null;
-          if (amountsFound.length > 0) {
-            detectedAmount = Math.max(...amountsFound);
-            console.log("[OCR] Montos detectados:", amountsFound, "-> Seleccionado:", detectedAmount);
-          }
+
+          const detectedAmount = extractAmountFromText(text);
+          console.log("[OCR] Importe final extraído:", detectedAmount);
           
           if (statusText) statusText.textContent = "Conciliando pago con Mercado Pago...";
           
