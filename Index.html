@@ -2063,6 +2063,9 @@
         <button class="btn-add" onclick="abrirModalAltaSocio()" style="padding: 0 16px; font-size: 0.8rem; height: 42px; white-space: nowrap; font-weight:700; background:var(--primary); color:#ffffff; border:none; border-radius:12px; display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.25); flex-shrink:0;">
           <i class="fa-solid fa-user-plus"></i> Alta Socio
         </button>
+        <button class="btn-secondary" onclick="compartirEnlaceRegistro()" style="width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" title="Compartir Enlace de Registro">
+          <i class="fa-solid fa-share-nodes" style="font-size: 1.1rem;"></i>
+        </button>
       </div>
       
       <!-- FILTROS DEL PADRÓN DE SOCIOS -->
@@ -2704,17 +2707,16 @@
             <input type="text" id="form-socio-dni" class="form-input" placeholder="Ej: 42.123.456" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; font-size:0.8rem; padding:10px 8px;">
           </div>
         </div>
-
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
           <div class="form-group" style="margin-bottom:0;">
-            <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">Categorías Deportivas * <span style="font-weight:400; color:#64748b;">(puede elegir varias)</span></label>
+            <label class="form-label" style="font-size:0.75rem; font-weight:700; color:#334155;">TORNEO / LIGA * <span style="font-weight:400; color:#64748b;">(puede elegir varias)</span></label>
             <div id="form-socio-category-checks" style="display:flex; flex-wrap:wrap; gap:8px; padding:8px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px;">
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="EDEFI-Mayores" class="cat-checkbox"> EDEFI Mayores</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="EDEFI-Baby" class="cat-checkbox"> EDEFI Baby</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="BAFI-Femenino" class="cat-checkbox"> BAFI Femenino</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="BAFI-Masculino" class="cat-checkbox"> BAFI Masculino</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="FUTSALA-Masculino" class="cat-checkbox"> FUTSALA Masculino</label>
-              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="FUTSALA-Promocionales" class="cat-checkbox"> FUTSALA Promocionales</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="EDEFI-Mayores" class="cat-checkbox" onchange="validarRestriccionesTorneo()"> EDEFI Mayores</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="EDEFI-Baby" class="cat-checkbox" onchange="validarRestriccionesTorneo()"> EDEFI Baby</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="BAFI-Femenino" class="cat-checkbox" onchange="validarRestriccionesTorneo()"> BAFI Femenino</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="BAFI-Masculino" class="cat-checkbox" onchange="validarRestriccionesTorneo()"> BAFI Masculino</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="FUTSALA-Masculino" class="cat-checkbox" onchange="validarRestriccionesTorneo()"> FUTSALA Masculino</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;color:#0f172a;cursor:pointer;"><input type="checkbox" value="FUTSALA-Promocionales" class="cat-checkbox" onchange="validarRestriccionesTorneo()"> FUTSALA Promocionales</label>
             </div>
           </div>
           <div class="form-group" style="margin-bottom:0;">
@@ -2768,12 +2770,26 @@
         </div>
       </div>
       
+      <!-- Pantalla de éxito de registro público -->
+      <div id="alta-socio-success" style="display:none; text-align:center; padding: 20px 0; flex-direction:column; align-items:center; gap:16px;">
+        <i class="fa-solid fa-circle-check text-success" style="font-size: 3.5rem; color:#10b981;"></i>
+        <h3 style="margin:0; font-size: 1.3rem; color: var(--text-primary); font-weight:800;">¡Registro Completado!</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0; max-width: 320px; line-height: 1.4;">
+          Tu inscripción en Haedo Futsal ha sido registrada. Guardá tus credenciales de acceso:
+        </p>
+        <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; width: 100%; max-width: 320px; text-align: left; box-sizing: border-box; margin: 0 auto;">
+          <div style="margin-bottom: 8px;">Usuario: <strong style="color: var(--primary); font-size: 1.05rem;" id="success-username">--</strong></div>
+          <div>Clave Numérica: <strong style="color: var(--text-primary); font-size: 1.05rem;" id="success-password">--</strong></div>
+        </div>
+        <button class="btn-primary" onclick="irALoginPublico()" style="width:100%; max-width:320px; justify-content:center; padding: 12px; font-weight:700; font-size:0.95rem; border-radius:10px; margin-top:10px; background:var(--primary); color:white; border:none; cursor:pointer;">
+          Ir a Iniciar Sesión
+        </button>
+      </div>
+
       <div class="modal-footer" style="padding-top:12px; border-top:1px solid var(--border-color);">
         <button class="modal-btn cancel" onclick="cerrarModalAltaSocio()">Cancelar</button>
         <button class="modal-btn confirm" onclick="confirmarAltaSocio()" style="background:var(--primary); font-weight:700;"><i class="fa-solid fa-check"></i> Registrar Socio</button>
       </div>
-    </div>
-  </div>
 
   <!-- MODAL: FICHA PERSONAL COMPLETA DEL SOCIO -->
   <div id="ficha-personal-modal" class="modal-overlay" style="z-index: 11000;">
@@ -5472,18 +5488,50 @@
     }
 
     // MODAL: ALTA DE NUEVO SOCIO
+    // MODAL: ALTA DE NUEVO SOCIO
     function abrirModalAltaSocio() {
+      // Configurar modo administrativo
+      window.esRegistroPublico = false;
+      
+      const closeBtn = document.querySelector("#alta-socio-modal .modal-close");
+      if (closeBtn) closeBtn.style.display = "flex";
+      
+      const cancelBtn = document.querySelector("#alta-socio-modal .modal-btn.cancel");
+      if (cancelBtn) cancelBtn.style.display = "flex";
+      
+      const roleSelect = document.getElementById("form-socio-role");
+      if (roleSelect) {
+        roleSelect.closest(".form-group").style.display = "block";
+        roleSelect.value = "Deportista";
+      }
+      
+      const titleText = document.querySelector("#alta-socio-modal .modal-title");
+      if (titleText) {
+        titleText.innerHTML = '<i class="fa-solid fa-user-plus" style="color:var(--primary);"></i> Dar de Alta Nuevo Socio';
+      }
+      
+      const confirmBtn = document.querySelector("#alta-socio-modal .modal-btn.confirm");
+      if (confirmBtn) {
+        confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Registrar Socio';
+      }
+
+      // Resetear campos
       document.getElementById("form-socio-firstname").value = "";
       document.getElementById("form-socio-lastname").value = "";
       document.getElementById("form-socio-username").value = "";
       document.getElementById("form-socio-password").value = "1234";
       document.getElementById("form-socio-email").value = "";
-      if (document.getElementById("form-socio-role")) document.getElementById("form-socio-role").value = "Deportista";
       document.getElementById("form-socio-dni").value = "";
+      
       // Resetear checkboxes y activar el por defecto
-      document.querySelectorAll('#form-socio-category-checks .cat-checkbox').forEach(cb => cb.checked = false);
+      document.querySelectorAll('#form-socio-category-checks .cat-checkbox').forEach(cb => {
+        cb.checked = false;
+        cb.disabled = false;
+      });
       const defaultCb = document.querySelector('#form-socio-category-checks .cat-checkbox[value="EDEFI-Mayores"]');
       if (defaultCb) defaultCb.checked = true;
+      validarRestriccionesTorneo(); // Aplicar restricciones
+
       document.getElementById("form-socio-birthdate").value = "";
       document.getElementById("form-socio-phone").value = "";
       document.getElementById("form-socio-blood").value = "O+";
@@ -5492,7 +5540,131 @@
       document.getElementById("form-socio-contact").value = "";
       document.getElementById("form-socio-contactphone").value = "";
       document.getElementById("form-socio-notes").value = "";
+      
+      // Mostrar cuerpo del formulario, ocultar éxito
+      const scrollBody = document.querySelector("#alta-socio-modal div[style*='overflow-y: auto']");
+      if (scrollBody) scrollBody.style.display = "flex";
+      const footer = document.querySelector("#alta-socio-modal .modal-footer");
+      if (footer) footer.style.display = "flex";
+      document.getElementById("alta-socio-success").style.display = "none";
+      
       document.getElementById("alta-socio-modal").style.display = "flex";
+    }
+
+    function abrirFormularioRegistroPublico() {
+      // 1. Mostrar login en el fondo
+      mostrarPantalla("login-view");
+      
+      // 2. Ejecutar reset básico llamando a abrirModalAltaSocio()
+      abrirModalAltaSocio();
+      
+      // 3. Sobrescribir configuraciones para modo público
+      window.esRegistroPublico = true;
+      
+      const closeBtn = document.querySelector("#alta-socio-modal .modal-close");
+      if (closeBtn) closeBtn.style.display = "none";
+      
+      const cancelBtn = document.querySelector("#alta-socio-modal .modal-btn.cancel");
+      if (cancelBtn) cancelBtn.style.display = "none";
+      
+      const roleSelect = document.getElementById("form-socio-role");
+      if (roleSelect) {
+        roleSelect.closest(".form-group").style.display = "none";
+        roleSelect.value = "Deportista";
+      }
+      
+      const titleText = document.querySelector("#alta-socio-modal .modal-title");
+      if (titleText) {
+        titleText.innerHTML = '<i class="fa-solid fa-user-plus" style="color:var(--primary);"></i> Formulario de Inscripción - Socio';
+      }
+      
+      const confirmBtn = document.querySelector("#alta-socio-modal .modal-btn.confirm");
+      if (confirmBtn) {
+        confirmBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Completar Inscripción';
+      }
+      
+      // Despejar valores iniciales de contraseña para obligar a definirla
+      document.getElementById("form-socio-password").value = "";
+    }
+
+    function compartirEnlaceRegistro() {
+      const shareUrl = window.location.origin + window.location.pathname + "?action=register-socio";
+      const shareText = "Inscribite como socio en Haedo Futsal completando tus datos en el siguiente enlace:";
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Inscripción Haedo Futsal',
+          text: shareText,
+          url: shareUrl
+        }).catch(err => console.log("Error al compartir:", err));
+      } else {
+        // Fallback: copiar al portapapeles y avisar
+        navigator.clipboard.writeText(`${shareText}\n${shareUrl}`).then(() => {
+          alert("¡Enlace de inscripción copiado al portapapeles! Compartilo por WhatsApp u otra red.");
+        }).catch(() => {
+          alert("Enlace de inscripción:\n" + shareUrl);
+        });
+      }
+    }
+
+    function irALoginPublico() {
+      cerrarModalAltaSocio();
+      // Limpiar parámetros url de ?action=register-socio
+      window.history.replaceState({}, document.title, window.location.pathname);
+      mostrarPantalla("login-view");
+    }
+
+    function validarRestriccionesTorneo() {
+      const checkboxes = document.querySelectorAll("#form-socio-category-checks .cat-checkbox");
+      let selected = [];
+      checkboxes.forEach(cb => {
+        if (cb.checked) selected.push(cb.value);
+      });
+      
+      // Resetear estados deshabilitados
+      checkboxes.forEach(cb => {
+        cb.disabled = false;
+      });
+      
+      if (selected.includes("EDEFI-Mayores")) {
+        checkboxes.forEach(cb => {
+          if (cb.value !== "EDEFI-Mayores") {
+            cb.checked = false;
+            cb.disabled = true;
+          }
+        });
+        return;
+      }
+      
+      if (selected.includes("BAFI-Femenino")) {
+        checkboxes.forEach(cb => {
+          if (cb.value !== "BAFI-Femenino") {
+            cb.checked = false;
+            cb.disabled = true;
+          }
+        });
+        return;
+      }
+      
+      if (selected.includes("EDEFI-Baby") || selected.includes("FUTSALA-Promocionales")) {
+        checkboxes.forEach(cb => {
+          if (cb.value !== "EDEFI-Baby" && cb.value !== "FUTSALA-Promocionales") {
+            cb.checked = false;
+            cb.disabled = true;
+          }
+        });
+        return;
+      }
+      
+      if (selected.includes("BAFI-Masculino") || selected.includes("FUTSALA-Masculino")) {
+        checkboxes.forEach(cb => {
+          if (cb.value !== "BAFI-Masculino" && cb.value !== "FUTSALA-Masculino") {
+            cb.checked = false;
+            cb.disabled = true;
+          }
+        });
+        return;
+      }
     }
 
     function sugerirYValidarUsuario() {
@@ -5648,10 +5820,25 @@
         .withSuccessHandler(function(res) {
           ocultarCarga();
           if (res && res.success) {
-            alert("¡Socio registrado con éxito!");
-            cerrarModalAltaSocio();
-            if (typeof cargarDatosAdmin === "function") {
-              cargarDatosAdmin();
+            if (window.esRegistroPublico) {
+              // Mostrar credenciales de éxito
+              document.getElementById("success-username").innerText = username.toUpperCase();
+              document.getElementById("success-password").innerText = password;
+              
+              // Ocultar formulario y footer
+              const scrollBody = document.querySelector("#alta-socio-modal div[style*='overflow-y: auto']");
+              if (scrollBody) scrollBody.style.display = "none";
+              const footer = document.querySelector("#alta-socio-modal .modal-footer");
+              if (footer) footer.style.display = "none";
+              
+              // Mostrar pantalla de éxito
+              document.getElementById("alta-socio-success").style.display = "flex";
+            } else {
+              alert("¡Socio registrado con éxito!");
+              cerrarModalAltaSocio();
+              if (typeof cargarDatosAdmin === "function") {
+                cargarDatosAdmin();
+              }
             }
           } else {
             alert("Error al registrar socio: " + (res ? res.message : "Error desconocido."));
@@ -9059,46 +9246,7 @@
 
     // FORMULARIO PÚBLICO DE REGISTRO / ALTA DE SOCIO (WHATSAPP)
     function inicializarFormularioRegistro() {
-      // Mostrar paso 1 y resetear inputs
-      document.getElementById("register-step-1").style.display = "block";
-      document.getElementById("register-step-2").style.display = "none";
-      document.getElementById("register-step-3").style.display = "none";
-      document.getElementById("public-register-dni-check").value = "";
-      document.getElementById("register-dni-toast").style.display = "none";
-      
-      // Resetear botón de verificación a estado inicial
-      const registerBtn = document.querySelector("#register-step-1 button");
-      if (registerBtn) {
-        registerBtn.innerText = "Verificar DNI";
-        registerBtn.onclick = verificarDniPublico;
-      }
-      
-      // Limpiar formulario del paso 2
-      document.getElementById("form-public-register").reset();
-      
-      mostrarPantalla("public-register-view");
-
-      // Cargar categorías públicas en el selector
-      mostrarCarga("Cargando categorías...");
-      google.script.run
-        .withSuccessHandler(function(response) {
-          ocultarCarga();
-          if (response && response.success && response.categorias) {
-            const select = document.getElementById("public-register-category");
-            select.innerHTML = "";
-            response.categorias.forEach(cat => {
-              const opt = document.createElement("option");
-              opt.value = cat.id;
-              opt.innerText = cat.name;
-              select.appendChild(opt);
-            });
-          }
-        })
-        .withFailureHandler(function(err) {
-          ocultarCarga();
-          console.warn("No se pudieron cargar las categorías del servidor:", err);
-        })
-        .obtenerCategoriasPublicas();
+      abrirFormularioRegistroPublico();
     }
 
     function verificarDniPublico() {
