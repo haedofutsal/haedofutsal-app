@@ -3342,16 +3342,9 @@
           </select>
         </div>
 
-        <!-- Nro de Operación / ID de Transferencia -->
-        <div class="form-group" style="text-align: left; margin-bottom: 1.2rem;" id="comprobante-txid-group">
-          <label class="form-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Número de Operación / ID Transferencia:</label>
-          <input type="text" id="comprobante-txid-input" class="form-input" placeholder="Ej: 1868352613" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding: 8px; font-size: 0.9rem; width:100%; border-radius:8px;">
-          <p style="font-size: 0.7rem; color: var(--text-muted); margin: 4px 0 0 0; line-height:1.2;">Ingresá el ID de transferencia para acreditación automática inmediata. (Para hacer pruebas, podés escribir <strong>TEST</strong> o cualquier número ficticio).</p>
-        </div>
-        
         <!-- Estado de escaneo -->
         <div id="comprobante-status-area" style="margin-bottom: 1rem;">
-          <div id="comprobante-status-loading" style="display: none; flex-direction: column; align-items: center; gap: 8px; padding: 15px 0;">
+          <div id="comprobante-status-loading" style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 15px 0;">
             <i class="fa-solid fa-circle-notch fa-spin text-success" style="font-size: 2rem;"></i>
             <p style="margin: 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">Escaneando comprobante y conciliando pago...</p>
           </div>
@@ -3376,9 +3369,6 @@
         <!-- Botones -->
         <div style="display: flex; gap: 10px; margin-top: 1rem;">
           <button id="comprobante-btn-cancelar" class="btn-secondary" style="flex: 1; padding: 10px 0; justify-content: center; font-size: 0.9rem;" onclick="cerrarModalValidarComprobante()">Cancelar</button>
-          <button id="comprobante-btn-verificar" class="btn-primary" style="flex: 1.5; background: #10b981; border: none; justify-content: center; padding: 10px 0; font-size: 0.9rem; font-weight:700; color:white;" onclick="iniciarConciliacionConEntrada()">
-            Verificar y Acreditar
-          </button>
           <button id="comprobante-btn-listo" class="btn-primary" style="flex: 1; background: #10b981; border: none; justify-content: center; display: none; padding: 10px 0; font-size: 0.9rem;" onclick="cerrarModalValidarComprobante()">
             Listo
           </button>
@@ -4297,22 +4287,20 @@
       }
       selectCuota.disabled = true;
       
-      // Configurar estado inicial del modal
-      document.getElementById("comprobante-txid-group").style.display = "block";
-      document.getElementById("comprobante-txid-input").value = "";
-      document.getElementById("comprobante-status-loading").style.display = "none";
+      // Configurar estado inicial del modal y comenzar validación automática
+      document.getElementById("comprobante-status-loading").style.display = "flex";
       document.getElementById("comprobante-status-result").style.display = "none";
       
       document.getElementById("comprobante-btn-cancelar").style.display = "flex";
-      document.getElementById("comprobante-btn-verificar").style.display = "flex";
       document.getElementById("comprobante-btn-listo").style.display = "none";
-    }
-
-    function iniciarConciliacionConEntrada() {
-      const selectCuota = document.getElementById("comprobante-select-cuota");
-      const selectedOption = selectCuota.options[selectCuota.selectedIndex];
-      if (!selectedOption) return;
       
+      const scannerLine = document.getElementById("comprobante-scanner-line");
+      if (scannerLine) {
+        scannerLine.style.display = "block";
+        scannerLine.style.animation = "laser-scan 1.5s linear infinite";
+      }
+      
+      const selectedOption = selectCuota.options[selectCuota.selectedIndex];
       const paymentId = selectedOption.value;
       const month = selectedOption.getAttribute("data-month");
       const amount = selectedOption.getAttribute("data-amount");
@@ -4321,29 +4309,16 @@
       const transferTypeEl = document.querySelector('input[name="modal-transfer-method"]:checked');
       const transferMethod = transferTypeEl ? transferTypeEl.value : "Transferencia MP";
       
-      const transactionId = document.getElementById("comprobante-txid-input").value.trim();
-      
-      // Ocultar formulario de entrada, mostrar cargando y escaner
-      document.getElementById("comprobante-txid-group").style.display = "none";
-      document.getElementById("comprobante-btn-verificar").style.display = "none";
-      document.getElementById("comprobante-status-loading").style.display = "flex";
-      
-      const scannerLine = document.getElementById("comprobante-scanner-line");
-      if (scannerLine) {
-        scannerLine.style.display = "block";
-        scannerLine.style.animation = "laser-scan 1.5s linear infinite";
-      }
-      
       const reader = new FileReader();
       reader.onload = function(e) {
         const base64Data = e.target.result;
-        ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, transactionId);
+        ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, "");
       };
       reader.onerror = function() {
         alert("No se pudo leer el archivo de comprobante. Intentá con otra imagen.");
         cerrarModalValidarComprobante();
       };
-      reader.readAsDataURL(fileComprobanteActual);
+      reader.readAsDataURL(file);
     }
 
     function ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, transactionId) {
