@@ -4081,7 +4081,7 @@
             <span class="badge" style="background-color:#fef9c3; color:#ca8a04; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem; text-transform:uppercase; margin-bottom:2px;">Pendiente</span>
           `;
           actionHTML = `
-            <button class="btn-sm-pay" data-payment-id="${p.Payment_ID}" data-month="${p.Month}" data-amount="${p.Amount}" style="margin-left:8px; display:flex; align-items:center; gap:4px; font-size:0.72rem; padding:6px 10px; border-radius:6px;">
+            <button class="btn-sm-pay" onclick="abrirModalMetodoPago('${p.Payment_ID}', '${p.Month}', '${p.Amount}')" style="margin-left:8px; display:flex; align-items:center; gap:4px; font-size:0.72rem; padding:6px 10px; border-radius:6px;">
               <i class="fa-solid fa-wallet"></i> Pagar
             </button>
           `;
@@ -9643,22 +9643,6 @@
       const banner = document.getElementById('pwa-install-banner');
       if (banner) banner.style.display = 'none';
       deferredInstallPrompt = null;
-    });
-
-    // Delegated click listener for payment buttons to ensure robust event execution
-    document.addEventListener('click', function(e) {
-      const payBtn = e.target.closest('.btn-sm-pay');
-      if (payBtn) {
-        console.log("Pay button clicked (via delegated click handler):", payBtn);
-        const paymentId = payBtn.getAttribute('data-payment-id');
-        if (paymentId) {
-          e.preventDefault();
-          e.stopPropagation();
-          const month = payBtn.getAttribute('data-month');
-          const amount = payBtn.getAttribute('data-amount');
-          abrirModalMetodoPago(paymentId, month, amount);
-        }
-      }
     });
 
   </script>
