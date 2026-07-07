@@ -1797,7 +1797,7 @@
 
             <!-- Torneo/Liga (Menu desplegable responsivo con multi-select de hasta 2 opciones) -->
             <div class="form-group">
-              <label class="form-label">Torneo / Liga (Seleccionar hasta 2)</label>
+              <label class="form-label" style="font-weight:700; color:#334155;">TORNEO / LIGA</label>
               <div id="public-update-categories-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap:10px; padding:10px; border:1px solid var(--border-color); border-radius:8px; background:#fafafa;">
                 <!-- Se cargan dinámicamente -->
               </div>
@@ -2060,7 +2060,7 @@
           <i class="fa-solid fa-magnifying-glass search-icon"></i>
           <input type="text" id="admin-socios-search" class="search-input" placeholder="Buscar por nombre o correo..." oninput="filtrarSociosAdmin()">
         </div>
-        <button class="btn-add" onclick="abrirModalAltaSocio()" style="padding: 0 16px; font-size: 0.8rem; height: 42px; white-space: nowrap; font-weight:700; background:var(--primary); color:#ffffff; border:none; border-radius:12px; display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.25); flex-shrink:0;">
+        <button class="btn-add" onclick="window.open(window.location.origin + window.location.pathname + '?action=update-info', '_blank')" style="padding: 0 16px; font-size: 0.8rem; height: 42px; white-space: nowrap; font-weight:700; background:var(--primary); color:#ffffff; border:none; border-radius:12px; display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow: 0 4px 12px rgba(37,99,235,0.25); flex-shrink:0;">
           <i class="fa-solid fa-user-plus"></i> Alta Socio
         </button>
         <button class="btn-secondary" onclick="compartirEnlaceRegistro()" style="width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);" title="Compartir Enlace de Registro">
@@ -5588,8 +5588,8 @@
     }
 
     function compartirEnlaceRegistro() {
-      const shareUrl = window.location.origin + window.location.pathname + "?action=register-socio";
-      const shareText = "Inscribite como socio en Haedo Futsal completando tus datos en el siguiente enlace:";
+      const shareUrl = window.location.origin + window.location.pathname + "?action=update-info";
+      const shareText = "Inscribite o actualizá tus datos de socio en Haedo Futsal ingresando en el siguiente enlace:";
       
       if (navigator.share) {
         navigator.share({
@@ -8959,12 +8959,55 @@
 
     function limitarSeleccionCategorias() {
       const checkboxes = document.querySelectorAll('input[name="public-cat-check"]');
-      const checked = Array.from(checkboxes).filter(cb => cb.checked);
+      let selected = [];
       checkboxes.forEach(cb => {
-        if (!cb.checked) {
-          cb.disabled = checked.length >= 2;
-        }
+        if (cb.checked) selected.push(cb.value);
       });
+      
+      // Reset disabled states first
+      checkboxes.forEach(cb => {
+        cb.disabled = false;
+      });
+      
+      if (selected.includes("EDEFI Mayores")) {
+        checkboxes.forEach(cb => {
+          if (cb.value !== "EDEFI Mayores") {
+            cb.checked = false;
+            cb.disabled = true;
+          }
+        });
+        return;
+      }
+      
+      if (selected.includes("BAFI Femenino")) {
+        checkboxes.forEach(cb => {
+          if (cb.value !== "BAFI Femenino") {
+            cb.checked = false;
+            cb.disabled = true;
+          }
+        });
+        return;
+      }
+      
+      if (selected.includes("EDEFI Baby") || selected.includes("FUTSALA Promocionales")) {
+        checkboxes.forEach(cb => {
+          if (cb.value !== "EDEFI Baby" && cb.value !== "FUTSALA Promocionales") {
+            cb.checked = false;
+            cb.disabled = true;
+          }
+        });
+        return;
+      }
+      
+      if (selected.includes("BAFI Masculino") || selected.includes("FUTSALA Masculino")) {
+        checkboxes.forEach(cb => {
+          if (cb.value !== "BAFI Masculino" && cb.value !== "FUTSALA Masculino") {
+            cb.checked = false;
+            cb.disabled = true;
+          }
+        });
+        return;
+      }
     }
 
     function sanitizarCliente(txt) {
