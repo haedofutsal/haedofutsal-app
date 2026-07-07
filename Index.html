@@ -4316,9 +4316,9 @@
       const transferMethod = transferTypeEl ? transferTypeEl.value : "Transferencia MP";
       
       const statusText = document.querySelector("#comprobante-status-loading p");
-      if (statusText) statusText.textContent = "Buscando código de identificación (CoelsaID)...";
+      if (statusText) statusText.textContent = "Buscando código de identificación (CoelsaID) e importe...";
       
-      // Ejecutar OCR en cliente para buscar el CoelsaID de 22 caracteres
+      // Ejecutar OCR en cliente para buscar el CoelsaID de 22 caracteres e importe
       Tesseract.recognize(file, 'eng+spa')
         .then(function(result) {
           const text = (result && result.data && result.data.text) || "";
@@ -4339,13 +4339,49 @@
               console.log("[OCR] CoelsaID detectado (relaxed):", detectedCoelsaId);
             }
           }
+
+          // Buscar importes en el texto. Ej: $ 1.500,00, $ 2, $1.00, $ 1500
+          const amountRegex = /\$\s*(\d+(?:[.,]\d{1,3})?)/g;
+          const amountsFound = [];
+          let amtMatch;
+          
+          function parseCurrencyString(valStr) {
+            if (valStr.includes(",") && valStr.includes(".")) {
+              return parseFloat(valStr.replace(/\./g, "").replace(",", "."));
+            }
+            if (valStr.includes(",")) {
+              return parseFloat(valStr.replace(",", "."));
+            }
+            if (valStr.includes(".")) {
+              const parts = valStr.split(".");
+              if (parts[parts.length - 1].length === 3) {
+                return parseFloat(valStr.replace(/\./g, ""));
+              } else {
+                return parseFloat(valStr);
+              }
+            }
+            return parseFloat(valStr);
+          }
+
+          while ((amtMatch = amountRegex.exec(text)) !== null) {
+            const val = parseCurrencyString(amtMatch[1]);
+            if (!isNaN(val)) {
+              amountsFound.push(val);
+            }
+          }
+          
+          let detectedAmount = null;
+          if (amountsFound.length > 0) {
+            detectedAmount = Math.max(...amountsFound);
+            console.log("[OCR] Montos detectados:", amountsFound, "-> Seleccionado:", detectedAmount);
+          }
           
           if (statusText) statusText.textContent = "Conciliando pago con Mercado Pago...";
           
           const reader = new FileReader();
           reader.onload = function(e) {
             const base64Data = e.target.result;
-            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, detectedCoelsaId);
+            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, detectedCoelsaId, detectedAmount);
           };
           reader.onerror = function() {
             alert("No se pudo leer el archivo de comprobante. Intentá con otra imagen.");
@@ -4360,7 +4396,7 @@
           const reader = new FileReader();
           reader.onload = function(e) {
             const base64Data = e.target.result;
-            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, "");
+            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, "", null);
           };
           reader.onerror = function() {
             alert("No se pudo leer el archivo de comprobante.");
@@ -4370,7 +4406,7 @@
         });
     }
 
-    function ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, transactionId) {
+    function ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, transactionId, ocrAmount) {
       google.script.run
         .withSuccessHandler(function(response) {
           const scannerLine = document.getElementById("comprobante-scanner-line");
@@ -4462,7 +4498,7 @@
           alert("Error de conexión al conciliar: " + err.toString());
           cerrarModalValidarComprobante();
         })
-        .conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, transferMethod, base64Data, transactionId);
+        .conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, transferMethod, base64Data, transactionId, ocrAmount);
     }
 
     function actualizarMontoEsperadoComprobante() {
