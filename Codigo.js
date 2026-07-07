@@ -1785,7 +1785,8 @@ function actualizarDatosSocioPublico(email, datos) {
       "EmergencyContact": (datos.EmergencyContact || "").trim(),
       "EmergencyPhone": (datos.EmergencyPhone || "").trim(),
       "ParentName": (datos.ParentName || "").trim(),
-      "ParentPhone": (datos.ParentPhone || "").trim()
+      "ParentPhone": (datos.ParentPhone || "").trim(),
+      "Photo": datos.Photo || ""
     };
 
     // Aplicar las ediciones en el rango correspondiente
@@ -2028,6 +2029,7 @@ function registrarSocioPublico(socioObj) {
       else if (header === "ParentPhone") newRow.push(socioObj.ParentPhone || "");
       else if (header === "Username") newRow.push(candidato || socioObj.Username || "");
       else if (header === "Password") newRow.push("1234");
+      else if (header === "Photo") newRow.push(socioObj.Photo || "");
       else newRow.push("");
     });
 
