@@ -1446,7 +1446,11 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
       
       registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Conciliación AUTOMÁTICA exitosa para cuota ${month} por $${targetAmount.toLocaleString('es-AR')}. MP ID: ${txId}`);
       
-      return { success: true, message: `¡Pago conciliado y acreditado automáticamente! Se encontró la transferencia #${txId} por $${targetAmount.toLocaleString('es-AR')} en la cuenta del club.` };
+      let msg = `¡Pago conciliado y acreditado automáticamente! Se encontró la transferencia #${txId} por $${targetAmount.toLocaleString('es-AR')} en la cuenta del club.`;
+      if (isTestUser) {
+        msg = `[TEST MOCK] Acreditación exitosa. CoelsaID: ${cleanTxId} | Importe extraído: $${ocrAmount || "No detectado"}`;
+      }
+      return { success: true, message: msg };
     }
     
     return { success: false, message: "No se pudo validar tu transferencia de forma automática. Intentá ingresando tu Nro. de Operación." };
