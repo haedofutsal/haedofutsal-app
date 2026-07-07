@@ -1732,6 +1732,18 @@
           <form id="form-public-update" onsubmit="event.preventDefault(); guardarDatosPublicos();" style="display:none; display:flex; flex-direction:column; gap:16px;">
             <input type="hidden" id="public-update-email">
 
+            <!-- Contenedor de Foto/Avatar -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:10px; align-self:center;">
+              <div style="position:relative; width:94px; height:94px; border-radius:50%; border:3px solid var(--primary); box-shadow: 0 4px 14px rgba(0,0,0,0.12); background:#f1f5f9; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                <img id="public-update-avatar-preview" src="https://i.pravatar.cc/150" style="width:100%; height:100%; object-fit:cover;">
+                <button type="button" onclick="document.getElementById('public-update-photo-input').click()" style="position:absolute; bottom:0; left:0; right:0; height:28px; background:rgba(15,23,42,0.78); color:#ffffff; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.7rem; font-weight:700; transition:background 0.2s;" title="Sacar Foto / Subir Imagen">
+                  <i class="fa-solid fa-camera" style="margin-right:4px;"></i> Foto
+                </button>
+              </div>
+              <input type="file" id="public-update-photo-input" accept="image/*" capture="user" style="display:none;" onchange="procesarFotoCapturada(event)">
+              <span style="font-size:0.65rem; color:#64748b; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;">Foto de Perfil del Socio</span>
+            </div>
+
             <!-- Fila Apellido & Nombres (Responsivo) -->
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
               <!-- Apellido -->
@@ -9168,6 +9180,47 @@
       }
     }
 
+    function procesarFotoCapturada(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      mostrarCarga("Procesando foto...");
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement("canvas");
+          const size = 200;
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext("2d");
+          
+          // Crop square from center of the image
+          const minDim = Math.min(img.width, img.height);
+          const sx = (img.width - minDim) / 2;
+          const sy = (img.height - minDim) / 2;
+          
+          ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+          
+          // Compressing to jpeg with 0.7 quality creates a small (~6-10KB) base64
+          const base64 = canvas.toDataURL("image/jpeg", 0.7);
+          window.capturedPhotoBase64 = base64;
+          document.getElementById("public-update-avatar-preview").src = base64;
+          ocultarCarga();
+        };
+        img.onerror = function() {
+          ocultarCarga();
+          alert("Error al cargar la imagen capturada.");
+        };
+        img.src = e.target.result;
+      };
+      reader.onerror = function() {
+        ocultarCarga();
+        alert("Error al leer el archivo de imagen.");
+      };
+      reader.readAsDataURL(file);
+    }
+
     function inicializarFormularioPublico(identifier) {
       document.getElementById("public-update-success").style.display = "none";
       document.getElementById("public-update-form-container").style.display = "block";
@@ -9200,6 +9253,14 @@
               document.getElementById("public-update-emergencycontact").value = d.EmergencyContact || d.ParentName || "";
               document.getElementById("public-update-emergencyphone").value = d.EmergencyPhone || d.ParentPhone || "";
               document.getElementById("public-update-username").value = d.Username || "";
+              
+              if (d.Photo) {
+                document.getElementById("public-update-avatar-preview").src = d.Photo;
+                window.capturedPhotoBase64 = d.Photo;
+              } else {
+                document.getElementById("public-update-avatar-preview").src = 'https://i.pravatar.cc/150?u=' + d.Email.toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+                window.capturedPhotoBase64 = "";
+              }
               
               // Dividir Name en Nombres y Apellido
               let nombres = "";
@@ -9242,6 +9303,9 @@
               document.getElementById("public-update-username").value = "";
               document.getElementById("public-update-firstname").value = "";
               document.getElementById("public-update-lastname").value = "";
+
+              document.getElementById("public-update-avatar-preview").src = "https://i.pravatar.cc/150";
+              window.capturedPhotoBase64 = "";
 
               renderizarCheckboxesCategorias([]);
               actualizarCamposEdad();
@@ -9296,7 +9360,8 @@
         EmergencyContact: contactName,
         EmergencyPhone: contactPhone,
         ParentName: isMinor ? contactName : "",
-        ParentPhone: isMinor ? contactPhone : ""
+        ParentPhone: isMinor ? contactPhone : "",
+        Photo: window.capturedPhotoBase64 || ""
       };
 
       if (window_isNewSocio) {
