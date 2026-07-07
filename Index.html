@@ -4095,7 +4095,7 @@
             <h4 style="margin:0; font-size:0.88rem; color:#1e293b; font-weight:700;">Cuota: ${p.Month}</h4>
             <p style="margin:0; font-size:0.78rem; color:var(--text-muted); font-weight:600;">Monto: $${parseFloat(p.Amount).toLocaleString('es-AR')}</p>
           </div>
-          <div style="display:flex; align-items:center; gap:6px;">
+          <div style="display:flex; align-items:center; gap:6px;" id="pay-action-${p.Payment_ID}">
             ${statusBadgeHTML}
             ${actionHTML}
           </div>
@@ -4107,28 +4107,66 @@
     let cuotaSeleccionadaPago = null;
 
     function abrirModalMetodoPago(paymentId, month, amount) {
-      cuotaSeleccionadaPago = { paymentId, month, amount };
-      const detalle = document.getElementById("modal-pago-detalle");
-      if (detalle) detalle.innerText = `Cuota: ${month} | Monto a Abonar: $${parseFloat(amount).toLocaleString('es-AR')}`;
-      
-      // Reset radio buttons to option 1
-      const radioBanco = document.querySelector('input[name="modal-transfer-method"][value="Banco Oficial"]');
-      if (radioBanco) radioBanco.checked = true;
-      mostrarDetalleMetodoPago('banco');
-      
-      document.getElementById("modal-metodo-pago").style.display = "flex";
+      try {
+        console.log("abrirModalMetodoPago called with:", { paymentId, month, amount });
+        cuotaSeleccionadaPago = { paymentId, month, amount };
+        
+        const detalle = document.getElementById("modal-pago-detalle");
+        if (detalle) {
+          let parsedAmount = parseFloat(amount);
+          if (isNaN(parsedAmount)) {
+            // Clean formatting to try parsing (remove dollar sign, space, etc.)
+            const cleaned = String(amount).replace(/[^0-9.,-]/g, '').replace(/,/g, '.');
+            parsedAmount = parseFloat(cleaned);
+          }
+          const formatted = isNaN(parsedAmount) ? amount : parsedAmount.toLocaleString('es-AR');
+          detalle.innerText = `Cuota: ${month} | Monto a Abonar: $${formatted}`;
+        }
+        
+        // Reset radio buttons to option 1
+        const radioBanco = document.querySelector('input[name="modal-transfer-method"][value="Banco Oficial"]');
+        if (radioBanco) radioBanco.checked = true;
+        
+        mostrarDetalleMetodoPago('banco');
+        
+        const modal = document.getElementById("modal-metodo-pago");
+        if (modal) {
+          modal.style.display = "flex";
+        } else {
+          console.error("modal-metodo-pago not found!");
+          alert("Error: El modal de pago no se encuentra disponible.");
+        }
+      } catch (err) {
+        console.error("Error in abrirModalMetodoPago:", err);
+        alert("Error al abrir opciones de pago: " + err.message);
+      }
     }
 
     function cerrarModalMetodoPago() {
-      document.getElementById("modal-metodo-pago").style.display = "none";
+      try {
+        const modal = document.getElementById("modal-metodo-pago");
+        if (modal) modal.style.display = "none";
+      } catch (err) {
+        console.error("Error in cerrarModalMetodoPago:", err);
+      }
     }
 
     function mostrarDetalleMetodoPago(metodo) {
-      document.getElementById("detalle-metodo-banco").style.display = metodo === "banco" ? "block" : "none";
-      document.getElementById("detalle-metodo-mp_transf").style.display = metodo === "mp_transf" ? "block" : "none";
-      document.getElementById("detalle-metodo-billeteras").style.display = metodo === "billeteras" ? "block" : "none";
-      document.getElementById("detalle-metodo-mp_tarjeta").style.display = metodo === "mp_tarjeta" ? "block" : "none";
-      document.getElementById("wrapper-subir-comprobante").style.display = metodo === "mp_tarjeta" ? "none" : "block";
+      try {
+        const elBanco = document.getElementById("detalle-metodo-banco");
+        const elMpTransf = document.getElementById("detalle-metodo-mp_transf");
+        const elBilleteras = document.getElementById("detalle-metodo-billeteras");
+        const elMpTarjeta = document.getElementById("detalle-metodo-mp_tarjeta");
+        const elUpload = document.getElementById("wrapper-subir-comprobante");
+
+        if (elBanco) elBanco.style.display = metodo === "banco" ? "block" : "none";
+        if (elMpTransf) elMpTransf.style.display = metodo === "mp_transf" ? "block" : "none";
+        if (elBilleteras) elBilleteras.style.display = metodo === "billeteras" ? "block" : "none";
+        if (elMpTarjeta) elMpTarjeta.style.display = metodo === "mp_tarjeta" ? "block" : "none";
+        if (elUpload) elUpload.style.display = metodo === "mp_tarjeta" ? "none" : "block";
+      } catch (err) {
+        console.error("Error in mostrarDetalleMetodoPago:", err);
+      }
     }
 
     function copiarTexto(texto, etiqueta) {
