@@ -1974,8 +1974,8 @@
     <div id="admin-inicio-view" class="view-section" style="gap: 8px;">
       <div class="header-bar" style="margin-bottom: 2px; padding-bottom: 6px; border-bottom: none;">
         <div style="display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;">
-          <h2 style="margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a;">Dashboard</h2>
-          <span id="dash-month-subtitle" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 500;">Resumen del Mes (Junio 2026)</span>
+          <h2 style="margin: 0; font-size: 1.35rem; font-weight: 800; color: #0f172a;">Resumen</h2>
+          <span id="dash-month-subtitle" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-left: 2px;">Junio 2026</span>
         </div>
         <div style="display:flex; gap:8px;">
           <button class="btn-logout" onclick="abrirModalCambiarClave()" title="Cambiar clave numérica" style="color:var(--text-muted); border-color:var(--border-color);">
@@ -2025,8 +2025,8 @@
       <!-- SECCIÓN: JORNADAS PRÓXIMAS DE TORNEOS -->
       <div class="section-title-area" style="margin-top: 14px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-          <h3 class="section-title" style="margin-bottom:0; color:#0f172a; font-weight:700;"><i class="fa-solid fa-trophy" style="margin-right:6px; color:#d97706;"></i>Partidos Pendientes (Esta semana y la siguiente)</h3>
-          <small style="color: var(--text-muted); font-size: 0.65rem;">Tocá una jornada para ver el detalle</small>
+          <h3 class="section-title" style="margin-bottom:0; color:#0f172a; font-weight:700;"><i class="fa-solid fa-calendar-days" style="margin-right:6px; color:var(--primary);"></i>Partidos</h3>
+          <small style="color: var(--text-muted); font-size: 0.65rem;">Último jugado y próximo partido</small>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
           <select id="dash-jornadas-filter-torneo" class="form-select" style="padding: 6px 12px; font-size: 0.75rem; width: 100%; border-color: #cbd5e1; background: #ffffff; color:#0f172a;" onchange="filtrarDashboardJornadas()">
@@ -4709,6 +4709,17 @@
           if (response && response.success) {
             estadoApp.datosAdmin = response;
             const currentMonth = "2026-06";
+            
+            // Formatear mes y año en subtítulo
+            try {
+              const [yearStr, monthStr] = currentMonth.split("-");
+              const mesesMap = {
+                "01": "Enero", "02": "Febrero", "03": "Marzo", "04": "Abril", "05": "Mayo", "06": "Junio",
+                "07": "Julio", "08": "Agosto", "09": "Septiembre", "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
+              };
+              const labelMesAnio = `${mesesMap[monthStr] || monthStr} ${yearStr}`;
+              document.getElementById("dash-month-subtitle").innerText = labelMesAnio;
+            } catch(e) { console.error("Error setting dynamic subtitle:", e); }
 
             document.getElementById("admin-metric-socios").innerText = response.metrics.totalSocios;
             animarNumero("admin-metric-socios", response.metrics.totalSocios);
@@ -4899,9 +4910,12 @@
       });
     }
 
-    function renderizarListaSociosCategoria(catId, filtroEstado) {
+    function renderizarListaSociosCategoria(catId, filtroEstado, filtroSubcat) {
       const listEl = document.getElementById(`sociolist-${catId}`);
       if (!listEl) return;
+      
+      if (!filtroEstado) filtroEstado = "todos";
+      if (!filtroSubcat) filtroSubcat = "todos";
       
       const data = estadoApp.datosAdmin;
       const socios = (data.socios || []).filter(s => obtenerCategoriaPadre(s.Category) === catId);
@@ -4913,66 +4927,84 @@
         return { ...s, estado: est, apellido: obtenerApellido(s.Name) };
       });
 
-      const total = sociosConEstado.length;
-      const verdes = sociosConEstado.filter(s => s.estado === "aldia").length;
-      const amarillos = sociosConEstado.filter(s => s.estado === "pendiente").length;
-      const rojos = sociosConEstado.filter(s => s.estado === "moroso").length;
-
-      if (!filtroEstado) filtroEstado = "todos";
-
-      // Orden por defecto: Apellido A-Z. Si hay filtro de estado seleccionado, priorizar ese estado primero.
-      sociosConEstado.sort((a, b) => {
-        if (filtroEstado !== "todos") {
-          const matchA = a.estado === filtroEstado ? 0 : 1;
-          const matchB = b.estado === filtroEstado ? 0 : 1;
-          if (matchA !== matchB) return matchA - matchB;
+      // Recopilar subcategorías únicas presentes
+      const uniqueSubcats = new Set();
+      socios.forEach(s => {
+        if (s.Category) {
+          s.Category.split('|').forEach(catVal => {
+            if (obtenerCategoriaPadre(catVal) === catId) {
+              uniqueSubcats.add(catVal.trim());
+            }
+          });
         }
-        return a.apellido.localeCompare(b.apellido, 'es');
+      });
+      const subcatsArr = Array.from(uniqueSubcats).sort();
+
+      // Aplicar filtros
+      let filteredSocios = sociosConEstado;
+      if (filtroEstado !== "todos") {
+        filteredSocios = filteredSocios.filter(s => s.estado === filtroEstado);
+      }
+      if (filtroSubcat !== "todos") {
+        filteredSocios = filteredSocios.filter(s => {
+          if (!s.Category) return false;
+          return s.Category.split('|').map(c => c.trim()).includes(filtroSubcat);
+        });
+      }
+
+      // Ordenar por Apellido
+      filteredSocios.sort((a, b) => a.apellido.localeCompare(b.apellido, 'es'));
+
+      // Renderizar controles de filtrado
+      let subcatOptionsHtml = `<option value="todos" ${filtroSubcat === 'todos' ? 'selected' : ''}>Todas (${sociosConEstado.length})</option>`;
+      subcatsArr.forEach(sub => {
+        const count = sociosConEstado.filter(s => s.Category && s.Category.split('|').map(c => c.trim()).includes(sub)).length;
+        const displayName = sub.startsWith(catId + "-") ? sub.substring(catId.length + 1) : sub.replace("-", " ");
+        subcatOptionsHtml += `<option value="${sub}" ${filtroSubcat === sub ? 'selected' : ''}>${displayName} (${count})</option>`;
       });
 
       let html = `
-        <div style="padding: 10px 14px; background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-          <span style="font-size:0.65rem; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">Ordenar por estado:</span>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button onclick="event.stopPropagation(); renderizarListaSociosCategoria('${catId}', 'todos')" style="cursor:pointer; padding:4px 8px; border-radius:6px; font-size:0.68rem; font-weight:700; border:1px solid ${filtroEstado === 'todos' ? '#1d4ed8' : '#cbd5e1'}; background:${filtroEstado === 'todos' ? 'rgba(29,78,216,0.12)' : '#ffffff'}; color:${filtroEstado === 'todos' ? '#1d4ed8' : '#475569'}; transition:all 0.2s;">
-              Todos (${total})
-            </button>
-            <button onclick="event.stopPropagation(); renderizarListaSociosCategoria('${catId}', 'aldia')" style="cursor:pointer; padding:4px 8px; border-radius:6px; font-size:0.68rem; font-weight:700; border:1px solid ${filtroEstado === 'aldia' ? 'var(--success)' : 'rgba(16,185,129,0.3)'}; background:${filtroEstado === 'aldia' ? 'rgba(16,185,129,0.15)' : '#ffffff'}; color:var(--success); transition:all 0.2s;">
-              <i class="fa-solid fa-circle-check"></i> Al día (${verdes})
-            </button>
-            <button onclick="event.stopPropagation(); renderizarListaSociosCategoria('${catId}', 'pendiente')" style="cursor:pointer; padding:4px 8px; border-radius:6px; font-size:0.68rem; font-weight:700; border:1px solid ${filtroEstado === 'pendiente' ? 'var(--warning)' : 'rgba(245,158,11,0.3)'}; background:${filtroEstado === 'pendiente' ? 'rgba(245,158,11,0.15)' : '#ffffff'}; color:#d97706; transition:all 0.2s;">
-              <i class="fa-solid fa-clock"></i> Pendientes (${amarillos})
-            </button>
-            <button onclick="event.stopPropagation(); renderizarListaSociosCategoria('${catId}', 'moroso')" style="cursor:pointer; padding:4px 8px; border-radius:6px; font-size:0.68rem; font-weight:700; border:1px solid ${filtroEstado === 'moroso' ? 'var(--danger)' : 'rgba(244,63,94,0.3)'}; background:${filtroEstado === 'moroso' ? 'rgba(244,63,94,0.15)' : '#ffffff'}; color:var(--danger); transition:all 0.2s;">
-              <i class="fa-solid fa-triangle-exclamation"></i> Morosos (${rojos})
-            </button>
+        <div style="padding: 12px 14px; background: #f8fafc; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; display:flex; flex-direction:column; gap:8px;">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+            <!-- Select Subcategoría -->
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <label style="font-size:0.65rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Subcategoría</label>
+              <select id="filter-subcat-${catId}" onchange="filtrarSociosAccordion('${catId}')" style="padding:6px; font-size:0.75rem; border:1px solid #cbd5e1; border-radius:6px; background:#ffffff; color:#0f172a; cursor:pointer;">
+                ${subcatOptionsHtml}
+              </select>
+            </div>
+            
+            <!-- Select Estado -->
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <label style="font-size:0.65rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Estado Cuenta</label>
+              <select id="filter-estado-${catId}" onchange="filtrarSociosAccordion('${catId}')" style="padding:6px; font-size:0.75rem; border:1px solid #cbd5e1; border-radius:6px; background:#ffffff; color:#0f172a; cursor:pointer;">
+                <option value="todos" ${filtroEstado === 'todos' ? 'selected' : ''}>Todos (${sociosConEstado.length})</option>
+                <option value="aldia" ${filtroEstado === 'aldia' ? 'selected' : ''}>🟢 Al día (${sociosConEstado.filter(s => s.estado === 'aldia').length})</option>
+                <option value="pendiente" ${filtroEstado === 'pendiente' ? 'selected' : ''}>🟡 Pendientes (${sociosConEstado.filter(s => s.estado === 'pendiente').length})</option>
+                <option value="moroso" ${filtroEstado === 'moroso' ? 'selected' : ''}>🔴 Morosos (${sociosConEstado.filter(s => s.estado === 'moroso').length})</option>
+              </select>
+            </div>
           </div>
         </div>
         <div style="display:flex; flex-direction:column;">
       `;
 
-      if (sociosConEstado.length === 0) {
-        html += `<div style="padding:12px; color:var(--text-muted); font-size:0.75rem; text-align:center;">Sin socios en esta categoría.</div>`;
+      if (filteredSocios.length === 0) {
+        html += `<div style="padding:16px; color:var(--text-muted); font-size:0.75rem; text-align:center;">Ningún socio coincide con los filtros.</div>`;
       } else {
-        sociosConEstado.forEach(s => {
+        filteredSocios.forEach(s => {
           let badgeText = "Al día";
           let badgeClass = "aldia";
-          let iconClass = "fa-circle-check";
           let iconColor = "var(--success)";
-          let avatarBg = "rgba(16,185,129,0.18)";
 
           if (s.estado === "pendiente") {
             badgeText = "Pendiente";
             badgeClass = "pendiente";
-            iconClass = "fa-clock";
             iconColor = "var(--warning)";
-            avatarBg = "rgba(245,158,11,0.18)";
           } else if (s.estado === "moroso") {
             badgeText = "Moroso";
             badgeClass = "moroso";
-            iconClass = "fa-triangle-exclamation";
             iconColor = "var(--danger)";
-            avatarBg = "rgba(244,63,94,0.18)";
           }
 
           const styleUser = obtenerEstiloUsernameCategoria(s.Category);
@@ -5007,6 +5039,12 @@
       listEl.innerHTML = html;
     }
 
+    function filtrarSociosAccordion(catId) {
+      const estadoVal = document.getElementById(`filter-estado-${catId}`).value;
+      const subcatVal = document.getElementById(`filter-subcat-${catId}`).value;
+      renderizarListaSociosCategoria(catId, estadoVal, subcatVal);
+    }
+
     // Expande/colapsa la lista de socios de una categoría
     function toggleCategoriaSocios(catId) {
       const listEl    = document.getElementById(`sociolist-${catId}`);
@@ -5017,7 +5055,7 @@
       document.querySelectorAll(".dash-cat-chevron").forEach(el => el.style.transform = "");
 
       if (!isOpen && listEl) {
-        renderizarListaSociosCategoria(catId, 'todos');
+        renderizarListaSociosCategoria(catId, 'todos', 'todos');
         listEl.style.display = "block";
         if (chevron) chevron.style.transform = "rotate(180deg)";
       }
@@ -5184,39 +5222,68 @@
       if (!container) return;
       container.innerHTML = "";
 
-      const range = obtenerRangoSemanaActualYSiguiente("2026-06-27");
-
-      let partidos = (data.partidos || []).filter(p => {
-        const isPending = !p.Result || p.Result === "Pendiente";
-        const isInRange = p.Date >= range.startStr && p.Date <= range.endStr;
-        return isPending && isInRange;
-      });
-
       const torneos = data.torneos || [];
       const torneosMap = {};
       torneos.forEach(t => torneosMap[t.Torneo_ID] = t);
 
-      if (filtroTorneoId && filtroTorneoId !== "Todos") {
-        partidos = partidos.filter(p => {
-          const t = torneosMap[p.Torneo_ID];
-          return t && obtenerCategoriaPadre(t.Category) === filtroTorneoId;
-        });
-      }
+      // Agrupar todos los partidos por Torneo_ID
+      const partidosPorTorneo = {};
+      (data.partidos || []).forEach(p => {
+        if (!partidosPorTorneo[p.Torneo_ID]) partidosPorTorneo[p.Torneo_ID] = [];
+        partidosPorTorneo[p.Torneo_ID].push(p);
+      });
 
-      if (partidos.length === 0) {
-        container.innerHTML = `<div class="empty-state" style="padding:15px;"><p>No hay partidos pendientes para esta semana o la siguiente.</p></div>`;
+      let partidosAMostrar = [];
+
+      Object.entries(partidosPorTorneo).forEach(([torneoId, list]) => {
+        // Filtrar por torneo si corresponde
+        const t = torneosMap[torneoId];
+        if (filtroTorneoId && filtroTorneoId !== "Todos") {
+          if (!t || obtenerCategoriaPadre(t.Category) !== filtroTorneoId) {
+            return;
+          }
+        }
+
+        // Separar jugados y pendientes
+        const jugados = list.filter(p => p.Result && p.Result !== "Pendiente" && p.Result.trim().length > 0);
+        const pendientes = list.filter(p => !p.Result || p.Result === "Pendiente" || p.Result.trim().length === 0);
+
+        // Ordenar jugados descendente (el último jugado primero)
+        jugados.sort((a, b) => b.Date.localeCompare(a.Date));
+        // Ordenar pendientes ascendente (el próximo primero)
+        pendientes.sort((a, b) => a.Date.localeCompare(b.Date));
+
+        if (jugados.length > 0) {
+          const ultimoJugado = { ...jugados[0], dashboardBadge: "Último Jugado" };
+          partidosAMostrar.push(ultimoJugado);
+        }
+        if (pendientes.length > 0) {
+          const proximoPartido = { ...pendientes[0], dashboardBadge: "Próximo Partido" };
+          partidosAMostrar.push(proximoPartido);
+        }
+      });
+
+      if (partidosAMostrar.length === 0) {
+        container.innerHTML = `<div class="empty-state" style="padding:15px;"><p>No se encontraron partidos para mostrar.</p></div>`;
         return;
       }
 
-      partidos.sort((a, b) => a.Date.localeCompare(b.Date));
+      // Ordenar los partidos seleccionados por Torneo y por Tipo (Último jugado primero, próximo partido segundo)
+      partidosAMostrar.sort((a, b) => {
+        const nameA = (torneosMap[a.Torneo_ID] ? torneosMap[a.Torneo_ID].Name : "").toLowerCase();
+        const nameB = (torneosMap[b.Torneo_ID] ? torneosMap[b.Torneo_ID].Name : "").toLowerCase();
+        if (nameA !== nameB) return nameA.localeCompare(nameB);
+        // Si es el mismo torneo, poner el "Último Jugado" antes del "Próximo Partido"
+        return a.dashboardBadge === "Último Jugado" ? -1 : 1;
+      });
 
-      partidos.forEach(p => {
+      partidosAMostrar.forEach(p => {
         const card = document.createElement("div");
         card.className = "jornada-card";
         card.style.padding = "10px 12px";
         card.style.cursor = "pointer";
         card.onclick = () => abrirDetallePartidoUniversal(p.Partido_ID);
-        card.innerHTML = construirTarjetaPartidoHTML(p, torneosMap);
+        card.innerHTML = construirTarjetaPartidoHTML(p, torneosMap, p.dashboardBadge);
         container.appendChild(card);
       });
     }
@@ -6327,7 +6394,7 @@
       }
     }
 
-    function construirTarjetaPartidoHTML(p, torneosMap) {
+    function construirTarjetaPartidoHTML(p, torneosMap, badgeLabel) {
       const torneo = torneosMap ? torneosMap[p.Torneo_ID] : null;
       const torneoName = (torneo ? torneo.Name : (p.Torneo_Name || "Torneo")).split(" [Precio:")[0];
       const catName = torneo ? torneo.Category : "";
@@ -6355,6 +6422,15 @@
         `;
       }
 
+      let badgeHTML = "";
+      if (badgeLabel) {
+        const isLastPlayed = badgeLabel.toLowerCase().includes("jugado");
+        const badgeColor = isLastPlayed ? "#475569" : "var(--primary)";
+        const badgeBg = isLastPlayed ? "#e2e8f0" : "rgba(29,78,216,0.1)";
+        const badgeBorder = isLastPlayed ? "1px solid #cbd5e1" : "1px solid rgba(29,78,216,0.2)";
+        badgeHTML = `<span style="font-size:0.58rem; font-weight:800; background:${badgeBg}; color:${badgeColor}; border:${badgeBorder}; padding:2px 6px; border-radius:4px; text-transform:uppercase; letter-spacing:0.3px; margin: 0 4px; display:inline-block; vertical-align:middle;">${badgeLabel}</span>`;
+      }
+
       return `
         <div style="display:flex; align-items:center; gap:10px; width:100%;">
           <!-- LOGO DEL TORNEO A LA IZQUIERDA -->
@@ -6365,7 +6441,10 @@
           <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
             <!-- CABECERA: NOMBRE TORNEO + FECHA -->
             <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-              <span style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${torneoName} ${catName ? '· ' + catName : ''}</span>
+              <span style="font-size:0.65rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:2px; flex:1; min-width:0;">
+                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${torneoName} ${catName ? '· ' + catName : ''}</span>
+                ${badgeHTML}
+              </span>
               <span style="font-size:0.65rem; color:#1d4ed8; font-weight:700; flex-shrink:0;"><i class="fa-solid fa-calendar-day"></i> ${p.Date}</span>
             </div>
             
