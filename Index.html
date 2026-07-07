@@ -15,6 +15,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Tesseract OCR Library for client-side receipt scanning -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   
   <style>
     /* VARIABLES DE DISEÑO MODO CLARO DEPORTIVO MODERNO (OPCIÓN 1) */
@@ -4313,16 +4315,59 @@
       const transferTypeEl = document.querySelector('input[name="modal-transfer-method"]:checked');
       const transferMethod = transferTypeEl ? transferTypeEl.value : "Transferencia MP";
       
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const base64Data = e.target.result;
-        ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, "");
-      };
-      reader.onerror = function() {
-        alert("No se pudo leer el archivo de comprobante. Intentá con otra imagen.");
-        cerrarModalValidarComprobante();
-      };
-      reader.readAsDataURL(file);
+      const statusText = document.querySelector("#comprobante-status-loading p");
+      if (statusText) statusText.textContent = "Buscando código de identificación (CoelsaID)...";
+      
+      // Ejecutar OCR en cliente para buscar el CoelsaID de 22 caracteres
+      Tesseract.recognize(file, 'eng+spa')
+        .then(function(result) {
+          const text = (result && result.data && result.data.text) || "";
+          console.log("[OCR] Texto extraído del comprobante:", text);
+          
+          const coelsaRegex = /\b([A-Z0-9]{22})\b/g;
+          const matches = text.match(coelsaRegex) || [];
+          let detectedCoelsaId = "";
+          
+          if (matches.length > 0) {
+            detectedCoelsaId = matches[0];
+            console.log("[OCR] CoelsaID detectado:", detectedCoelsaId);
+          } else {
+            const relaxedRegex = /[A-Z0-9]{22}/g;
+            const relaxedMatches = text.match(relaxedRegex) || [];
+            if (relaxedMatches.length > 0) {
+              detectedCoelsaId = relaxedMatches[0];
+              console.log("[OCR] CoelsaID detectado (relaxed):", detectedCoelsaId);
+            }
+          }
+          
+          if (statusText) statusText.textContent = "Conciliando pago con Mercado Pago...";
+          
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const base64Data = e.target.result;
+            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, detectedCoelsaId);
+          };
+          reader.onerror = function() {
+            alert("No se pudo leer el archivo de comprobante. Intentá con otra imagen.");
+            cerrarModalValidarComprobante();
+          };
+          reader.readAsDataURL(file);
+        })
+        .catch(function(err) {
+          console.error("[OCR] Error al procesar Tesseract OCR:", err);
+          if (statusText) statusText.textContent = "Conciliando pago sin código de identificación...";
+          
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            const base64Data = e.target.result;
+            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, "");
+          };
+          reader.onerror = function() {
+            alert("No se pudo leer el archivo de comprobante.");
+            cerrarModalValidarComprobante();
+          };
+          reader.readAsDataURL(file);
+        });
     }
 
     function ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, transactionId) {
