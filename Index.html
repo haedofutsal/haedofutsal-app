@@ -19,33 +19,34 @@
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   
   <style>
+    /* VARIABLES DE DISEÑO MODO CLARO DEPORTIVO MODERNO (OPCIÓN 1) */
     :root {
-      --bg-gradient: linear-gradient(135deg, #0b0f19 0%, #111827 100%);
-      --bg-card: #1e293b;
-      --border-color: rgba(255, 255, 255, 0.08);
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --text-primary: #ffffff;
+      --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+      --bg-card: #ffffff;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-primary: #0f172a;
       
       /* COLORES INSTITUCIONALES HAEDO FUTSAL (AZUL REAL & ROJO) */
-      --primary: #3b82f6;
-      --primary-hover: #60a5fa;
-      --primary-glow: rgba(59, 130, 246, 0.25);
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-glow: rgba(37, 99, 235, 0.2);
       
-      --club-red: #ef4444;
-      --club-red-hover: #f87171;
-      --club-red-glow: rgba(239, 68, 68, 0.25);
+      --club-red: #dc2626;
+      --club-red-hover: #b91c1c;
+      --club-red-glow: rgba(220, 38, 38, 0.2);
       
-      --success: #22c55e;
-      --success-glow: rgba(34, 197, 94, 0.15);
+      --success: #16a34a;
+      --success-glow: rgba(22, 163, 74, 0.12);
       
-      --danger: #f87171;
-      --danger-glow: rgba(248, 113, 113, 0.15);
+      --danger: #ef4444;
+      --danger-glow: rgba(239, 68, 68, 0.12);
       
-      --warning: #f59e0b;
-      --warning-glow: rgba(245, 158, 11, 0.15);
+      --warning: #d97706;
+      --warning-glow: rgba(217, 119, 6, 0.12);
       
-      --shadow-premium: 0 10px 30px rgba(0, 0, 0, 0.4);
+      --shadow-premium: 0 8px 24px rgba(15, 23, 42, 0.08);
       --transition-fluid: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -276,7 +277,7 @@
 
     .form-input {
       width: 100%;
-      background: var(--bg-card);
+      background: #ffffff;
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 12px 14px 12px 42px;
@@ -305,7 +306,7 @@
 
     .form-select {
       width: 100%;
-      background: var(--bg-card);
+      background: #ffffff;
       border: 1px solid var(--border-color);
       border-radius: 12px;
       padding: 12px 14px 12px 42px;
@@ -324,7 +325,7 @@
     .btn {
       width: 100%;
       background: var(--primary);
-      color: #ffffff;
+      color: var(--text-main);
       border: none;
       border-radius: 12px;
       padding: 14px;
@@ -813,7 +814,7 @@
     }
 
     .modal {
-      background: var(--bg-card);
+      background: #ffffff;
       border: 1px solid var(--border-color);
       color: var(--text-main);
       border-radius: 20px;
@@ -2631,7 +2632,7 @@
 
   <!-- MODAL: REVISIÓN DE COMPROBANTE (ADMINISTRADOR) -->
   <div id="admin-revision-modal" class="modal-overlay" style="z-index: 12000; display:none; align-items:center; justify-content:center;">
-    <div class="modal" style="max-width: 500px; width: 95%; padding: 20px; background: var(--bg-card); color: var(--text-main); border-radius:18px; box-shadow:var(--shadow-premium);">
+    <div class="modal" style="max-width: 500px; width: 95%; padding: 20px; background:#ffffff; color:#0f172a; border-radius:18px; box-shadow:var(--shadow-premium);">
       <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display:flex; justify-content:space-between; align-items:center;">
         <h3 class="modal-title" style="display:flex; align-items:center; gap:8px; font-size:1.05rem; font-weight:800; margin:0;">
           <i class="fa-solid fa-file-invoice-dollar" style="color:var(--primary);"></i> Revisar Comprobante
@@ -2670,7 +2671,7 @@
 
   <!-- MODAL: ALTA DE NUEVO SOCIO / DEPORTISTA -->
   <div id="alta-socio-modal" class="modal-overlay" style="z-index: 12000;">
-    <div class="modal" style="max-width: 760px; width: 98%; padding: 20px 24px; max-height: 90vh; display: flex; flex-direction: column; background: var(--bg-card); color: var(--text-main); border-radius:18px; box-shadow:var(--shadow-premium);">
+    <div class="modal" style="max-width: 760px; width: 98%; padding: 20px 24px; max-height: 90vh; display: flex; flex-direction: column; background:#ffffff; color:#0f172a; border-radius:18px; box-shadow:var(--shadow-premium);">
       <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
         <h3 class="modal-title" style="display:flex; align-items:center; gap:8px; font-size:1.1rem; color:#0f172a; font-weight:800;">
           <i class="fa-solid fa-user-plus" style="color:var(--primary);"></i> Dar de Alta Nuevo Socio
