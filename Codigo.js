@@ -2633,13 +2633,13 @@ function verificarYGenerarCuotasMensuales() {
           existingPayments[key] = { status: targetStatus, amount: amount };
           console.log(`[AutoCuota] Generado pago para ${socio.email} del mes ${month} por $${amount}. Estado: ${targetStatus}`);
         } else {
-          // Si el pago ya existe pero tiene un importe de $0 (por error previo), corregirlo al importe correspondiente
-          if (existing.amount === 0) {
+          // Si la cuota aún no fue pagada, sincronizar el importe con el precio actual de la categoría
+          if (existing.status !== "Pagado") {
             const correctAmount = getSocioFee(socio.category);
-            if (correctAmount > 0) {
+            if (correctAmount > 0 && existing.amount !== correctAmount) {
               sheetPagos.getRange(existing.rowNum, pAmountCol + 1).setValue(correctAmount);
               dbModified = true;
-              console.log(`[AutoCuota] Corregida cuota de $0 a $${correctAmount} para ${socio.email} del mes ${month}`);
+              console.log(`[AutoCuota] Actualizado importe de $${existing.amount} a $${correctAmount} para ${socio.email} del mes ${month}`);
             }
           }
           
