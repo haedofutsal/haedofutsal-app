@@ -1889,20 +1889,51 @@
           <a href="javascript:void(0)" onclick="abrirModalOlvideClave()" style="font-size: 0.78rem; color: var(--primary); text-decoration: none; font-weight: 600;">¿Olvidaste tu clave?</a>
         </div>
         
+        <div id="env-selector-container" class="form-group" style="margin-top: 12px; display: none;">
+          <label class="form-label" for="login-env" style="color: #64748b; font-size: 0.75rem;">Entorno de Base de Datos</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-server input-icon"></i>
+            <select id="login-env" class="form-select" onchange="toggleQuickLogin()" style="padding-left: 38px; font-weight: 600; font-size: 0.9rem; color: var(--primary); border: 1px solid var(--border-color); border-radius: 8px; width: 100%; height: 42px; background-color: var(--card-bg);">
+              <option value="PROD">🚀 Producción (Supabase)</option>
+              <option value="TEST" selected>🧪 Pruebas (Local db.json)</option>
+            </select>
+          </div>
+        </div>
+        
+        <script>
+          // Mostrar selector de entorno solo en entornos locales
+          if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.')) {
+            document.getElementById('env-selector-container').style.display = 'block';
+          }
+          
+          function toggleQuickLogin() {
+            const env = document.getElementById('login-env').value;
+            const quickLogin = document.getElementById('quick-login-container');
+            if (quickLogin) {
+              quickLogin.style.display = (env === 'TEST') ? 'block' : 'none';
+            }
+          }
+        </script>
+        
         <button id="btn-login" class="btn" type="button" onclick="ejecutarLogin()" style="margin-top: 12px;">
           <span>Ingresar</span>
           <i class="fa-solid fa-arrow-right"></i>
         </button>
 
         <!-- ACCESOS RÁPIDOS DE PRUEBA (3 ROLES) -->
-        <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-color); text-align: center;">
+        <div id="quick-login-container" style="margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border-color); text-align: center; display: none;">
           <span style="font-size: 0.62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; display: block; margin-bottom: 8px;">Ingreso Rápido</span>
           <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
             <button onclick="loginDemo('admin')" type="button" style="background: rgba(29,78,216,0.15); border: 1px solid var(--primary); color: #818cf8; padding: 5px 10px; font-size: 0.7rem; border-radius: 8px; cursor: pointer; font-weight: 600;">👑 Admin</button>
             <button onclick="loginDemo('coach')" type="button" style="background: rgba(245,158,11,0.15); border: 1px solid #f59e0b; color: #fbbf24; padding: 5px 10px; font-size: 0.7rem; border-radius: 8px; cursor: pointer; font-weight: 600;">⚽ Coach</button>
-            <button onclick="loginDemo('deportista')" type="button" style="background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; padding: 5px 10px; font-size: 0.7rem; border-radius: 8px; cursor: pointer; font-weight: 600;">🧢 Socio</button>
+            <button onclick="loginDemo('deportista')" type="button" style="background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #34d399; padding: 5px 10px; font-size: 0.7rem; border-radius: 8px; cursor: pointer; font-weight: 600;">👟 Socio</button>
           </div>
         </div>
+        
+        <script>
+          // Inicializar estado visual
+          setTimeout(toggleQuickLogin, 100);
+        </script>
       </div>
     </div>
 
@@ -1924,6 +1955,7 @@
           <button class="btn-logout" onclick="abrirModalCambiarClave()" title="Cambiar clave numérica" style="color:var(--text-muted); border-color:var(--border-color);">
             <i class="fa-solid fa-key"></i>
           </button>
+          <div class="user-avatar-badge" style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin-right: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Usuario Logueado"></div>
           <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
@@ -1994,6 +2026,7 @@
           <button class="btn-logout" onclick="abrirModalCambiarClave()" title="Cambiar clave numérica" style="color:var(--text-muted); border-color:var(--border-color);">
             <i class="fa-solid fa-key"></i>
           </button>
+          <div class="user-avatar-badge" style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin-right: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Usuario Logueado"></div>
           <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
@@ -2063,7 +2096,8 @@
             <p>Deportistas y planteles del club</p>
           </div>
         </div>
-        <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
+        <div class="user-avatar-badge" style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin-right: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Usuario Logueado"></div>
+          <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
           <i class="fa-solid fa-right-from-bracket"></i>
         </button>
       </div>
@@ -2151,6 +2185,7 @@
           <button class="btn-secondary" onclick="abrirModalLogAuditoria()" style="font-size:0.75rem; padding:6px 12px; background:rgba(37,99,235,0.1); border:1px solid rgba(37,99,235,0.3); color:#1d4ed8; border-radius:10px; cursor:pointer; font-weight:600; display:flex; align-items:center; gap:6px;">
             <i class="fa-solid fa-clipboard-list"></i> Log
           </button>
+          <div class="user-avatar-badge" style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin-right: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Usuario Logueado"></div>
           <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
@@ -2477,6 +2512,7 @@
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <button id="btn-programar-partido" class="btn-add" onclick="abrirModalPartido()"><i class="fa-solid fa-calendar-plus"></i> Programar</button>
+          <div class="user-avatar-badge" style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin-right: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Usuario Logueado"></div>
           <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
@@ -2525,7 +2561,8 @@
             <p>Indumentaria y merchandising oficial del club</p>
           </div>
         </div>
-        <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
+        <div class="user-avatar-badge" style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: none; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; margin-right: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Usuario Logueado"></div>
+          <button class="btn-logout" onclick="ejecutarLogout()" title="Cerrar sesión">
           <i class="fa-solid fa-right-from-bracket"></i>
         </button>
       </div>
@@ -3550,7 +3587,7 @@
             fetch("/api/run", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ functionName, args: Array.from(args) })
+              body: JSON.stringify({ functionName, args: Array.from(args), env: window.APP_ENV || 'PROD' })
             })
             .then(res => res.json())
             .then(data => {
@@ -3642,9 +3679,9 @@
         canEditMatches: true
       },
       Coach: {
-        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-agenda-view", "club-tienda-view"],
+        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-torneos-view", "admin-agenda-view", "club-tienda-view"],
         navBar: "admin",
-        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-agenda", "nav-admin-tienda"],
+        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"],
         defaultView: "inicio",
         canEditFinanzas: false,
         canEditMatches: true
@@ -3789,6 +3826,9 @@
     };
 
     function loginDemo(rolKey) {
+      const envSelector = document.getElementById("login-env");
+      window.APP_ENV = envSelector ? envSelector.value : 'PROD';
+      
       // Datos de acceso rápido por rol — no requieren usuario ni clave
       const demoUsers = {
         admin: { email: 'admin@futsalhaedo.com', role: 'Admin', name: 'Administrador', username: 'admin', photo: '' },
@@ -3871,6 +3911,10 @@
       const usernameInput = document.getElementById("login-username").value.trim();
       const passwordInput = document.getElementById("login-password").value.trim();
       const rememberChecked = document.getElementById("login-remember").checked;
+      
+      const envSelector = document.getElementById("login-env");
+      const envInput = envSelector ? envSelector.value : 'PROD';
+      window.APP_ENV = envInput;
 
       if (!usernameInput) {
         mostrarErrorLogin("Por favor, ingresá tu usuario.");
@@ -3934,6 +3978,15 @@
       estadoApp.userName = userInfo.name;
       estadoApp.username = userInfo.username;
       
+      
+      // Update avatars
+      const initial = (userInfo.username || userInfo.name || "?").charAt(0).toUpperCase();
+      document.querySelectorAll('.user-avatar-badge').forEach(el => {
+        el.innerText = initial;
+        el.title = "Logueado como: " + (userInfo.username || userInfo.name);
+        el.style.display = "flex";
+      });
+
       const config = RoleAccessController.applyRoleConfig(userInfo.role);
       
       if (config.navBar === "admin") {
@@ -4708,6 +4761,34 @@
       const activeTabId = seccion === 'tienda' ? 'nav-admin-tienda' : ('nav-admin-' + seccion);
       const activeTabEl = document.getElementById(activeTabId);
       if (activeTabEl) activeTabEl.classList.add("active");
+
+      // Si la sección es Finanzas, ocultar/mostrar elementos según rol
+      if (seccion === 'torneos') {
+        const isCoach = (estadoApp.role === 'Coach');
+        const finanzasView = document.getElementById('admin-torneos-view');
+        
+        // Botones superiores
+        const topButtons = finanzasView.querySelectorAll('.header-bar button.btn-secondary');
+        topButtons.forEach(btn => btn.style.display = isCoach ? 'none' : 'flex');
+        
+        // Cards de resúmenes
+        const cardsToHide = ['acc-balance', 'acc-cuotas', 'acc-torneos', 'acc-sponsors', 'acc-gastos', 'acc-tienda'];
+        cardsToHide.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && el.parentElement) {
+            el.parentElement.style.display = isCoach ? 'none' : 'block';
+          }
+        });
+        
+        // Auto-expandir movimientos para Coach
+        if (isCoach) {
+          const movsBody = document.getElementById('acc-movimientos');
+          const movsHeader = movsBody ? movsBody.previousElementSibling : null;
+          if (movsBody && movsBody.style.display === 'none') {
+            toggleFinanzasAccordion('acc-movimientos', movsHeader);
+          }
+        }
+      }
 
       if (seccion === 'inicio') {
         cargarDatosAdministracion();
@@ -6988,6 +7069,14 @@
         Payment_Method: method
       };
       
+      // Adjuntar el nombre del coach para auditora local
+      if (estadoApp.role === 'Coach') {
+        const tag = " [Coach: " + estadoApp.username + "]";
+        if (!payload.Concept.includes(tag)) {
+          payload.Concept += tag;
+        }
+      }
+      
       const runner = movId ? google.script.run.editarMovimientoTorneo(payload, estadoApp.userEmail) : google.script.run.registrarMovimientoTorneo(payload, estadoApp.userEmail);
       
       google.script.run
@@ -7975,7 +8064,13 @@
     function filtrarYCalcularFinanzas() {
       if (!estadoApp.datosAdmin) return;
       
-      const movimientos = estadoApp.datosAdmin.finanzas || [];
+      let movimientosBase = estadoApp.datosAdmin.finanzas || [];
+      if (estadoApp.role === 'Coach') {
+        const tag = "[Coach: " + estadoApp.username + "]";
+        movimientosBase = movimientosBase.filter(m => m.Concept.includes(tag));
+      }
+      
+      const movimientos = movimientosBase;
       const torneos = estadoApp.datosAdmin.torneos || [];
       const pagos = estadoApp.datosAdmin.pagos || [];
       
