@@ -3269,40 +3269,20 @@
             <label style="display:flex; align-items:center; gap:10px; border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; cursor: pointer; background: var(--bg-card); transition: all 0.2s;" onclick="mostrarDetalleMetodoPago('banco')">
               <input type="radio" name="modal-transfer-method" value="Banco Oficial" checked style="accent-color: var(--primary);">
               <div style="display:flex; flex-direction:column; flex:1;">
-                <span style="font-weight:700; font-size:0.9rem; color:var(--text-primary);">Transferencia (CVU / Alias)</span>
+                <span style="font-weight:700; font-size:0.9rem; color:var(--text-primary);">Transferencia Bancaria</span>
                 <span style="font-size:0.75rem; color:var(--text-muted);">$0 recargos, transferencia directa</span>
               </div>
               <i class="fa-solid fa-building-columns text-primary" style="font-size: 1.2rem;"></i>
             </label>
 
-            <!-- Opción 2: Transferencia Mercado Pago -->
+            <!-- Opción 2: Mercado Pago / Billeteras Virtuales -->
             <label style="display:flex; align-items:center; gap:10px; border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; cursor: pointer; background: var(--bg-card); transition: all 0.2s;" onclick="mostrarDetalleMetodoPago('mp_transf')">
               <input type="radio" name="modal-transfer-method" value="Transferencia MP" style="accent-color: var(--primary);">
               <div style="display:flex; flex-direction:column; flex:1;">
-                <span style="font-weight:700; font-size:0.9rem; color:var(--text-primary);">Mercado Pago (CVU / Alias)</span>
+                <span style="font-weight:700; font-size:0.9rem; color:var(--text-primary);">Mercado Pago / Billeteras Virtuales</span>
                 <span style="font-size:0.75rem; color:var(--text-muted);">$0 recargos, transferencia MP</span>
               </div>
               <i class="fa-solid fa-wallet text-success" style="font-size: 1.2rem;"></i>
-            </label>
-
-            <!-- Opción 3: Cuenta DNI / MODO / Ualá -->
-            <label style="display:flex; align-items:center; gap:10px; border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; cursor: pointer; background: var(--bg-card); transition: all 0.2s;" onclick="mostrarDetalleMetodoPago('billeteras')">
-              <input type="radio" name="modal-transfer-method" value="Cuenta DNI / MODO" style="accent-color: var(--primary);">
-              <div style="display:flex; flex-direction:column; flex:1;">
-                <span style="font-weight:700; font-size:0.9rem; color:var(--text-primary);">Cuenta DNI / MODO / Ualá</span>
-                <span style="font-size:0.75rem; color:var(--text-muted);">$0 recargos, transferencia directa</span>
-              </div>
-              <i class="fa-solid fa-mobile text-warning" style="font-size: 1.2rem;"></i>
-            </label>
-
-            <!-- Opción 4: Mercado Pago Online -->
-            <label style="display:flex; align-items:center; gap:10px; border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; cursor: pointer; background: var(--bg-card); transition: all 0.2s;" onclick="mostrarDetalleMetodoPago('mp_tarjeta')">
-              <input type="radio" name="modal-transfer-method" value="Mercado Pago Tarjeta" style="accent-color: var(--primary);">
-              <div style="display:flex; flex-direction:column; flex:1;">
-                <span style="font-weight:700; font-size:0.9rem; color:var(--text-primary);">Tarjeta de Crédito / Débito</span>
-                <span style="font-size:0.75rem; color:var(--text-muted);">Acreditación inmediata online</span>
-              </div>
-              <i class="fa-solid fa-credit-card" style="font-size: 1.2rem; color: #009ee3;"></i>
             </label>
           </div>
         </div>
@@ -3324,28 +3304,6 @@
             </div>
           </div>
           
-          <!-- Selector rápido de Billetera -->
-          <div style="margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 12px;">
-            <p style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin: 0 0 8px 0; text-transform: uppercase; text-align: left;"><i class="fa-solid fa-up-right-from-square"></i> Copiar Alias y abrir en tu cel:</p>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
-              <button onclick="copiarYAbrirBilletera('mercadopago://', 'https://www.mercadopago.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
-                <i class="fa-solid fa-wallet text-success" style="font-size: 1.1rem;"></i>
-                <span style="font-weight: 600; color: var(--text-primary);">MP</span>
-              </button>
-              <button onclick="copiarYAbrirBilletera('personalpay://', 'https://www.personalpay.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
-                <i class="fa-solid fa-mobile-screen text-primary" style="font-size: 1.1rem;"></i>
-                <span style="font-weight: 600; color: var(--text-primary);">P. Pay</span>
-              </button>
-              <button onclick="copiarYAbrirBilletera('cuentadni://', 'https://www.bancoprovincia.com.ar/cuentadni')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
-                <i class="fa-solid fa-building-columns text-success" style="font-size: 1.1rem;"></i>
-                <span style="font-weight: 600; color: var(--text-primary);">C. DNI</span>
-              </button>
-              <button onclick="copiarYAbrirBilletera('modo://', 'https://www.modo.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
-                <i class="fa-solid fa-qrcode text-warning" style="font-size: 1.1rem;"></i>
-                <span style="font-weight: 600; color: var(--text-primary);">MODO</span>
-              </button>
-            </div>
-          </div>
         </div>
 
         <!-- Detalles Mercado Pago Transferencia -->
@@ -3370,54 +3328,7 @@
           </div>
         </div>
 
-        <!-- Detalles Billeteras Virtuales -->
-        <div id="detalle-metodo-billeteras" style="background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem; display: none;">
-          <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 0.95rem;">Datos de Billetera Virtual</h4>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 10px 0;">Transferí el monto exacto desde Cuenta DNI, MODO, Ualá, etc.</p>
-          <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 0.82rem;">
-            <div>Titular: <strong style="color: var(--text-primary);">Haedo Futsal Club</strong></div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; flex-wrap:wrap; gap:6px;">
-              <span>Alias: <code id="alias-billeteras" style="color:#f59e0b; font-weight:bold;">willy.78.mp</code></span>
-              <button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem; border-radius:4px;" onclick="copiarTexto('willy.78.mp', 'Alias')"><i class="fa-regular fa-copy"></i> Copiar</button>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; flex-wrap:wrap; gap:6px;">
-              <span>CVU: <code id="cvu-billeteras" style="color:var(--text-primary); font-family:monospace; word-break:break-all;">0000003100098098995218</code></span>
-              <button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem; border-radius:4px;" onclick="copiarTexto('0000003100098098995218', 'CVU')"><i class="fa-regular fa-copy"></i> Copiar</button>
-            </div>
-          </div>
-          
-          <!-- Selector rápido de Billetera -->
-          <div style="margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 12px;">
-            <p style="font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin: 0 0 8px 0; text-transform: uppercase; text-align: left;"><i class="fa-solid fa-up-right-from-square"></i> Copiar Alias y abrir en tu cel:</p>
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
-              <button onclick="copiarYAbrirBilletera('mercadopago://', 'https://www.mercadopago.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
-                <i class="fa-solid fa-wallet text-success" style="font-size: 1.1rem;"></i>
-                <span style="font-weight: 600; color: var(--text-primary);">MP</span>
-              </button>
-              <button onclick="copiarYAbrirBilletera('personalpay://', 'https://www.personalpay.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
-                <i class="fa-solid fa-mobile-screen text-primary" style="font-size: 1.1rem;"></i>
-                <span style="font-weight: 600; color: var(--text-primary);">P. Pay</span>
-              </button>
-              <button onclick="copiarYAbrirBilletera('cuentadni://', 'https://www.bancoprovincia.com.ar/cuentadni')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
-                <i class="fa-solid fa-building-columns text-success" style="font-size: 1.1rem;"></i>
-                <span style="font-weight: 600; color: var(--text-primary);">C. DNI</span>
-              </button>
-              <button onclick="copiarYAbrirBilletera('modo://', 'https://www.modo.com.ar')" class="btn-secondary" style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding: 8px 4px; font-size: 0.62rem; gap: 4px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-card);">
-                <i class="fa-solid fa-qrcode text-warning" style="font-size: 1.1rem;"></i>
-                <span style="font-weight: 600; color: var(--text-primary);">MODO</span>
-              </button>
-            </div>
-          </div>
-        </div>
 
-        <!-- Detalles Mercado Pago Tarjeta -->
-        <div id="detalle-metodo-mp_tarjeta" style="background: rgba(0, 158, 227, 0.05); border: 1px solid rgba(0, 158, 227, 0.2); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem; display: none;">
-          <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 0.95rem;">Pago Instantáneo Online</h4>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 10px 0;">Pagá con tarjeta o saldo de tu cuenta mediante Mercado Pago.</p>
-          <button class="btn-primary" style="width:100%; justify-content:center; padding: 11px; font-size: 0.85rem; background: #009ee3; border: none; font-weight:700;" onclick="confirmarPagoMercadoPago()">
-            Pagar con Mercado Pago &rarr;
-          </button>
-        </div>
 
         <!-- BOTÓN SUBIR COMPROBANTE (Para los dos primeros métodos) -->
         <div id="wrapper-subir-comprobante" style="border: 2px dashed #10b981; background: rgba(16, 185, 129, 0.03); border-radius: 12px; padding: 1rem; text-align: center;">
@@ -4213,15 +4124,11 @@
       try {
         const elBanco = document.getElementById("detalle-metodo-banco");
         const elMpTransf = document.getElementById("detalle-metodo-mp_transf");
-        const elBilleteras = document.getElementById("detalle-metodo-billeteras");
-        const elMpTarjeta = document.getElementById("detalle-metodo-mp_tarjeta");
         const elUpload = document.getElementById("wrapper-subir-comprobante");
 
         if (elBanco) elBanco.style.display = metodo === "banco" ? "block" : "none";
         if (elMpTransf) elMpTransf.style.display = metodo === "mp_transf" ? "block" : "none";
-        if (elBilleteras) elBilleteras.style.display = metodo === "billeteras" ? "block" : "none";
-        if (elMpTarjeta) elMpTarjeta.style.display = metodo === "mp_tarjeta" ? "block" : "none";
-        if (elUpload) elUpload.style.display = metodo === "mp_tarjeta" ? "none" : "block";
+        if (elUpload) elUpload.style.display = "block";
       } catch (err) {
         console.error("Error in mostrarDetalleMetodoPago:", err);
       }
