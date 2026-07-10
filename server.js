@@ -289,11 +289,6 @@ global.MailApp = {
   }
 };
 
-global.SpreadsheetApp = {
-  getActiveSpreadsheet: () => mockSpreadsheet,
-  openById: () => mockSpreadsheet,
-  flush: () => {}
-};
 
 // Simulación de UrlFetchApp que mockea la llamada a Mercado Pago
 global.UrlFetchApp = {
@@ -345,10 +340,67 @@ global.UrlFetchApp = {
   }
 };
 
-function getSandboxContext() {
+function getSandboxContext(env = "PROD") {
   const backendCodePath = path.join(__dirname, 'Codigo.js');
+  const mockSpreadsheetEnv = (env) => {
+    if (env === 'TEST') {
+      return {
+        getSheetByName: (name) => ({
+          getDataRange: () => ({
+            getValues: () => {
+              const db = readDb();
+              const sheet = db[name];
+              if (!sheet) return [SHEET_HEADERS[name] || []];
+              return [sheet.headers, ...sheet.rows];
+            }
+          }),
+          appendRow: (rowArray) => {
+            const db = readDb();
+            if (!db[name]) db[name] = { headers: SHEET_HEADERS[name], rows: [] };
+            db[name].rows.push(rowArray);
+            writeDb(db);
+          },
+          clear: () => {
+            const db = readDb();
+            if (db[name]) db[name].rows = [];
+            writeDb(db);
+          },
+          getLastRow: () => {
+            const db = readDb();
+            return db[name] ? db[name].rows.length + 1 : 1;
+          },
+          getRange: (row, col) => ({
+            setValue: (val) => {
+              const db = readDb();
+              if (db[name] && db[name].rows[row - 2]) {
+                db[name].rows[row - 2][col - 1] = val;
+                writeDb(db);
+              }
+            },
+            setNumberFormat: () => {}
+          }),
+          deleteRow: (row) => {
+            const db = readDb();
+            if (db[name] && db[name].rows[row - 2]) {
+              db[name].rows.splice(row - 2, 1);
+              writeDb(db);
+            }
+          }
+        }),
+        insertSheet: (name) => mockSpreadsheetEnv(env).getSheetByName(name),
+        deleteSheet: () => {},
+        getSheets: () => [{}, {}]
+      };
+    }
+    return mockSpreadsheet; // The original Supabase one
+  };
+
   const ctx = {
-    SpreadsheetApp: global.SpreadsheetApp,
+    SpreadsheetApp: {
+      getActiveSpreadsheet: () => mockSpreadsheetEnv(env),
+      openById: () => mockSpreadsheetEnv(env),
+      flush: () => {}
+    },
     PropertiesService: global.PropertiesService,
     UrlFetchApp: global.UrlFetchApp,
     HtmlService: global.HtmlService,
@@ -385,13 +437,26 @@ console.log("¡Backend de Codigo.js cargado y simulado con éxito!");
 // ENDPOINT API /api/login
 // ==========================================
 app.post('/api/login', (req, res) => {
-  const { username, password } = req.body || {};
+  const { username, password, env = 'PROD' } = req.body || {};
   if (!username) return res.status(400).json({ success: false, message: 'Falta usuario.' });
 
   try {
     // 1. Obtener los usuarios con todos los campos incluyendo username y password
-    let query = '?select=id,email,role,name,photo,username,password';
-    let rows = syncSupabase('usuarios', 'GET', null, query);
+    let rows = [];
+    if (env === 'TEST') {
+      const db = readDb();
+      if (db.Usuarios) {
+        const h = db.Usuarios.headers;
+        rows = db.Usuarios.rows.map((r, i) => ({
+          id: i, email: r[h.indexOf('Email')], role: r[h.indexOf('Role')],
+          name: r[h.indexOf('Name')], photo: r[h.indexOf('Photo')],
+          username: r[h.indexOf('Username')], password: r[h.indexOf('Password')]
+        }));
+      }
+    } else {
+      let query = '?select=id,email,role,name,photo,username,password';
+      rows = syncSupabase('usuarios', 'GET', null, query);
+    }
     
     if (!Array.isArray(rows)) {
       console.error('[LOGIN] Error: Supabase no devolvió un array.');
@@ -480,11 +545,11 @@ app.get('/api/migrate-usuarios', async (req, res) => {
 // ENDPOINT API /api/run (PROXEA CON CLIENTE)
 // ==========================================
 app.post('/api/run', (req, res) => {
-  const { functionName, args } = req.body;
+  const { functionName, args, env = 'PROD' } = req.body;
   console.log(`[API RUN] Ejecutando función del servidor: ${functionName}(${JSON.stringify(args)})`);
   
   try {
-    const ctx = getSandboxContext();
+    const ctx = getSandboxContext(env);
     const func = ctx[functionName];
     if (typeof func !== 'function') {
       throw new Error(`La función de backend '${functionName}' no existe en el servidor.`);
@@ -494,7 +559,7 @@ app.post('/api/run', (req, res) => {
 
     // Sincronización en vivo con Supabase en operaciones de escritura
     const writeOps = ['registrarSocioNuevo', 'marcarPagoComoPagado', 'generarPagoMercadoPago', 'registrarPartidoNuevo', 'registrarMovimientoTorneo', 'editarMovimientoTorneo', 'eliminarMovimientoTorneo', 'actualizarPrecios'];
-    if (writeOps.includes(functionName)) {
+    if (writeOps.includes(functionName) && env === 'PROD') {
       try {
         const https = require('https');
         const SUPABASE_URL = process.env.SUPABASE_URL || 'https://kjcnotrxxthnzpgljeus.supabase.co';
