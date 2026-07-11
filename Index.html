@@ -2980,11 +2980,25 @@
   <!-- MODAL: LOG GENERAL DE LA APP / AUDITORÍA -->
   <div id="log-auditoria-modal" class="modal-overlay">
     <div class="modal" style="max-width: 800px; width: 98%;">
-      <div class="modal-header">
-        <h3 class="modal-title" style="display: flex; align-items: center; gap: 8px;">
-          <i class="fa-solid fa-clipboard-list" style="color: #818cf8;"></i> Log General & Auditoría de Operaciones
-        </h3>
-        <button class="modal-close" onclick="cerrarModalLogAuditoria()"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-header" style="flex-direction: column; align-items: flex-start; gap: 12px;">
+        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+          <h3 class="modal-title" style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-clipboard-list" style="color: #818cf8;"></i> Log General & Auditoría de Operaciones
+          </h3>
+          <button class="modal-close" onclick="cerrarModalLogAuditoria()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div style="width: 100%; display: flex; gap: 10px; align-items: center; background: var(--bg-card); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);">
+          <label style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);"><i class="fa-solid fa-filter"></i> Filtrar por:</label>
+          <select id="filtro-log-tipo" class="form-input" style="padding: 6px 10px; font-size: 0.85rem; max-width: 250px;" onchange="filtrarYRenderizarLogs()">
+            <option value="TODOS">Todas las operaciones</option>
+            <option value="PADRON_SOCIOS">Alta / Edición de Socios</option>
+            <option value="PAGO">Ingresos / Pagos de Cuotas</option>
+            <option value="TARIFAS_PRECIOS">Modificación de Precios</option>
+            <option value="MOVIMIENTO">Movimientos de Caja (Torneos)</option>
+            <option value="SISTEMA">Otras (Sistema/Logins)</option>
+          </select>
+        </div>
       </div>
       <div style="max-height: 420px; overflow-y: auto; padding-right: 4px;" id="log-auditoria-container">
         <!-- Lista de logs de auditoría cargados dinámicamente -->
@@ -7019,16 +7033,38 @@
         .eliminarMovimientoTorneo(movId, estadoApp.userEmail);
     }
 
+    let allAuditLogsGlobal = [];
+
+    function filtrarYRenderizarLogs() {
+      const filtro = document.getElementById("filtro-log-tipo").value;
+      let logsFiltrados = allAuditLogsGlobal;
+
+      if (filtro !== "TODOS") {
+        logsFiltrados = allAuditLogsGlobal.filter(log => {
+          if (filtro === "SISTEMA") {
+            return log.Entity !== "PADRON_SOCIOS" && log.Entity !== "PAGO" && log.Entity !== "TARIFAS_PRECIOS" && log.Entity !== "MOVIMIENTO";
+          }
+          return log.Entity === filtro;
+        });
+      }
+
+      renderizarLogsAuditoria(logsFiltrados);
+    }
+
     // MODAL: LOG GENERAL & AUDITORÍA
     function abrirModalLogAuditoria() {
       document.getElementById("log-auditoria-modal").style.display = "flex";
       const container = document.getElementById("log-auditoria-container");
       container.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted);"><i class="fa-solid fa-spinner fa-spin"></i> Cargando historial de auditoría...</div>`;
       
+      // Reset filter
+      document.getElementById("filtro-log-tipo").value = "TODOS";
+
       google.script.run
         .withSuccessHandler(function(response) {
           if (response && response.success) {
-            renderizarLogsAuditoria(response.logs || []);
+            allAuditLogsGlobal = response.logs || [];
+            filtrarYRenderizarLogs();
           } else {
             container.innerHTML = `<div class="empty-state"><p>No se pudieron cargar los logs.</p></div>`;
           }
