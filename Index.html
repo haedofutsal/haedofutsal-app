@@ -9747,8 +9747,17 @@
       const listMp = document.getElementById("admin-mp-list");
       listMp.innerHTML = `<div class="empty-state"><p><i class="fa-solid fa-spinner fa-spin"></i> Conectando con Mercado Pago...</p></div>`;
       
-      const startFilter = document.getElementById("mp-filter-start")?.value;
-      const endFilter = document.getElementById("mp-filter-end")?.value;
+      const mpStart = document.getElementById("mp-filter-start");
+      const mpEnd = document.getElementById("mp-filter-end");
+      if (!mpStart.value || !mpEnd.value) {
+        const end = new Date();
+        const start = new Date(end.getTime() - (48 * 60 * 60 * 1000));
+        if (mpStart) mpStart.value = start.toISOString().split('T')[0];
+        if (mpEnd) mpEnd.value = end.toISOString().split('T')[0];
+      }
+      
+      const startFilter = mpStart?.value;
+      const endFilter = mpEnd?.value;
       let url = '/api/mp-transfers';
       if (startFilter && endFilter) {
         url += `?startDate=${startFilter}&endDate=${endFilter}`;
