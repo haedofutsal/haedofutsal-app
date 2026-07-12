@@ -1,7 +1,7 @@
 {
-  "name": "Haedo Futsal Club",
+  "name": "Haedo Futsal",
   "short_name": "Haedo Futsal",
-  "description": "Sistema de Gestión y Finanzas de Haedo Futsal Club",
+  "description": "Sistema de Gestión y Finanzas de Haedo Futsal",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
