@@ -2519,6 +2519,13 @@
         
         <div id="tab-rev-mp" style="display:none;">
           <h3 style="font-size:1rem; font-weight:800; color:#0f172a; margin-bottom:10px;"><i class="fa-solid fa-building-columns" style="color:#10b981; margin-right:5px;"></i> Últimos Ingresos (Mercado Pago)</h3>
+          
+          <div style="display:flex; gap:8px; margin-bottom:12px; align-items:center;">
+            <input type="date" id="mp-filter-start" class="form-input" style="flex:1; padding:8px; font-size:0.8rem;">
+            <input type="date" id="mp-filter-end" class="form-input" style="flex:1; padding:8px; font-size:0.8rem;">
+            <button class="btn-primary" onclick="cargarRevisionesYTransferencias()" style="padding:8px 12px; border-radius:8px;"><i class="fa-solid fa-search"></i></button>
+          </div>
+
           <div id="admin-mp-list" style="display:flex; flex-direction:column; gap:10px;">
             <div class="empty-state"><p>Cargando transferencias...</p></div>
           </div>
@@ -9712,30 +9719,42 @@
       if (pagosRevision.length === 0) {
         listPendientes.innerHTML = `<div class="empty-state"><p>No hay cuotas pendientes de revisión.</p></div>`;
       } else {
-        listPendientes.innerHTML = pagosRevision.map(p => `
+        listPendientes.innerHTML = pagosRevision.map(p => {
+          const socioData = (estadoApp.datosAdmin?.usuarios || []).find(u => (u.Email || "").toLowerCase() === (p.Email || "").toLowerCase());
+          const socioLabel = socioData ? `${socioData.Username || socioData.Name} | ${socioData.Category || 'Sin Categoría'}` : p.Email;
+          
+          return `
           <div class="list-item-card" style="display:flex; flex-direction:column; gap:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <div style="font-weight:800; color:#0f172a;">${p.Email}</div>
+              <div style="font-weight:800; color:#0f172a;">${socioLabel}</div>
               <div style="font-weight:900; color:#1d4ed8;">$${parseFloat(p.Amount || 0).toLocaleString('es-AR')}</div>
             </div>
             <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
               <div>Mes: <span style="font-weight:700;">${p.Month}</span></div>
               <div>ID: ${p.Payment_ID}</div>
             </div>
-            ${p.MP_Link ? `<button class="btn-secondary" style="margin-top:5px; width:100%;" onclick="abrirModalComprobante('${p.MP_Link}')"><i class="fa-solid fa-image"></i> Ver Comprobante Subido</button>` : ''}
+            ${p.MP_Link ? `<button class="btn-secondary" style="margin-top:5px; width:100%; justify-content:center; display:flex; align-items:center; gap:8px;" onclick="abrirModalComprobante('${p.MP_Link}')"><i class="fa-solid fa-image"></i> Ver Comprobante Subido</button>` : ''}
             <div style="display:flex; gap:10px; margin-top:5px;">
-              <button class="btn-primary" style="flex:1; background:#10b981;" onclick="aprobarPagoAdmin('${p.Payment_ID}')"><i class="fa-solid fa-check"></i> Aprobar</button>
-              <button class="btn-secondary" style="flex:1; color:#ef4444; border-color:#ef4444;" onclick="rechazarPagoAdmin('${p.Payment_ID}')"><i class="fa-solid fa-xmark"></i> Rechazar</button>
+              <button class="btn-primary" style="flex:1; justify-content:center; display:flex; align-items:center; gap:8px;" onclick="aprobarPagoAdmin('${p.Payment_ID}')"><i class="fa-solid fa-check"></i> Aprobar</button>
+              <button class="btn-secondary" style="flex:1; justify-content:center; display:flex; align-items:center; gap:8px;" onclick="rechazarPagoAdmin('${p.Payment_ID}')"><i class="fa-solid fa-xmark"></i> Rechazar</button>
             </div>
           </div>
-        `).join("");
+          `;
+        }).join("");
       }
 
       // 2. Cargar Transferencias MP desde servidor
       const listMp = document.getElementById("admin-mp-list");
       listMp.innerHTML = `<div class="empty-state"><p><i class="fa-solid fa-spinner fa-spin"></i> Conectando con Mercado Pago...</p></div>`;
       
-      fetch('/api/mp-transfers')
+      const startFilter = document.getElementById("mp-filter-start")?.value;
+      const endFilter = document.getElementById("mp-filter-end")?.value;
+      let url = '/api/mp-transfers';
+      if (startFilter && endFilter) {
+        url += `?startDate=${startFilter}&endDate=${endFilter}`;
+      }
+
+      fetch(url)
         .then(res => res.json())
         .then(data => {
           if (!data.results || data.results.length === 0) {
