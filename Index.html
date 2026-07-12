@@ -4411,7 +4411,7 @@
       
       const pagos = (estadoApp.datosSocio && estadoApp.datosSocio.pagos) || [];
       const deudas = pagos
-        .filter(p => p.Status === "Pendiente")
+        .filter(p => p.Status === "Pendiente" || p.Status === "Deuda")
         .sort((a, b) => (a.Month || '').localeCompare(b.Month || ''));
       
       if (deudas.length === 0) {
@@ -7288,7 +7288,7 @@
         // Filtrar pagos por cuotas de socios del mes seleccionado
         const pagosMes = dbPagos.filter(p => p.Month === mes);
         const recaudado = pagosMes.filter(p => p.Status === "Pagado").reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
-        const pendiente = pagosMes.filter(p => p.Status === "Pendiente").reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
+        const pendiente = pagosMes.filter(p => p.Status === "Pendiente" || p.Status === "Deuda").reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
         const totalFacturado = recaudado + pendiente;
         const cobroPct = totalFacturado > 0 ? ((recaudado / totalFacturado) * 100) : 0;
 
@@ -8233,7 +8233,7 @@
             } else {
               cuotasTr += amt;
             }
-          } else if (p.Status === "Pendiente") {
+          } else if (p.Status === "Pendiente" || p.Status === "Deuda") {
             cuotasDeuda += amt;
           }
         }
