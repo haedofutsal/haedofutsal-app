@@ -4553,14 +4553,17 @@
           const matches = text.match(coelsaRegex) || [];
           let detectedCoelsaId = "";
           
-          if (matches.length > 0) {
-            detectedCoelsaId = matches[0];
+          const validMatches = matches.filter(m => /[A-Z]/.test(m));
+          
+          if (validMatches.length > 0) {
+            detectedCoelsaId = validMatches[0];
             console.log("[OCR] CoelsaID detectado:", detectedCoelsaId);
           } else {
             const relaxedRegex = /[A-Z0-9]{22}/g;
             const relaxedMatches = text.match(relaxedRegex) || [];
-            if (relaxedMatches.length > 0) {
-              detectedCoelsaId = relaxedMatches[0];
+            const validRelaxed = relaxedMatches.filter(m => /[A-Z]/.test(m));
+            if (validRelaxed.length > 0) {
+              detectedCoelsaId = validRelaxed[0];
               console.log("[OCR] CoelsaID detectado (relaxed):", detectedCoelsaId);
             }
           }
