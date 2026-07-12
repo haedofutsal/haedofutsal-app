@@ -1293,15 +1293,6 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
     }
 
     if (!casoAExitoso && (!cleanTxId || isCoelsaId || fallbackToCasoB)) {
-            return { success: false, message: `El monto de la transacción #${cleanTxId} ($${mpAmount}) no coincide con el de la cuota ($${targetAmount}).` };
-          }
-        } else {
-          return { success: false, message: `La transacción #${cleanTxId} se encuentra en estado '${paymentInfo.status}' (debe estar approved).` };
-        }
-      } else {
-        return { success: false, message: `No se pudo encontrar la transacción #${cleanTxId} en Mercado Pago. Verificá el número e intentá de nuevo.` };
-      }
-    } else {
       // Caso B: Buscar en los últimos 50 movimientos o mock para Coelsa ID
       if (cleanTxId) {
         // Verificar si ya fue acreditado en nuestra BD para evitar duplicados
