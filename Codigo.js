@@ -1253,6 +1253,9 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
 
     const isCoelsaId = cleanTxId && (cleanTxId.length === 22 || /[a-zA-Z]/.test(cleanTxId));
 
+    let casoAExitoso = false;
+    let fallbackToCasoB = false;
+
     if (cleanTxId && !isCoelsaId) {
       // Caso A: ID de Pago de Mercado Pago Directo (Numérico)
       // Verificar si ya fue acreditado en nuestra BD para evitar duplicados
@@ -1277,7 +1280,19 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
           const mpAmount = parseFloat(paymentInfo.transaction_amount || 0);
           if (Math.abs(mpAmount - targetAmount) < 10.0) { // Tolerancia de 10 pesos
             matchedPayment = paymentInfo;
+            casoAExitoso = true;
           } else {
+            fallbackToCasoB = true;
+          }
+        } else {
+          fallbackToCasoB = true;
+        }
+      } else {
+        fallbackToCasoB = true;
+      }
+    }
+
+    if (!casoAExitoso && (!cleanTxId || isCoelsaId || fallbackToCasoB)) {
             return { success: false, message: `El monto de la transacción #${cleanTxId} ($${mpAmount}) no coincide con el de la cuota ($${targetAmount}).` };
           }
         } else {
