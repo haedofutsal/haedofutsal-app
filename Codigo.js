@@ -97,7 +97,7 @@ function doGet(e) {
     }
     const template = HtmlService.createTemplateFromFile("Index");
     return template.evaluate()
-      .setTitle("Haedo Futsal - ERP Deportivo")
+      .setTitle("Haedo Futsal App")
       .addMetaTag("viewport", "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   } catch (error) {
