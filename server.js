@@ -580,10 +580,29 @@ app.post('/api/scan-receipt', async (req, res) => {
 
 app.get('/api/mp-transfers', async (req, res) => {
   try {
-    const response = await axios.get('https://api.mercadopago.com/v1/payments/search?sort=date_created&criteria=desc&limit=50', {
+    const { startDate, endDate } = req.query;
+    
+    let beginDateISO, endDateISO;
+    if (startDate && endDate) {
+      beginDateISO = new Date(startDate + 'T00:00:00.000Z').toISOString();
+      endDateISO = new Date(endDate + 'T23:59:59.999Z').toISOString();
+    } else {
+      const end = new Date();
+      const begin = new Date(end.getTime() - (48 * 60 * 60 * 1000));
+      beginDateISO = begin.toISOString();
+      endDateISO = end.toISOString();
+    }
+
+    const url = `https://api.mercadopago.com/v1/payments/search?sort=date_created&criteria=desc&begin_date=${beginDateISO}&end_date=${endDateISO}&limit=100`;
+
+    const response = await axios.get(url, {
       headers: { 'Authorization': `Bearer ${MP_TOKEN}` }
     });
-    res.json(response.data);
+    
+    // Filtrar solo las transferencias aprobadas y recibidas (status === 'approved')
+    const receivedTransfers = (response.data.results || []).filter(t => t.status === 'approved');
+    
+    res.json({ results: receivedTransfers });
   } catch (error) {
     console.error('[MP API Error]', error.response?.data || error.message);
     res.status(500).json({ error: 'Error fetching from Mercado Pago', details: error.response?.data });
