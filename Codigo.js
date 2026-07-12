@@ -1177,7 +1177,7 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
       token = getMercadoPagoToken();
     } catch(e) {}
     if (!token || token === "MOCK_MP_ACCESS_TOKEN_DEVELOPMENT") {
-      token = "APP_USR-3796695277109598-062312-3b036573c099307abf18c869ea76c0f6-1868352613";
+      token = "APP_USR-3322444120483456-062819-f186f817a6a28fd7251c13baaf3d014e-43153257";
     }
     
     // 2. Obtener datos de la cuota y de los socios
