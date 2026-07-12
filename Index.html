@@ -3382,7 +3382,7 @@
         <!-- Detalles Banco -->
         <div id="detalle-metodo-banco" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem;">
           <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 0.95rem;">Datos de Cuenta Bancaria</h4>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 10px 0;">Transferí el monto exacto y luego cargá el comprobante abajo.</p>
+          
           <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 0.82rem;">
             <div>Titular: <strong style="color: var(--text-primary);">Haedo Futsal</strong></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; flex-wrap:wrap; gap:6px;">
@@ -3400,11 +3400,9 @@
         <!-- Detalles Mercado Pago Transferencia -->
         <div id="detalle-metodo-mp_transf" style="background: rgba(0, 158, 227, 0.05); border: 1px solid rgba(0, 158, 227, 0.2); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem; display: none;">
           <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 0.95rem;">Datos de Mercado Pago</h4>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0 0 10px 0;">Transferí el monto exacto y luego cargá el comprobante abajo.</p>
           
-          <button onclick="copiarYAbrirBilletera('mercadopago://', 'https://www.mercadopago.com.ar')" class="btn-primary" style="background: #009ee3; border:none; width:100%; justify-content:center; padding: 10px; font-size: 0.82rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; border-radius: 8px; cursor: pointer; color: white;">
-            <i class="fa-solid fa-mobile-screen-button" style="font-size: 1rem;"></i> Copiar Alias y Abrir Mercado Pago
-          </button>
+          
+          
 
           <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 0.82rem;">
             <div>Titular: <strong style="color: var(--text-primary);">Haedo Futsal</strong></div>
@@ -4206,7 +4204,7 @@
             parsedAmount = parseFloat(cleaned);
           }
           const formatted = isNaN(parsedAmount) ? amount : parsedAmount.toLocaleString('es-AR');
-          detalle.innerText = `Cuota: ${month} | Monto a Abonar: $${formatted}`;
+          detalle.innerHTML = `<span style="font-size: 0.95rem; color: var(--text-muted); font-weight: 500;">Cuota: ${month}</span><br><span style="font-size: 1.3rem; font-weight: 800; color: var(--primary);">Monto a Abonar: ${formatted}</span>`;
         }
         
         // Reset radio buttons to option 1
