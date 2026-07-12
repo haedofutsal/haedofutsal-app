@@ -4047,10 +4047,30 @@
               const file = window.sharedReceiptPendiente;
               window.sharedReceiptPendiente = null;
               setTimeout(() => {
-                mostrarModalValidarComprobanteCompartido(file);
+                const nombreUsuario = response.Nombre || estadoApp.userName || estadoApp.userEmail;
+                const esParaEstaCuenta = confirm(`Has compartido un comprobante de pago.\n\nActualmente estás en la cuenta de: ${nombreUsuario}\n\n¿Querés registrar el pago para ESTA cuenta?\n\n(Elegí Cancelar para entrar con otro usuario)`);
+                
+                if (esParaEstaCuenta) {
+                  mostrarModalValidarComprobanteCompartido(file);
+                } else {
+                  if ('caches' in window) {
+                    caches.open('receipt-share').then(cache => {
+                      const responseHeaders = new Headers({
+                        'Content-Type': file.type,
+                        'Content-Length': file.size.toString(),
+                        'X-File-Name': encodeURIComponent(file.name)
+                      });
+                      const fileResponse = new Response(file, { headers: responseHeaders });
+                      cache.put('/shared-receipt-file', fileResponse).then(() => {
+                        ejecutarLogout();
+                      });
+                    });
+                  } else {
+                    ejecutarLogout();
+                  }
+                }
               }, 500);
             }
-            
             const welcomeEl = document.getElementById("socio-welcome-name");
             const nameEl = document.getElementById("socio-profile-name");
             const catEl = document.getElementById("socio-profile-cat");
@@ -9756,9 +9776,7 @@
 
     // ───────────── PWA: Registro del Service Worker e Intercepción de Share Target ─────────────
     function chequearReciboCompartido() {
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('shared') === 'receipt') {
-        if ('caches' in window) {
+      if ('caches' in window) {
           caches.open('receipt-share').then(cache => {
             cache.match('/shared-receipt-file').then(response => {
               if (response) {
@@ -9792,7 +9810,6 @@
             });
           });
         }
-      }
     }
     function cambiarTabRevisiones(tab) {
       document.getElementById("btn-tab-rev-pendientes").className = tab === 'pendientes' ? "btn-primary" : "btn-secondary";
