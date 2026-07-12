@@ -2127,7 +2127,13 @@
             <label class="form-label" style="font-size: 0.6rem; margin-bottom: 2px;">Mes Cuota</label>
             <select id="admin-socios-filter-mes" class="form-select" style="padding-left: 10px; font-size: 0.75rem; padding: 6px;" onchange="filtrarSociosAdmin()">
               <option value="Todos">-- Todos los Meses --</option>
-              <option value="2026-06">2026-06 (Junio)</option>
+              <option value="2026-12">2026-12 (Diciembre)</option>
+                <option value="2026-11">2026-11 (Noviembre)</option>
+                <option value="2026-10">2026-10 (Octubre)</option>
+                <option value="2026-09">2026-09 (Septiembre)</option>
+                <option value="2026-08">2026-08 (Agosto)</option>
+                <option value="2026-07">2026-07 (Julio)</option>
+                <option value="2026-06">2026-06 (Junio)</option>
               <option value="2026-05">2026-05 (Mayo)</option>
               <option value="2026-04">2026-04 (Abril)</option>
               <option value="2026-03">2026-03 (Marzo)</option>
@@ -2221,6 +2227,12 @@
                 <option value="2026-03">2026-03 (Marzo)</option>
                 <option value="2026-04">2026-04 (Abril)</option>
                 <option value="2026-05">2026-05 (Mayo)</option>
+                <option value="2026-12">2026-12 (Diciembre)</option>
+                <option value="2026-11">2026-11 (Noviembre)</option>
+                <option value="2026-10">2026-10 (Octubre)</option>
+                <option value="2026-09">2026-09 (Septiembre)</option>
+                <option value="2026-08">2026-08 (Agosto)</option>
+                <option value="2026-07">2026-07 (Julio)</option>
                 <option value="2026-06" selected>2026-06 (Junio)</option>
               </select>
             </div>
@@ -2232,6 +2244,12 @@
                 <option value="2026-03">2026-03 (Marzo)</option>
                 <option value="2026-04">2026-04 (Abril)</option>
                 <option value="2026-05">2026-05 (Mayo)</option>
+                <option value="2026-12">2026-12 (Diciembre)</option>
+                <option value="2026-11">2026-11 (Noviembre)</option>
+                <option value="2026-10">2026-10 (Octubre)</option>
+                <option value="2026-09">2026-09 (Septiembre)</option>
+                <option value="2026-08">2026-08 (Agosto)</option>
+                <option value="2026-07">2026-07 (Julio)</option>
                 <option value="2026-06" selected>2026-06 (Junio)</option>
               </select>
             </div>
@@ -2264,6 +2282,12 @@
                 <option value="2026-03">2026-03 (Marzo)</option>
                 <option value="2026-04">2026-04 (Abril)</option>
                 <option value="2026-05">2026-05 (Mayo)</option>
+                <option value="2026-12">2026-12 (Diciembre)</option>
+                <option value="2026-11">2026-11 (Noviembre)</option>
+                <option value="2026-10">2026-10 (Octubre)</option>
+                <option value="2026-09">2026-09 (Septiembre)</option>
+                <option value="2026-08">2026-08 (Agosto)</option>
+                <option value="2026-07">2026-07 (Julio)</option>
                 <option value="2026-06" selected>2026-06 (Junio)</option>
               </select>
             </div>
@@ -2275,6 +2299,12 @@
                 <option value="2026-03">2026-03 (Marzo)</option>
                 <option value="2026-04">2026-04 (Abril)</option>
                 <option value="2026-05">2026-05 (Mayo)</option>
+                <option value="2026-12">2026-12 (Diciembre)</option>
+                <option value="2026-11">2026-11 (Noviembre)</option>
+                <option value="2026-10">2026-10 (Octubre)</option>
+                <option value="2026-09">2026-09 (Septiembre)</option>
+                <option value="2026-08">2026-08 (Agosto)</option>
+                <option value="2026-07">2026-07 (Julio)</option>
                 <option value="2026-06" selected>2026-06 (Junio)</option>
               </select>
             </div>
@@ -4845,7 +4875,7 @@
           ocultarCarga();
           if (response && response.success) {
             estadoApp.datosAdmin = response;
-            const currentMonth = "2026-06";
+            const today = new Date(); const currentMonth = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0");
             
             // Formatear mes y año en subtítulo
             try {
@@ -4863,6 +4893,7 @@
             
             if (typeof cargarRevisionesYTransferencias === 'function') cargarRevisionesYTransferencias();
             if (typeof renderizarTodasLasCuotas === 'function') renderizarTodasLasCuotas();
+            if (typeof sincronizarFiltrosBalance === 'function') sincronizarFiltrosBalance();
 
             // --- Calcular desglose global de socios del mes ---
             const socios = response.socios || [];
@@ -5060,7 +5091,7 @@
       const data = estadoApp.datosAdmin;
       const socios = (data.socios || []).filter(s => obtenerCategoriaPadre(s.Category) === catId);
       const pagos = data.pagos || [];
-      const currentMonth = "2026-06";
+      const today = new Date(); const currentMonth = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0");
       
       const sociosConEstado = socios.map(s => {
         const est = obtenerEstadoSocioMes(s.Email, currentMonth, pagos);
@@ -5473,7 +5504,7 @@
       }
 
       const pagos = (estadoApp.datosAdmin ? estadoApp.datosAdmin.pagos : []) || [];
-      const currentMonth = "2026-06";
+      const today = new Date(); const currentMonth = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0");
 
       const catNames = {
         "EDEFI-Mayores": "EDEFI Mayores",
@@ -8109,8 +8140,8 @@
     }
 
     function sincronizarFiltrosBalance() {
-      const bIni = document.getElementById("fin-balance-mes-inicio") ? document.getElementById("fin-balance-mes-inicio").value : "2026-06";
-      const bFin = document.getElementById("fin-balance-mes-fin") ? document.getElementById("fin-balance-mes-fin").value : "2026-06";
+      const bIni = document.getElementById("fin-balance-mes-inicio") ? document.getElementById("fin-balance-mes-inicio").value : (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, "0"));
+      const bFin = document.getElementById("fin-balance-mes-fin") ? document.getElementById("fin-balance-mes-fin").value : (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, "0"));
       
       const cIni = document.getElementById("fin-cuotas-mes-inicio");
       const cFin = document.getElementById("fin-cuotas-mes-fin");
@@ -8147,8 +8178,8 @@
       };
 
       // 0. ITEM PRINCIPAL: BALANCE GENERAL CONSOLIDADO
-      const balMesInicio = document.getElementById("fin-balance-mes-inicio") ? document.getElementById("fin-balance-mes-inicio").value : "2026-06";
-      const balMesFin = document.getElementById("fin-balance-mes-fin") ? document.getElementById("fin-balance-mes-fin").value : "2026-06";
+      const balMesInicio = document.getElementById("fin-balance-mes-inicio") ? document.getElementById("fin-balance-mes-inicio").value : (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, "0"));
+      const balMesFin = document.getElementById("fin-balance-mes-fin") ? document.getElementById("fin-balance-mes-fin").value : (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, "0"));
       
       const lblBalRango = document.getElementById("lbl-balance-rango");
       if (lblBalRango) {
@@ -8271,8 +8302,8 @@
       }
 
       // 1. ITEM 1: CUOTAS MENSUALES DE SOCIOS
-      const mesInicio = document.getElementById("fin-cuotas-mes-inicio") ? document.getElementById("fin-cuotas-mes-inicio").value : "2026-06";
-      const mesFin = document.getElementById("fin-cuotas-mes-fin") ? document.getElementById("fin-cuotas-mes-fin").value : "2026-06";
+      const mesInicio = document.getElementById("fin-cuotas-mes-inicio") ? document.getElementById("fin-cuotas-mes-inicio").value : (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, "0"));
+      const mesFin = document.getElementById("fin-cuotas-mes-fin") ? document.getElementById("fin-cuotas-mes-fin").value : (new Date().getFullYear() + "-" + String(new Date().getMonth() + 1).padStart(2, "0"));
       
       const lblRango = document.getElementById("lbl-cuotas-rango");
       if (lblRango) {
