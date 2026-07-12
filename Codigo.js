@@ -1345,10 +1345,10 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
             
             if (cleanTxId && isCoelsaId) {
               // Buscar coincidencia exacta de CoelsaID en los campos de la transferencia
-              const mpTxId = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.transaction_id || "").toString().trim();
-              const mpBankTransferId = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.bank_transfer_id || "").toString().trim();
-              const mpAcquirerId = (p.acquirer_reconciliation_id || "").toString().trim();
-              const mpE2EId = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.e2e_id || "").toString().trim();
+              const mpTxId = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.transaction_id || "").toString().trim().toUpperCase();
+              const mpBankTransferId = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.bank_transfer_id || "").toString().trim().toUpperCase();
+              const mpAcquirerId = (p.acquirer_reconciliation_id || "").toString().trim().toUpperCase();
+              const mpE2EId = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.e2e_id || "").toString().trim().toUpperCase();
               
               if (mpTxId === cleanTxId || mpBankTransferId === cleanTxId || mpAcquirerId === cleanTxId || mpE2EId === cleanTxId) {
                 matches = true;
