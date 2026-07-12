@@ -1,3 +1,10 @@
+// Helper para obtener fecha actual en formato ISO horario Argentina (UTC-3)
+function getArgIsoString() {
+  const now = new Date();
+  const argDate = new Date(now.getTime() - 3 * 3600 * 1000);
+  return argDate.toISOString();
+}
+
 /**
  * Google Apps Script - Backend API para ERP Web Haedo Futsal (Ampliando Torneos, Finanzas y Socios)
  * Desarrollado con sintaxis moderna ES6 (motor V8).
@@ -729,7 +736,7 @@ function registrarSocioNuevo(socioObj, userEmail) {
       }
     }
 
-    const todayStr = new Date().toISOString().split("T")[0];
+    const todayStr = getArgIsoString().split("T")[0];
     const isMinor = (socioObj.Category || "").includes("Bab") || (socioObj.Category || "").includes("Juv") || (parseInt(age || "20") < 18);
     const assignedRole = socioObj.Role || "Deportista";
 
@@ -796,7 +803,7 @@ function registrarLogAuditoria(userEmail, actionType, entity, details) {
       sheet.appendRow(["Log_ID", "Timestamp", "User_Email", "Action_Type", "Entity", "Details"]);
     }
     const logId = `LOG-${Date.now().toString().slice(-6)}`;
-    const timestamp = new Date().toISOString().replace("T", " ").substring(0, 19);
+    const timestamp = getArgIsoString().replace("T", " ").substring(0, 19);
     sheet.appendRow([logId, timestamp, userEmail || "Admin", actionType, entity, details]);
     SpreadsheetApp.flush();
   } catch (err) {
@@ -819,7 +826,7 @@ function registrarMovimientoTorneo(movObj, userEmail) {
     if (!sheet) throw new Error("No se encontró la hoja de finanzas.");
     
     const movId = `MOV-${Date.now().toString().slice(-6)}`;
-    const dateFormatted = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+    const dateFormatted = getArgIsoString().split("T")[0]; // YYYY-MM-DD
     const method = Payment_Method || "Efectivo";
     
     // Columnas: Movimiento_ID, Torneo_ID, Type, Concept, Amount, Date, Payment_Method
@@ -1075,7 +1082,7 @@ function marcarPagoComoPagado(paymentId, collectorEmail, collectorRole) {
     if (filaIndex === -1) throw new Error("No se encontró el registro de pago.");
     
     const rowNum = filaIndex + 1;
-    const nowStr = new Date().toISOString().replace("T", " ").substring(0, 16);
+    const nowStr = getArgIsoString().replace("T", " ").substring(0, 16);
     const collectorStr = collectorRole || 'Admin';
     
     sheetPagos.getRange(rowNum, statusColIndex + 1).setValue("Pagado");
@@ -1125,7 +1132,7 @@ function registrarPagoTransferenciaComprobante(paymentId, email, amount, month, 
     }
     
     const rowNum = filaIndex + 1;
-    const nowStr = new Date().toISOString().replace("T", " ").substring(0, 16);
+    const nowStr = getArgIsoString().replace("T", " ").substring(0, 16);
     const methodStr = paymentMethod || "Transferencia MP";
     const socioEmail = pagosData[filaIndex][pEmailCol] || email;
     
@@ -1137,7 +1144,7 @@ function registrarPagoTransferenciaComprobante(paymentId, email, amount, month, 
     const sheetFinanzas = ss.getSheetByName(HOJA_FINANZAS);
     if (sheetFinanzas) {
       const movId = `MOV-${Date.now().toString().slice(-6)}`;
-      const dateFormatted = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const dateFormatted = getArgIsoString().split("T")[0]; // YYYY-MM-DD
       const concept = `Cuota Social ${month} - Socio: ${socioEmail}`;
       const numericAmount = parseFloat(amount || 0);
       
@@ -1388,7 +1395,7 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
       const txId = matchedPayment.id.toString();
       const colByStr = cleanTxId ? `Auto MP (ID: ${txId} / Ref: ${cleanTxId})` : `Auto MP (ID: ${txId})`;
       const rowNum = filaIndex + 1;
-      const nowStr = new Date().toISOString().replace("T", " ").substring(0, 16);
+      const nowStr = getArgIsoString().replace("T", " ").substring(0, 16);
       const methodStr = paymentMethod || "Transferencia MP";
       
       // Marcar como pagado
@@ -1401,7 +1408,7 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
       const sheetFinanzas = ss.getSheetByName(HOJA_FINANZAS);
       if (sheetFinanzas) {
         const movId = `MOV-${Date.now().toString().slice(-6)}`;
-        const dateFormatted = new Date().toISOString().split("T")[0];
+        const dateFormatted = getArgIsoString().split("T")[0];
         const concept = `Cuota Social ${month} - Socio: ${socioEmail} (Auto MP ID: ${txId})`;
         
         sheetFinanzas.appendRow([movId, "General", "Ingreso", concept, targetAmount, dateFormatted, methodStr]);
@@ -1509,7 +1516,7 @@ function aprobarRevisionPagoComprobante(paymentId, email, amount, month) {
     }
     
     const rowNum = filaIndex + 1;
-    const nowStr = new Date().toISOString().replace("T", " ").substring(0, 16);
+    const nowStr = getArgIsoString().replace("T", " ").substring(0, 16);
     const socioEmail = pagosData[filaIndex][pEmailCol] || email;
     const oldBy = pagosData[filaIndex][pByCol] || "";
     let methodStr = "Transferencia";
@@ -1527,7 +1534,7 @@ function aprobarRevisionPagoComprobante(paymentId, email, amount, month) {
     const sheetFinanzas = ss.getSheetByName(HOJA_FINANZAS);
     if (sheetFinanzas) {
       const movId = `MOV-${Date.now().toString().slice(-6)}`;
-      const dateFormatted = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const dateFormatted = getArgIsoString().split("T")[0]; // YYYY-MM-DD
       const concept = `Cuota Social ${month} - Socio: ${socioEmail}`;
       const numericAmount = parseFloat(amount || 0);
       
@@ -1622,7 +1629,7 @@ function actualizarEstadoCuotasMasivo(paymentIds, nuevoEstado, adminEmail) {
     const transactionIdColIndex = headers.indexOf("MP_Transaction_ID");
     
     let count = 0;
-    const nowStr = new Date().toISOString().replace("T", " ").substring(0, 16);
+    const nowStr = getArgIsoString().replace("T", " ").substring(0, 16);
     const actorStr = adminEmail ? adminEmail.split('@')[0] : 'Admin';
 
     for (let i = 1; i < pagosData.length; i++) {
@@ -1837,7 +1844,7 @@ function actualizarDatosSocioPublico(email, datos) {
     try {
       const sheetLogs = ss.getSheetByName("Logs_Audit");
       if (sheetLogs) {
-        const nowStr = new Date().toISOString().replace("T", " ").substring(0, 19);
+        const nowStr = getArgIsoString().replace("T", " ").substring(0, 19);
         sheetLogs.appendRow([nowStr, emailClean, "UPDATE_PUBLIC_PROFILE", "Actualizó sus datos personales de forma pública vía WhatsApp."]);
       }
     } catch (e) {
@@ -2044,7 +2051,7 @@ function registrarSocioPublico(socioObj) {
     }
 
     // Formatear fila con los headers correctos
-    const nowStr = new Date().toISOString().substring(0, 10); // YYYY-MM-DD
+    const nowStr = getArgIsoString().substring(0, 10); // YYYY-MM-DD
     const newRow = [];
     headers.forEach(header => {
       if (header === "Email") newRow.push(email);
@@ -2075,7 +2082,7 @@ function registrarSocioPublico(socioObj) {
     try {
       const sheetLogs = ss.getSheetByName("Logs_Audit");
       if (sheetLogs) {
-        const timeStr = new Date().toISOString().replace("T", " ").substring(0, 19);
+        const timeStr = getArgIsoString().replace("T", " ").substring(0, 19);
         sheetLogs.appendRow([timeStr, email, "REGISTER_PUBLIC_SOCIO", "Se registró como nuevo socio de forma pública. Usuario autogenerado: " + candidato]);
       }
     } catch (e) {
