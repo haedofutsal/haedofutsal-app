@@ -2491,6 +2491,41 @@
       </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- 18. VISTA ADMIN REVISIONES Y TRANSFERENCIAS -->
+    <!-- ========================================== -->
+    <div id="admin-revisiones-view" class="view-section">
+      <div class="header-bar">
+        <div class="header-brand">
+          <img src="logo.png" class="club-header-logo" alt="Haedo Futsal">
+          <div class="header-info">
+            <h2 style="color:#0f172a;">Revisiones & MP</h2>
+          </div>
+        </div>
+      </div>
+      <div class="view-content" style="padding:15px; padding-bottom:80px;">
+        <!-- Pestañas internas -->
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+          <button id="btn-tab-rev-pendientes" class="btn-primary" style="flex:1; border-radius:8px;" onclick="cambiarTabRevisiones('pendientes')">Cuotas en Revisión</button>
+          <button id="btn-tab-rev-mp" class="btn-secondary" style="flex:1; border-radius:8px;" onclick="cambiarTabRevisiones('mp')">Transferencias MP</button>
+        </div>
+        
+        <div id="tab-rev-pendientes" style="display:block;">
+          <h3 style="font-size:1rem; font-weight:800; color:#0f172a; margin-bottom:10px;"><i class="fa-solid fa-list-check" style="color:#1d4ed8; margin-right:5px;"></i> Pendientes de Revisión</h3>
+          <div id="admin-revisiones-list" style="display:flex; flex-direction:column; gap:10px;">
+            <div class="empty-state"><p>Cargando cuotas...</p></div>
+          </div>
+        </div>
+        
+        <div id="tab-rev-mp" style="display:none;">
+          <h3 style="font-size:1rem; font-weight:800; color:#0f172a; margin-bottom:10px;"><i class="fa-solid fa-building-columns" style="color:#10b981; margin-right:5px;"></i> Últimos Ingresos (Mercado Pago)</h3>
+          <div id="admin-mp-list" style="display:flex; flex-direction:column; gap:10px;">
+            <div class="empty-state"><p>Cargando transferencias...</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- VISTA ADMIN: AGENDA & PARTIDOS -->
     <div id="admin-agenda-view" class="view-section">
       <div class="header-bar">
@@ -2605,6 +2640,10 @@
     <button class="nav-item" id="nav-admin-torneos" onclick="navegarAdmin('torneos')">
       <i class="fa-solid fa-trophy"></i>
       <span>Finanzas</span>
+    </button>
+    <button class="nav-item" id="nav-admin-revisiones" onclick="navegarAdmin('revisiones')">
+      <i class="fa-solid fa-list-check"></i>
+      <span>Revisiones</span>
     </button>
     <button class="nav-item" id="nav-admin-agenda" onclick="navegarAdmin('agenda')">
       <i class="fa-solid fa-calendar-check"></i>
@@ -3587,17 +3626,17 @@
     // 2. Open/Closed Principle: Extensible Role Permissions Configuration Matrix
     const RolePermissions = {
       Admin: {
-        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-torneos-view", "admin-agenda-view", "club-tienda-view"],
+        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-torneos-view", "admin-agenda-view", "club-tienda-view", "admin-revisiones-view"],
         navBar: "admin",
-        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"],
+        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-revisiones", "nav-admin-agenda", "nav-admin-tienda"],
         defaultView: "inicio",
         canEditFinanzas: true,
         canEditMatches: true
       },
       Coach: {
-        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-torneos-view", "admin-agenda-view", "club-tienda-view"],
+        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-torneos-view", "admin-agenda-view", "club-tienda-view", "admin-revisiones-view"],
         navBar: "admin",
-        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"],
+        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-revisiones", "nav-admin-agenda", "nav-admin-tienda"],
         defaultView: "inicio",
         canEditFinanzas: false,
         canEditMatches: true
@@ -3900,7 +3939,13 @@
       document.querySelectorAll('.user-avatar-badge').forEach(el => {
         el.innerText = initial;
         el.title = "Logueado como: " + (userInfo.username || userInfo.name);
-        el.style.display = "flex";
+        
+        // Hide badge for Deportista role
+        if (userInfo.role === 'Deportista') {
+          el.style.display = "none";
+        } else {
+          el.style.display = "flex";
+        }
       });
 
       const config = RoleAccessController.applyRoleConfig(userInfo.role);
@@ -3963,7 +4008,12 @@
             const catEl = document.getElementById("socio-profile-cat");
             const avatarEl = document.getElementById("socio-avatar");
 
-            if (welcomeEl) welcomeEl.innerText = 'Hola ' + (estadoApp.userName || '').split(' ')[0];
+            // Fix name splitting to get the real first name instead of last name
+            let firstName = (estadoApp.userName || '').split(' ')[0];
+            if (estadoApp.userName && estadoApp.userName.includes(',')) {
+              firstName = estadoApp.userName.split(',')[1].trim().split(' ')[0];
+            }
+            if (welcomeEl) welcomeEl.innerText = 'Hola ' + firstName + ',';
             if (nameEl) nameEl.innerText = estadoApp.userName || '';
 
             const perfil = response.perfil || {};
@@ -4714,6 +4764,9 @@
         cargarSelectTorneos();
         actualizarDropdownFechasJornada();
         filtrarYCalcularFinanzas();
+      } else if (seccion === 'revisiones') {
+        mostrarPantalla("admin-revisiones-view");
+        cargarRevisionesYTransferencias();
       } else if (seccion === 'agenda') {
         mostrarPantalla("admin-agenda-view");
         cargarSelectAgendaFilters();
@@ -9639,6 +9692,87 @@
         }
       }
     }
+    function cambiarTabRevisiones(tab) {
+      document.getElementById("btn-tab-rev-pendientes").className = tab === 'pendientes' ? "btn-primary" : "btn-secondary";
+      document.getElementById("btn-tab-rev-mp").className = tab === 'mp' ? "btn-primary" : "btn-secondary";
+      
+      document.getElementById("tab-rev-pendientes").style.display = tab === 'pendientes' ? "block" : "none";
+      document.getElementById("tab-rev-mp").style.display = tab === 'mp' ? "block" : "none";
+      
+      if (tab === 'mp' && document.getElementById("admin-mp-list").innerHTML.includes("Cargando transferencias")) {
+        cargarRevisionesYTransferencias();
+      }
+    }
+
+    function cargarRevisionesYTransferencias() {
+      // 1. Cargar Cuotas Pendientes
+      const listPendientes = document.getElementById("admin-revisiones-list");
+      const pagosRevision = (estadoApp.datosAdmin?.pagos || []).filter(p => p.Status === 'Revision' || p.Status === 'En Revisión' || p.Collected_By?.includes('Revision'));
+      
+      if (pagosRevision.length === 0) {
+        listPendientes.innerHTML = `<div class="empty-state"><p>No hay cuotas pendientes de revisión.</p></div>`;
+      } else {
+        listPendientes.innerHTML = pagosRevision.map(p => `
+          <div class="list-item-card" style="display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div style="font-weight:800; color:#0f172a;">${p.Email}</div>
+              <div style="font-weight:900; color:#1d4ed8;">$${parseFloat(p.Amount || 0).toLocaleString('es-AR')}</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
+              <div>Mes: <span style="font-weight:700;">${p.Month}</span></div>
+              <div>ID: ${p.Payment_ID}</div>
+            </div>
+            ${p.MP_Link ? `<button class="btn-secondary" style="margin-top:5px; width:100%;" onclick="abrirModalComprobante('${p.MP_Link}')"><i class="fa-solid fa-image"></i> Ver Comprobante Subido</button>` : ''}
+            <div style="display:flex; gap:10px; margin-top:5px;">
+              <button class="btn-primary" style="flex:1; background:#10b981;" onclick="aprobarPagoAdmin('${p.Payment_ID}')"><i class="fa-solid fa-check"></i> Aprobar</button>
+              <button class="btn-secondary" style="flex:1; color:#ef4444; border-color:#ef4444;" onclick="rechazarPagoAdmin('${p.Payment_ID}')"><i class="fa-solid fa-xmark"></i> Rechazar</button>
+            </div>
+          </div>
+        `).join("");
+      }
+
+      // 2. Cargar Transferencias MP desde servidor
+      const listMp = document.getElementById("admin-mp-list");
+      listMp.innerHTML = `<div class="empty-state"><p><i class="fa-solid fa-spinner fa-spin"></i> Conectando con Mercado Pago...</p></div>`;
+      
+      fetch('/api/mp-transfers')
+        .then(res => res.json())
+        .then(data => {
+          if (!data.results || data.results.length === 0) {
+            listMp.innerHTML = `<div class="empty-state"><p>No se encontraron transferencias recientes.</p></div>`;
+            return;
+          }
+          listMp.innerHTML = data.results.map(t => {
+            const date = new Date(t.date_created).toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
+            return `
+              <div class="list-item-card" style="border-left:4px solid #10b981;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                  <div style="font-weight:800; color:#0f172a;">${t.payer?.first_name || ''} ${t.payer?.last_name || 'Desconocido'}</div>
+                  <div style="font-weight:900; color:#10b981;">$${parseFloat(t.transaction_amount || 0).toLocaleString('es-AR')}</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
+                  <div>${date}</div>
+                  <div>ID: ${t.id}</div>
+                </div>
+                <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">
+                  Motivo: ${t.description || 'Transferencia'}
+                </div>
+              </div>
+            `;
+          }).join("");
+        })
+        .catch(err => {
+          console.error(err);
+          listMp.innerHTML = `<div class="empty-state"><p style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Error al cargar transferencias de MP.</p></div>`;
+        });
+    }
+
+    function abrirModalComprobante(base64) {
+      if (!base64) return alert('No hay imagen adjunta.');
+      const win = window.open();
+      win.document.write(`<iframe src="${base64}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+    }
+
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
