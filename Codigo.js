@@ -1348,8 +1348,9 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
               const mpTxId = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.transaction_id || "").toString().trim();
               const mpBankTransferId = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.bank_transfer_id || "").toString().trim();
               const mpAcquirerId = (p.acquirer_reconciliation_id || "").toString().trim();
+              const mpE2EId = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.e2e_id || "").toString().trim();
               
-              if (mpTxId === cleanTxId || mpBankTransferId === cleanTxId || mpAcquirerId === cleanTxId) {
+              if (mpTxId === cleanTxId || mpBankTransferId === cleanTxId || mpAcquirerId === cleanTxId || mpE2EId === cleanTxId) {
                 matches = true;
               }
             } else {
