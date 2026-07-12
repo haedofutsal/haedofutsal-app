@@ -2294,8 +2294,9 @@
         <div id="acc-revisiones" class="accordion-body" style="display: none;">
           <!-- Pestañas internas -->
           <div style="display:flex; gap:10px; margin-bottom:15px; margin-top:10px;">
-            <button id="btn-tab-rev-pendientes" class="btn-primary" style="flex:1; border-radius:8px;" onclick="cambiarTabRevisiones('pendientes')">Cuotas en Revisión</button>
-            <button id="btn-tab-rev-mp" class="btn-secondary" style="flex:1; border-radius:8px;" onclick="cambiarTabRevisiones('mp')">Transferencias MP</button>
+            <button id="btn-tab-rev-pendientes" class="btn-primary" style="flex:1; border-radius:8px; font-size:0.8rem;" onclick="cambiarTabRevisiones('pendientes')">En Revisión</button>
+            <button id="btn-tab-rev-mp" class="btn-secondary" style="flex:1; border-radius:8px; font-size:0.8rem;" onclick="cambiarTabRevisiones('mp')">Transferencias MP</button>
+            <button id="btn-tab-rev-todas" class="btn-secondary" style="flex:1; border-radius:8px; font-size:0.8rem;" onclick="cambiarTabRevisiones('todas')">Todas las Cuotas</button>
           </div>
           
           <div id="tab-rev-pendientes" style="display:block;">
@@ -2312,6 +2313,32 @@
             </div>
             <div id="admin-mp-list" style="display:flex; flex-direction:column; gap:10px;">
               <div class="empty-state"><p>Cargando transferencias...</p></div>
+            </div>
+          </div>
+          
+          <div id="tab-rev-todas" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; gap:8px;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <input type="checkbox" id="chk-todas-cuotas" onchange="toggleAllCuotas(this.checked)" style="width:18px; height:18px;">
+                <label for="chk-todas-cuotas" style="font-size:0.85rem; font-weight:600; cursor:pointer;">Seleccionar Todas</label>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <select id="select-bulk-status" class="form-input" style="padding:6px; font-size:0.8rem; border-radius:6px;">
+                  <option value="">Acción Masiva...</option>
+                  <option value="Pagado">Marcar Pagado</option>
+                  <option value="Pendiente">Marcar Pendiente</option>
+                  <option value="Revision">Marcar En Revisión</option>
+                  <option value="Rechazada">Marcar Rechazada</option>
+                </select>
+                <button class="btn-primary" onclick="aplicarAccionMasivaCuotas()" style="padding:6px 12px; font-size:0.8rem; border-radius:6px;">Aplicar</button>
+              </div>
+            </div>
+            <div style="margin-bottom:10px; display:flex; gap:8px;">
+              <input type="month" id="filter-todas-month" class="form-input" style="flex:1; padding:8px; font-size:0.8rem;" onchange="renderizarTodasLasCuotas()">
+              <input type="text" id="filter-todas-email" class="form-input" placeholder="Buscar por socio..." style="flex:2; padding:8px; font-size:0.8rem;" onkeyup="renderizarTodasLasCuotas()">
+            </div>
+            <div id="admin-todas-cuotas-list" style="display:flex; flex-direction:column; gap:10px; max-height:400px; overflow-y:auto; padding-right:4px;">
+              <div class="empty-state"><p>Cargando cuotas...</p></div>
             </div>
           </div>
         </div>
@@ -4095,12 +4122,24 @@
               </div>
             </div>
           `;
-        } else if (p.Status === "Pendiente" || p.Status === "Deuda") {
-          const badgeText = p.Status === "Deuda" ? "Deuda" : "Pendiente";
-          const bgColor = p.Status === "Deuda" ? "#fee2e2" : "#fef9c3";
-          const textColor = p.Status === "Deuda" ? "#dc2626" : "#ca8a04";
+        } else if (p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada") {
+          let badgeText = p.Status === "Deuda" ? "Deuda" : "Pendiente";
+          let bgColor = p.Status === "Deuda" ? "#fee2e2" : "#fef9c3";
+          let textColor = p.Status === "Deuda" ? "#dc2626" : "#ca8a04";
+          let extraMsg = "";
+          
+          if (p.Status === "Rechazada") {
+            badgeText = "Pago Incorrecto";
+            bgColor = "#fee2e2";
+            textColor = "#dc2626";
+            extraMsg = `<div style="font-size:0.65rem; color:#dc2626; font-weight:600; text-align:right; margin-top:2px;">Comunicate con el club</div>`;
+          }
+          
           statusBadgeHTML = `
-            <span class="badge" style="background-color:${bgColor}; color:${textColor}; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem; text-transform:uppercase; margin-bottom:2px;">${badgeText}</span>
+            <div style="display:flex; flex-direction:column; align-items:flex-end;">
+              <span class="badge" style="background-color:${bgColor}; color:${textColor}; font-weight:700; padding:4px 8px; border-radius:6px; font-size:0.7rem; text-transform:uppercase; margin-bottom:2px;">${badgeText}</span>
+              ${extraMsg}
+            </div>
           `;
           actionHTML = `
             <button class="btn-sm-pay" onclick="abrirModalMetodoPago('${p.Payment_ID}', '${p.Month}', '${p.Amount}')" style="margin-left:8px; display:flex; align-items:center; gap:4px; font-size:0.72rem; padding:6px 10px; border-radius:6px;">
@@ -4411,7 +4450,7 @@
       
       const pagos = (estadoApp.datosSocio && estadoApp.datosSocio.pagos) || [];
       const deudas = pagos
-        .filter(p => p.Status === "Pendiente" || p.Status === "Deuda")
+        .filter(p => p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada")
         .sort((a, b) => (a.Month || '').localeCompare(b.Month || ''));
       
       if (deudas.length === 0) {
@@ -4779,13 +4818,13 @@
     function obtenerEstadoSocioMes(email, currentMonth, pagos) {
       const pagosSocio = (pagos || []).filter(p => p.Email.toLowerCase() === email.toLowerCase());
       const pagoMesActual = pagosSocio.find(p => p.Month === currentMonth);
-      const tieneDeudaAnterior = pagosSocio.some(p => p.Month < currentMonth && (p.Status === "Pendiente" || p.Status === "Deuda"));
+      const tieneDeudaAnterior = pagosSocio.some(p => p.Month < currentMonth && (p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada"));
 
       if (pagoMesActual && pagoMesActual.Status === "Pagado") {
         return "aldia"; // Verde
       }
-      if (tieneDeudaAnterior || (pagoMesActual && pagoMesActual.Status === "Deuda")) {
-        return "moroso"; // Rojo (deuda acumulada o cuota actual vencida)
+      if (tieneDeudaAnterior || (pagoMesActual && (pagoMesActual.Status === "Deuda" || pagoMesActual.Status === "Rechazada"))) {
+        return "moroso"; // Rojo (deuda acumulada o cuota actual vencida/rechazada)
       }
       return "pendiente"; // Amarillo (cuota mes actual pendiente sin deuda acumulada)
     }
@@ -6033,7 +6072,7 @@
 
             // --- Badge de estado de cuenta ---
             const badgeEl = document.getElementById("ficha-status-badge");
-            const pagosPendientes = response.pagos.filter(p => p.Status === "Pendiente" || p.Status === "Deuda");
+            const pagosPendientes = response.pagos.filter(p => p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada");
             const deudaTotal = pagosPendientes.reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
             if (deudaTotal > 0) {
               badgeEl.innerHTML = `
@@ -6072,10 +6111,16 @@
                 row.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04)";
                 
                 let actionHTML = "";
-                if (p.Status === "Pendiente" || p.Status === "Deuda") {
-                  const badgeText = p.Status === "Deuda" ? "Deuda" : "Pendiente";
-                  const badgeBg = p.Status === "Deuda" ? "rgba(220,38,38,0.12)" : "rgba(239,68,68,0.12)";
-                  const badgeColor = p.Status === "Deuda" ? "#b91c1c" : "#dc2626";
+                if (p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada") {
+                  let badgeText = p.Status === "Deuda" ? "Deuda" : "Pendiente";
+                  let badgeBg = p.Status === "Deuda" ? "rgba(220,38,38,0.12)" : "rgba(239,68,68,0.12)";
+                  let badgeColor = p.Status === "Deuda" ? "#b91c1c" : "#dc2626";
+                  
+                  if (p.Status === "Rechazada") {
+                    badgeText = "Pago Incorrecto";
+                    badgeBg = "rgba(220,38,38,0.12)";
+                    badgeColor = "#b91c1c";
+                  }
                   
                   actionHTML = `
                     <div style="display:flex; align-items:center; gap:8px;">
@@ -6160,7 +6205,17 @@
     function abrirModalRevisionAdmin(paymentId, month, amount, base64Receipt, email, readOnly = false) {
       revisionAdminSeleccionada = { paymentId, month, amount, email };
       
-      document.getElementById("rev-admin-email").innerText = email;
+      const decodedReceipt = decodeURIComponent(base64Receipt || "");
+      
+      let socioLabel = email;
+      const socioData = (estadoApp.datosAdmin?.usuarios || []).find(u => (u.Email || "").toLowerCase() === email.toLowerCase());
+      if (socioData) {
+        const socioName = socioData.Username || socioData.Name || email.split('@')[0];
+        const socioCat = socioData.Category || "Sin Categoría";
+        socioLabel = `${socioName} | ${socioCat}`;
+      }
+      
+      document.getElementById("rev-admin-email").innerText = socioLabel;
       document.getElementById("rev-admin-month").innerText = month;
       document.getElementById("rev-admin-amount").innerText = `$${parseFloat(amount).toLocaleString('es-AR')}`;
       
@@ -6168,14 +6223,14 @@
       const fallbackEl = document.getElementById("rev-admin-fallback");
       const downloadBtn = document.getElementById("rev-admin-download-btn");
       
-      if (base64Receipt.startsWith("data:application/pdf")) {
+      if (decodedReceipt.startsWith("data:application/pdf")) {
         imgEl.style.display = "none";
         fallbackEl.style.display = "flex";
-        downloadBtn.href = base64Receipt;
+        downloadBtn.href = decodedReceipt;
         downloadBtn.download = `comprobante-${month}-${email.split('@')[0]}.pdf`;
       } else {
         imgEl.style.display = "block";
-        imgEl.src = base64Receipt || "https://placehold.co/400x300?text=Sin+Imagen";
+        imgEl.src = decodedReceipt || "https://placehold.co/400x300?text=Sin+Imagen";
         fallbackEl.style.display = "none";
       }
       
@@ -7288,7 +7343,7 @@
         // Filtrar pagos por cuotas de socios del mes seleccionado
         const pagosMes = dbPagos.filter(p => p.Month === mes);
         const recaudado = pagosMes.filter(p => p.Status === "Pagado").reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
-        const pendiente = pagosMes.filter(p => p.Status === "Pendiente" || p.Status === "Deuda").reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
+        const pendiente = pagosMes.filter(p => p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada").reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
         const totalFacturado = recaudado + pendiente;
         const cobroPct = totalFacturado > 0 ? ((recaudado / totalFacturado) * 100) : 0;
 
@@ -8233,7 +8288,7 @@
             } else {
               cuotasTr += amt;
             }
-          } else if (p.Status === "Pendiente" || p.Status === "Deuda") {
+          } else if (p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada") {
             cuotasDeuda += amt;
           }
         }
@@ -9704,12 +9759,16 @@
     function cambiarTabRevisiones(tab) {
       document.getElementById("btn-tab-rev-pendientes").className = tab === 'pendientes' ? "btn-primary" : "btn-secondary";
       document.getElementById("btn-tab-rev-mp").className = tab === 'mp' ? "btn-primary" : "btn-secondary";
+      document.getElementById("btn-tab-rev-todas").className = tab === 'todas' ? "btn-primary" : "btn-secondary";
       
       document.getElementById("tab-rev-pendientes").style.display = tab === 'pendientes' ? "block" : "none";
       document.getElementById("tab-rev-mp").style.display = tab === 'mp' ? "block" : "none";
+      document.getElementById("tab-rev-todas").style.display = tab === 'todas' ? "block" : "none";
       
       if (tab === 'mp' && document.getElementById("admin-mp-list").innerHTML.includes("Cargando transferencias")) {
         cargarRevisionesYTransferencias();
+      } else if (tab === 'todas' && document.getElementById("admin-todas-cuotas-list").innerHTML.includes("Cargando cuotas")) {
+        renderizarTodasLasCuotas();
       }
     }
 
@@ -9724,7 +9783,7 @@
         listPendientes.innerHTML = pagosRevision.map(p => {
           const socioData = (estadoApp.datosAdmin?.usuarios || []).find(u => (u.Email || "").toLowerCase() === (p.Email || "").toLowerCase());
           let socioName = p.Email.split('@')[0];
-          let socioCat = "Admin/Coach";
+          let socioCat = "Sin Categoría";
           if (socioData) {
             socioName = socioData.Username || socioData.Name || socioName;
             socioCat = socioData.Category || "Sin Categoría";
