@@ -1995,22 +1995,10 @@
         </div>
       </div>
       
-      <!-- FILTRO DE CATEGORÍA -->
-      <div style="padding: 0 1.25rem; margin-top: 0.8rem; margin-bottom: 0.4rem;">
-        <label class="form-label" style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px; display: block;">Categoría:</label>
-        <select id="socio-filter-categoria" class="form-select" onchange="filtrarPartidosSocio()" style="background:#ffffff; border:1px solid #cbd5e1; color:#0f172a; padding: 8px 12px; border-radius: 8px; width: 100%; font-size: 0.9rem;">
-          <!-- Opciones dinámicas -->
-        </select>
-      </div>
-
-      <div class="filter-bar">
-        <input type="date" id="socio-filter-fecha-inicio" class="filter-input" onchange="filtrarPartidosSocio()">
-        <span style="font-size: 0.8rem; color: var(--text-muted);">hasta</span>
-        <input type="date" id="socio-filter-fecha-fin" class="filter-input" onchange="filtrarPartidosSocio()">
-      </div>
-      
-      <div id="socio-partidos-list" class="list-container">
-        <!-- Lista de partidos -->
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; text-align: center; padding: 20px;">
+        <i class="fa-solid fa-person-digging" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 20px;"></i>
+        <h3 style="color: #0f172a; font-size: 1.25rem; font-weight: 700; margin-bottom: 10px;">¡Próximamente!</h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 300px; line-height: 1.5;">Estamos trabajando en esta sección para traerte toda la información oficial de las ligas, fixture y resultados.</p>
       </div>
     </div>
 
@@ -4247,19 +4235,11 @@
       }
     }
 
-    function dibujarPartidosSocio(partidos, externalUrl = null) {
+    function dibujarPartidosSocio(partidos) {
       const container = document.getElementById("socio-partidos-list");
       if (!container) return;
       container.innerHTML = "";
 
-      if (externalUrl) {
-        container.innerHTML = `
-          <div style="width: 100%; height: 600px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); margin-top: 10px;">
-            <iframe src="${externalUrl}" width="100%" height="100%" frameborder="0" style="border:none;" title="Liga Oficial"></iframe>
-          </div>
-        `;
-        return;
-      }
       
       if (!partidos || partidos.length === 0) {
         container.innerHTML = `
@@ -4291,16 +4271,6 @@
     function filtrarPartidosSocio() {
       const selectCat = document.getElementById("socio-filter-categoria");
       const selectedCategory = selectCat ? selectCat.value : "all";
-      
-      const filterBar = document.querySelector("#socio-agenda-view .filter-bar");
-      if (selectedCategory === "EDEFI-Mayores") {
-        if (filterBar) filterBar.style.display = "none";
-        dibujarPartidosSocio([], "https://web.edefi.com.ar/zona/?id=56&tipoDeFase=TodosContraTodos&zonaNombre=ZONA+3&faseNombre=Torneo+Apertura&torneoNombre=Futsal+Mayores&agrupadorNombre=Futsal&color=Azul&agrupadorId=1");
-        return;
-      } else {
-        if (filterBar) filterBar.style.display = "flex";
-      }
-
       const start = document.getElementById("socio-filter-fecha-inicio").value;
       const end = document.getElementById("socio-filter-fecha-fin").value;
       
