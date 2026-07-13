@@ -4538,7 +4538,11 @@
           
           let detectedCoelsaId = "";
           
-          const validMatches = matches.filter(m => /[A-Z]/.test(m) && m.length === 22);
+          // Un CoelsaID genuino tiene 22 caracteres, y al menos una letra y un número.
+          // Si tiene sólo letras, suele ser una palabra falsamente detectada por quitar espacios.
+          const esCoelsaValido = (m) => m.length === 22 && /[0-9]/.test(m) && /[A-Za-z]/.test(m);
+          
+          const validMatches = matches.filter(esCoelsaValido);
           
           if (validMatches.length > 0) {
             detectedCoelsaId = validMatches[0].toUpperCase();
@@ -4546,7 +4550,7 @@
           } else {
             const relaxedRegex = /[A-Z0-9]{22}/gi;
             const relaxedMatches = text.match(relaxedRegex) || [];
-            const validRelaxed = relaxedMatches.filter(m => /[A-Z]/.test(m) && m.length === 22);
+            const validRelaxed = relaxedMatches.filter(esCoelsaValido);
             if (validRelaxed.length > 0) {
               detectedCoelsaId = validRelaxed[0].toUpperCase();
               console.log("[OCR/PDF] CoelsaID detectado (relaxed):", detectedCoelsaId);
