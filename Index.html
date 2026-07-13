@@ -3351,7 +3351,7 @@
   <div id="modal-metodo-pago" class="modal-overlay" style="z-index: 12500; display: none;">
     <div class="modal" style="max-width: 520px; border-radius: 16px; overflow-y: auto;">
       <div class="modal-header" style="background: var(--bg-card); padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-        <h3 style="margin:0; font-size: 1.1rem; color: var(--text-primary);"><i class="fa-solid fa-wallet text-primary" style="margin-right: 6px;"></i> Opción de Pago</h3>
+        <h3 style="margin:0; font-size: 1.1rem; color: var(--text-primary);"><i class="fa-solid fa-wallet text-primary" style="margin-right: 6px;"></i> Datos de Pago</h3>
         <button class="btn-close-modal" onclick="cerrarModalMetodoPago()" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;">&times;</button>
       </div>
       <div class="modal-body" style="padding: 1.5rem;">
@@ -3359,81 +3359,30 @@
           <p style="margin:0; font-weight: 700; color: var(--text-primary); font-size: 0.95rem;" id="modal-pago-detalle">Cuota: -- | Monto: $--</p>
         </div>
 
-        <!-- SELECCIONADOR DE MEDIO DE PAGO -->
-        <div style="margin-bottom: 1.2rem;">
-          <label class="form-label" style="font-size:0.75rem; font-weight:700; color:var(--text-muted); margin-bottom:6px; display:block;">Seleccioná el medio de pago:</label>
-          <div class="payment-methods-grid" style="display: flex; flex-direction: column; gap: 8px;">
-            <!-- Opción 1: Transferencia Bancaria -->
-            <label style="display:flex; align-items:center; gap:10px; border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; cursor: pointer; background: var(--bg-card); transition: all 0.2s;" onclick="mostrarDetalleMetodoPago('banco')">
-              <input type="radio" name="modal-transfer-method" value="Banco Oficial" checked style="accent-color: var(--primary);">
-              <div style="display:flex; flex-direction:column; flex:1;">
-                <span style="font-weight:700; font-size:0.9rem; color:var(--text-primary);">Transferencia Bancaria</span>
-                <span style="font-size:0.75rem; color:var(--text-muted);">$0 recargos, transferencia directa</span>
-              </div>
-              <i class="fa-solid fa-building-columns text-primary" style="font-size: 1.2rem;"></i>
-            </label>
-
-            <!-- Opción 2: Mercado Pago / Billeteras Virtuales -->
-            <label style="display:flex; align-items:center; gap:10px; border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; cursor: pointer; background: var(--bg-card); transition: all 0.2s;" onclick="mostrarDetalleMetodoPago('mp_transf')">
-              <input type="radio" name="modal-transfer-method" value="Transferencia MP" style="accent-color: var(--primary);">
-              <div style="display:flex; flex-direction:column; flex:1;">
-                <span style="font-weight:700; font-size:0.9rem; color:var(--text-primary);">Mercado Pago / Billeteras Virtuales</span>
-                <span style="font-size:0.75rem; color:var(--text-muted);">$0 recargos, transferencia MP</span>
-              </div>
-              <i class="fa-solid fa-wallet text-success" style="font-size: 1.2rem;"></i>
-            </label>
-          </div>
-        </div>
-
-        <!-- DETALLES SEGÚN MEDIO ELEGIDO -->
-        <!-- Detalles Banco -->
-        <div id="detalle-metodo-banco" style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem;">
-          <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 0.95rem;">Datos de Cuenta Bancaria</h4>
-          
+        <!-- DETALLES DE CUENTA -->
+        <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem;">
+          <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 0.95rem;">Datos de Cuenta</h4>
           <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 0.82rem;">
             <div>Titular: <strong style="color: var(--text-primary);">Haedo Futsal</strong></div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; flex-wrap:wrap; gap:6px;">
-              <span>Alias: <code id="alias-banco" style="color:#10b981; font-weight:bold;">willy.78.mp</code></span>
-              <button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem; border-radius:4px;" onclick="copiarTexto('willy.78.mp', 'Alias')"><i class="fa-regular fa-copy"></i> Copiar</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:6px;">
+              <span>Alias: <code style="color:#10b981; font-weight:bold; font-size:1.05rem;">willy.78.mp</code></span>
+              <button class="btn-secondary" style="padding:4px 10px; font-size:0.8rem; border-radius:6px; font-weight:bold;" onclick="copiarTexto('willy.78.mp', 'Alias')"><i class="fa-regular fa-copy"></i> Copiar</button>
             </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; flex-wrap:wrap; gap:6px;">
-              <span>CVU: <code id="cbu-banco" style="color:var(--text-primary); font-family:monospace; word-break:break-all;">0000003100098098995218</code></span>
-              <button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem; border-radius:4px;" onclick="copiarTexto('0000003100098098995218', 'CVU')"><i class="fa-regular fa-copy"></i> Copiar</button>
-            </div>
-          </div>
-          
-        </div>
-
-        <!-- Detalles Mercado Pago Transferencia -->
-        <div id="detalle-metodo-mp_transf" style="background: rgba(0, 158, 227, 0.05); border: 1px solid rgba(0, 158, 227, 0.2); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem; display: none;">
-          <h4 style="margin: 0 0 6px 0; color: var(--text-primary); font-size: 0.95rem;">Datos de Mercado Pago</h4>
-          
-          
-          
-
-          <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 0.82rem;">
-            <div>Titular: <strong style="color: var(--text-primary);">Haedo Futsal</strong></div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; flex-wrap:wrap; gap:6px;">
-              <span>Alias: <code id="alias-mp" style="color:#009ee3; font-weight:bold;">willy.78.mp</code></span>
-              <button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem; border-radius:4px;" onclick="copiarTexto('willy.78.mp', 'Alias')"><i class="fa-regular fa-copy"></i> Copiar</button>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; flex-wrap:wrap; gap:6px;">
-              <span>CVU: <code id="cvu-mp" style="color:var(--text-primary); font-family:monospace; word-break:break-all;">0000003100098098995218</code></span>
-              <button class="btn-secondary" style="padding:2px 8px; font-size:0.7rem; border-radius:4px;" onclick="copiarTexto('0000003100098098995218', 'CVU')"><i class="fa-regular fa-copy"></i> Copiar</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; flex-wrap:wrap; gap:6px;">
+              <span>CVU: <code style="color:var(--text-primary); font-family:monospace; word-break:break-all; font-size:0.95rem;">0000003100098098995218</code></span>
+              <button class="btn-secondary" style="padding:4px 10px; font-size:0.8rem; border-radius:6px; font-weight:bold;" onclick="copiarTexto('0000003100098098995218', 'CVU')"><i class="fa-regular fa-copy"></i> Copiar</button>
             </div>
           </div>
         </div>
 
-
-
-        <!-- BOTÓN SUBIR COMPROBANTE (Para los dos primeros métodos) -->
-        <div id="wrapper-subir-comprobante" style="border: 2px dashed #10b981; background: rgba(16, 185, 129, 0.03); border-radius: 12px; padding: 1rem; text-align: center;">
-          <p style="font-size: 0.85rem; font-weight: 700; margin: 0 0 6px 0; color: var(--text-primary);">Subir Comprobante de Transferencia</p>
-          <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 10px 0; line-height: 1.3;">Subí el archivo o captura de pantalla de la transferencia realizada para acreditarla de inmediato.</p>
-          <input type="file" id="pago-upload-comprobante" accept="image/*,application/pdf" style="display:none;" onchange="procesarArchivoComprobanteManual(this)">
+        <!-- BOTÓN SUBIR COMPROBANTE -->
+        <div id="wrapper-subir-comprobante" style="border: 2px dashed #10b981; background: rgba(16, 185, 129, 0.03); border-radius: 12px; padding: 1.5rem 1rem; text-align: center;">
+          <p style="font-size: 0.85rem; font-weight: 700; margin: 0 0 6px 0; color: var(--text-primary);">Subir Comprobante</p>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 15px 0; line-height: 1.3;">Seleccioná el archivo de la transferencia realizada.</p>
+          <input type="file" id="pago-upload-comprobante" accept=".png,.jpg,.jpeg,.pdf" style="display:none;" onchange="procesarArchivoComprobanteManual(this)">
           
-          <button class="btn-primary" onclick="document.getElementById('pago-upload-comprobante').click()" style="background: #10b981; border: none; width:100%; justify-content:center; padding: 10px; font-size: 0.85rem; font-weight:700; display:flex; align-items:center; gap:8px;">
-            <i class="fa-solid fa-file-arrow-up"></i> Seleccionar Comprobante / Tomar Foto
+          <button class="btn-primary" onclick="document.getElementById('pago-upload-comprobante').click()" style="background: #10b981; border: none; width:100%; justify-content:center; padding: 12px; font-size: 0.95rem; font-weight:700; display:flex; align-items:center; gap:8px; border-radius:8px;">
+            <i class="fa-solid fa-file-arrow-up"></i> Seleccionar Archivo
           </button>
         </div>
       </div>
