@@ -1259,12 +1259,8 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
 
     let cleanTxId = "";
     
-    if (ocrAmount !== null && ocrAmount !== undefined) {
-      const parsedOcrAmt = parseCurrencyString(ocrAmount);
-      if (!isNaN(parsedOcrAmt) && Math.abs(parsedOcrAmt - targetAmount) > 10.0) { // Tolerancia de 10 pesos
-        return { success: false, message: `El importe detectado en el comprobante ($${parsedOcrAmt.toLocaleString('es-AR')}) no coincide con el valor de la cuota ($${targetAmount.toLocaleString('es-AR')}).` };
-      }
-    }
+    // El OCR puede fallar leyendo fechas u otros nmeros del comprobante como montos.
+    // Confiamos en el backend (Mercado Pago API) y en el Smart Match para validar el monto real.
     
     if (transactionId && transactionId.trim().length > 0) {
       cleanTxId = transactionId.trim();
