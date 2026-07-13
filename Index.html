@@ -3740,7 +3740,25 @@
     };
 
     // ESTADO GENERAL DE LA APLICACIÓN CLIENTE
-    let estadoApp = {
+          function parseCurrencyString(val) {
+        if (val === null || val === undefined || val === '') return 0;
+        if (typeof val === 'number') return val;
+        let str = val.toString().replace(/[\$\sA-Za-z]/g, '');
+        if (str.includes(',') && str.includes('.')) {
+          str = str.replace(/\./g, '').replace(',', '.');
+        } else if (str.includes(',')) {
+          str = str.replace(',', '.');
+        } else if (str.includes('.')) {
+          const parts = str.split('.');
+          if (parts[parts.length - 1].length === 3) {
+            str = str.replace(/\./g, '');
+          }
+        }
+        const parsed = parseFloat(str);
+        return isNaN(parsed) ? 0 : parsed;
+      }
+
+      let estadoApp = {
       userEmail: null,
       role: null,
       userName: null,
