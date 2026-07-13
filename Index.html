@@ -4204,7 +4204,7 @@
         row.innerHTML = `
           <div class="row-info" style="display:flex; flex-direction:column; gap:2px;">
             <h4 style="margin:0; font-size:0.88rem; color:#1e293b; font-weight:700;">Cuota: ${p.Month}</h4>
-            <p style="margin:0; font-size:0.78rem; color:var(--text-muted); font-weight:600;">Monto: $${parseFloat(p.Amount).toLocaleString('es-AR')}</p>
+            <p style="margin:0; font-size:0.78rem; color:var(--text-muted); font-weight:600;">Monto: $${parseCurrencyString(p.Amount).toLocaleString('es-AR')}</p>
           </div>
           <div style="display:flex; align-items:center; gap:6px;" id="pay-action-${p.Payment_ID}">
             ${statusBadgeHTML}
@@ -4513,7 +4513,7 @@
         option.value = p.Payment_ID;
         option.setAttribute("data-month", p.Month);
         option.setAttribute("data-amount", p.Amount);
-        option.textContent = `Cuota ${p.Month} - $${parseFloat(p.Amount).toLocaleString('es-AR')}`;
+        option.textContent = `Cuota ${p.Month} - $${parseCurrencyString(p.Amount).toLocaleString('es-AR')}`;
         selectCuota.appendChild(option);
       });
       
@@ -6170,7 +6170,7 @@
             // --- Badge de estado de cuenta ---
             const badgeEl = document.getElementById("ficha-status-badge");
             const pagosPendientes = response.pagos.filter(p => p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada");
-            const deudaTotal = pagosPendientes.reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
+            const deudaTotal = pagosPendientes.reduce((sum, p) => sum + parseCurrencyString(p.Amount), 0);
             if (deudaTotal > 0) {
               badgeEl.innerHTML = `
                 <div class="ficha-badge-moroso">
@@ -6276,7 +6276,7 @@
                 row.innerHTML = `
                   <div class="row-info">
                     <h5 style="font-weight:700; font-size:0.85rem; color:#0f172a; margin:0 0 2px 0;">Cuota: ${p.Month}</h5>
-                    <p style="font-size:0.78rem; color:#64748b; margin:0;">Monto: <strong style="color:#0f172a;">$${parseFloat(p.Amount).toLocaleString('es-AR')}</strong></p>
+                    <p style="font-size:0.78rem; color:#64748b; margin:0;">Monto: <strong style="color:#0f172a;">$${parseCurrencyString(p.Amount).toLocaleString('es-AR')}</strong></p>
                   </div>
                   <div class="row-action">
                     ${actionHTML}
@@ -7025,7 +7025,7 @@
               </div>
               <div class="row-action" style="display:flex; align-items:center; gap:8px;">
                 <span class="badge ${m.Type === 'Ingreso' || m.Type === 'Sponsor' ? 'ingreso' : 'gasto'}" style="font-size:0.75rem; padding: 2px 6px;">
-                  ${m.Type === 'Ingreso' || m.Type === 'Sponsor' ? '+' : '-'}$${parseFloat(m.Amount).toLocaleString('es-AR')}
+                  ${m.Type === 'Ingreso' || m.Type === 'Sponsor' ? '+' : '-'}$${parseCurrencyString(m.Amount).toLocaleString('es-AR')}
                 </span>
               </div>
             `;
@@ -7079,7 +7079,7 @@
               </div>
               <div class="row-action" style="display:flex; align-items:center; gap:10px;">
                 <span class="badge ${m.Type === 'Ingreso' || m.Type === 'Sponsor' ? 'ingreso' : 'gasto'}" style="font-size:0.85rem;">
-                  ${m.Type === 'Ingreso' || m.Type === 'Sponsor' ? '+' : '-'}$${parseFloat(m.Amount).toLocaleString('es-AR')}
+                  ${m.Type === 'Ingreso' || m.Type === 'Sponsor' ? '+' : '-'}$${parseCurrencyString(m.Amount).toLocaleString('es-AR')}
                 </span>
                 <button onclick="abrirModalEditarMovimiento('${m.Movimiento_ID}')" title="Editar movimiento" style="background:rgba(217,119,6,0.12); border:1px solid #d97706; color:#b45309; width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
                   <i class="fa-solid fa-pen-to-square" style="font-size:0.8rem;"></i>
@@ -7365,14 +7365,14 @@
       if (tipo === "gastos") {
         // Filtrar gastos del mes seleccionado
         const egresos = dbFinanzas.filter(f => f.Type === "Gasto" && f.Date.startsWith(mes));
-        const totalGastado = egresos.reduce((sum, f) => sum + parseFloat(f.Amount || 0), 0);
+        const totalGastado = egresos.reduce((sum, f) => sum + parseCurrencyString(f.Amount), 0);
         
         // Agrupar por Concepto
         const agrupadoPorConcepto = {};
         egresos.forEach(f => {
           const conc = f.Concept || "Otros / Varios";
           if (!agrupadoPorConcepto[conc]) agrupadoPorConcepto[conc] = { total: 0, count: 0 };
-          agrupadoPorConcepto[conc].total += parseFloat(f.Amount || 0);
+          agrupadoPorConcepto[conc].total += parseCurrencyString(f.Amount);
           agrupadoPorConcepto[conc].count++;
         });
 
@@ -7443,8 +7443,8 @@
       } else if (tipo === "ingresos") {
         // Filtrar pagos por cuotas de socios del mes seleccionado
         const pagosMes = dbPagos.filter(p => p.Month === mes);
-        const recaudado = pagosMes.filter(p => p.Status === "Pagado").reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
-        const pendiente = pagosMes.filter(p => p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada").reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
+        const recaudado = pagosMes.filter(p => p.Status === "Pagado").reduce((sum, p) => sum + parseCurrencyString(p.Amount), 0);
+        const pendiente = pagosMes.filter(p => p.Status === "Pendiente" || p.Status === "Deuda" || p.Status === "Rechazada").reduce((sum, p) => sum + parseCurrencyString(p.Amount), 0);
         const totalFacturado = recaudado + pendiente;
         const cobroPct = totalFacturado > 0 ? ((recaudado / totalFacturado) * 100) : 0;
 
@@ -7456,8 +7456,8 @@
           const cat = socio ? (socio.Category || "Sin Categoría") : "Desconocida";
           if (!agrupadoPorCat[cat]) agrupadoPorCat[cat] = { pagado: 0, pendiente: 0, count: 0 };
           
-          if (p.Status === "Pagado") agrupadoPorCat[cat].pagado += parseFloat(p.Amount || 0);
-          else agrupadoPorCat[cat].pendiente += parseFloat(p.Amount || 0);
+          if (p.Status === "Pagado") agrupadoPorCat[cat].pagado += parseCurrencyString(p.Amount);
+          else agrupadoPorCat[cat].pendiente += parseCurrencyString(p.Amount);
           agrupadoPorCat[cat].count++;
         });
 
@@ -7530,9 +7530,9 @@
 
       } else if (tipo === "balance") {
         // Balance General de Caja (Egresos vs Ingresos por Cuotas e Ingresos por Torneos)
-        const recaudadoCuotas = dbPagos.filter(p => p.Month === mes && p.Status === "Pagado").reduce((sum, p) => sum + parseFloat(p.Amount || 0), 0);
-        const ingresosExtras = dbFinanzas.filter(f => f.Type === "Ingreso" && f.Date.startsWith(mes)).reduce((sum, f) => sum + parseFloat(f.Amount || 0), 0);
-        const egresosCaja = dbFinanzas.filter(f => f.Type === "Gasto" && f.Date.startsWith(mes)).reduce((sum, f) => sum + parseFloat(f.Amount || 0), 0);
+        const recaudadoCuotas = dbPagos.filter(p => p.Month === mes && p.Status === "Pagado").reduce((sum, p) => sum + parseCurrencyString(p.Amount), 0);
+        const ingresosExtras = dbFinanzas.filter(f => f.Type === "Ingreso" && f.Date.startsWith(mes)).reduce((sum, f) => sum + parseCurrencyString(f.Amount), 0);
+        const egresosCaja = dbFinanzas.filter(f => f.Type === "Gasto" && f.Date.startsWith(mes)).reduce((sum, f) => sum + parseCurrencyString(f.Amount), 0);
 
         const totalIngresos = recaudadoCuotas + ingresosExtras;
         const totalGastos = egresosCaja;
@@ -8101,7 +8101,7 @@
           if (parentTorneosGrouped[parentId]) {
             const rawName = t.Name || "";
             const match = rawName.match(/\[Precio:\s*(\d+)\]/);
-            const ticketPrice = match ? parseFloat(match[1]) : 0;
+            const ticketPrice = match ? parseCurrencyString(match[1]) : 0;
             
             if (ticketPrice && (!parentTorneosGrouped[parentId].Ticket_Price || ticketPrice > parentTorneosGrouped[parentId].Ticket_Price)) {
               parentTorneosGrouped[parentId].Ticket_Price = ticketPrice;
@@ -8148,7 +8148,7 @@
       const inputsCats = document.querySelectorAll(".precio-cat-input");
       inputsCats.forEach(input => {
         const id = input.getAttribute("data-id");
-        const val = parseFloat(input.value) || 0;
+        const val = parseCurrencyString(input.value) || 0;
         categoriasObj[id] = val;
       });
       
@@ -8156,7 +8156,7 @@
       const inputsTorneos = document.querySelectorAll(".precio-torneo-input");
       inputsTorneos.forEach(input => {
         const id = input.getAttribute("data-id");
-        const val = parseFloat(input.value) || 0;
+        const val = parseCurrencyString(input.value) || 0;
         torneosObj[id] = val;
       });
       
@@ -8266,7 +8266,7 @@
 
       pagos.forEach(p => {
         if (p.Month >= balMesInicio && p.Month <= balMesFin && p.Status === "Pagado") {
-          const amt = parseFloat(p.Amount) || 0;
+          const amt = parseCurrencyString(p.Amount) || 0;
           if (p.Collected_By) {
             balIngCuotasEf += amt;
             const cName = obtenerNombreCobrador(p.Collected_By);
@@ -8285,7 +8285,7 @@
         if (m.Date) {
           const mMovMonth = m.Date.substring(0, 7);
           if (mMovMonth >= balMesInicio && mMovMonth <= balMesFin) {
-            const amt = parseFloat(m.Amount) || 0;
+            const amt = parseCurrencyString(m.Amount) || 0;
             const isEf = !m.Payment_Method || m.Payment_Method === "Efectivo";
             const cName = m.User || m.Collected_By || "Caja Club";
             
@@ -8379,7 +8379,7 @@
 
       pagos.forEach(p => {
         if (p.Month >= mesInicio && p.Month <= mesFin) {
-          const amt = parseFloat(p.Amount) || 0;
+          const amt = parseCurrencyString(p.Amount) || 0;
           if (p.Status === "Pagado") {
             cuotasRecaudadas += amt;
             if (p.Collected_By) {
@@ -8420,7 +8420,7 @@
       const tIngCoaches = {}, tGasCoaches = {};
 
       filteredTorneoMovs.forEach(m => {
-        const amt = parseFloat(m.Amount) || 0;
+        const amt = parseCurrencyString(m.Amount) || 0;
         const isEf = !m.Payment_Method || m.Payment_Method === "Efectivo";
         const cName = m.User || m.Collected_By || "Caja Club";
         if (m.Type === "Ingreso") {
@@ -8471,7 +8471,7 @@
           if (sponIni && m.Date < sponIni) matchF = false;
           if (sponFin && m.Date > sponFin) matchF = false;
           if (matchCat && matchF) {
-            const amt = parseFloat(m.Amount) || 0;
+            const amt = parseCurrencyString(m.Amount) || 0;
             const isEf = !m.Payment_Method || m.Payment_Method === "Efectivo";
             const cName = m.User || m.Collected_By || "Caja Club";
             totalSponsors += amt;
@@ -8504,7 +8504,7 @@
           if (gasIni && m.Date < gasIni) matchF = false;
           if (gasFin && m.Date > gasFin) matchF = false;
           if (matchCat && matchF) {
-            const amt = parseFloat(m.Amount) || 0;
+            const amt = parseCurrencyString(m.Amount) || 0;
             const isEf = !m.Payment_Method || m.Payment_Method === "Efectivo";
             const cName = m.User || m.Collected_By || "Caja Club";
             totalGastosClub += amt;
@@ -8545,7 +8545,7 @@
           if (tiendaFin && m.Date > tiendaFin) matchF = false;
 
           if (matchCat && matchF) {
-            const amt = parseFloat(m.Amount) || 0;
+            const amt = parseCurrencyString(m.Amount) || 0;
             const isEf = !m.Payment_Method || m.Payment_Method === "Efectivo";
             const cName = m.User || m.Collected_By || "Caja Club";
             if (m.Type === "Ingreso" || m.Type === "Sponsor") {
@@ -9905,7 +9905,7 @@
           <div class="list-item-card" style="display:flex; flex-direction:column; gap:8px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
               <div style="font-weight:800; color:#0f172a;">${socioLabel}</div>
-              <div style="font-weight:900; color:#1d4ed8;">$${parseFloat(p.Amount || 0).toLocaleString('es-AR')}</div>
+              <div style="font-weight:900; color:#1d4ed8;">$${parseCurrencyString(p.Amount).toLocaleString('es-AR')}</div>
             </div>
             <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
               <div>Mes: <span style="font-weight:700;">${p.Month}</span></div>
@@ -9972,7 +9972,7 @@
               <div class="list-item-card" style="border-left:4px solid #10b981;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
                   <div style="font-weight:800; color:#0f172a;">${payerName}</div>
-                  <div style="font-weight:900; color:#10b981;">${parseFloat(t.transaction_amount || 0).toLocaleString('es-AR')}</div>
+                  <div style="font-weight:900; color:#10b981;">${parseCurrencyString(t.transaction_amount).toLocaleString('es-AR')}</div>
                 </div>
                 <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
                   <div>${date}</div>
@@ -10051,7 +10051,7 @@
             <input type="checkbox" class="chk-cuota-masivo" value="${p.Payment_ID}" ${isChecked} onchange="toggleCuotaMasivo('${p.Payment_ID}', this.checked)" style="width:18px; height:18px; cursor:pointer;">
             <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
               <div style="font-weight:800; color:#0f172a; font-size:0.85rem;">${socioName} <span style="font-weight:600; color:#64748b; font-size:0.75rem;">| ${socioCat}</span></div>
-              <div style="font-size:0.75rem; color:#475569; font-weight:600;">Cuota: ${p.Month} &nbsp;&bull;&nbsp; $${parseFloat(p.Amount || 0).toLocaleString('es-AR')}</div>
+              <div style="font-size:0.75rem; color:#475569; font-weight:600;">Cuota: ${p.Month} &nbsp;&bull;&nbsp; $${parseCurrencyString(p.Amount).toLocaleString('es-AR')}</div>
             </div>
             <div>
               ${statusBadge}
