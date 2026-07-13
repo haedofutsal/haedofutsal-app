@@ -4055,7 +4055,7 @@
               window.sharedReceiptPendiente = null;
               setTimeout(() => {
                 const nombreUsuario = response.Nombre || estadoApp.userName || estadoApp.userEmail;
-                const esParaEstaCuenta = confirm(`Has compartido un comprobante de pago.\n\nActualmente estás en la cuenta de: ${nombreUsuario}\n\n¿Querés registrar el pago para ESTA cuenta?\n\n(Elegí Cancelar para entrar con otro usuario)`);
+                const esParaEstaCuenta = true;
                 
                 if (esParaEstaCuenta) {
                   mostrarModalValidarComprobanteCompartido(file);
