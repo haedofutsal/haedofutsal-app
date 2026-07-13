@@ -1,4 +1,23 @@
 // Helper para obtener fecha actual en formato ISO horario Argentina (UTC-3)
+
+function parseCurrencyString(val) {
+  if (val === null || val === undefined || val === '') return 0;
+  if (typeof val === 'number') return val;
+  let str = val.toString().replace(/[\$\sA-Za-z]/g, '');
+  if (str.includes(',') && str.includes('.')) {
+    str = str.replace(/\./g, '').replace(',', '.');
+  } else if (str.includes(',')) {
+    str = str.replace(',', '.');
+  } else if (str.includes('.')) {
+    const parts = str.split('.');
+    if (parts[parts.length - 1].length === 3) {
+      str = str.replace(/\./g, '');
+    }
+  }
+  const parsed = parseFloat(str);
+  return isNaN(parsed) ? 0 : parsed;
+}
+
 function getArgIsoString() {
   const now = new Date();
   const argDate = new Date(now.getTime() - 3 * 3600 * 1000);
@@ -830,7 +849,7 @@ function registrarMovimientoTorneo(movObj, userEmail) {
     const method = Payment_Method || "Efectivo";
     
     // Columnas: Movimiento_ID, Torneo_ID, Type, Concept, Amount, Date, Payment_Method
-    sheet.appendRow([movId, Torneo_ID, Type, Concept, parseFloat(Amount), dateFormatted, method]);
+    sheet.appendRow([movId, Torneo_ID, Type, Concept, parseCurrencyString(Amount), dateFormatted, method]);
     
     const lastRowIndex = sheet.getLastRow();
     if (sheet.getRange(lastRowIndex, 5).setNumberFormat) {
@@ -838,7 +857,7 @@ function registrarMovimientoTorneo(movObj, userEmail) {
     }
     SpreadsheetApp.flush();
     
-    registrarLogAuditoria(userEmail || "Admin", "CREAR", "MOVIMIENTO", `Registrado movimiento ID ${movId}: "${Concept}" por $${parseFloat(Amount).toLocaleString('es-AR')} (${method})`);
+    registrarLogAuditoria(userEmail || "Admin", "CREAR", "MOVIMIENTO", `Registrado movimiento ID ${movId}: "${Concept}" por $${parseCurrencyString(Amount).toLocaleString('es-AR')} (${method})`);
     
     return { success: true, message: "Movimiento financiero registrado correctamente." };
     
@@ -873,7 +892,7 @@ function editarMovimientoTorneo(movObj, userEmail) {
         if (Torneo_ID) sheet.getRange(rowNum, headers.indexOf("Torneo_ID") + 1).setValue(Torneo_ID);
         if (Type) sheet.getRange(rowNum, headers.indexOf("Type") + 1).setValue(Type);
         if (Concept) sheet.getRange(rowNum, headers.indexOf("Concept") + 1).setValue(Concept);
-        if (Amount) sheet.getRange(rowNum, headers.indexOf("Amount") + 1).setValue(parseFloat(Amount));
+        if (Amount) sheet.getRange(rowNum, headers.indexOf("Amount") + 1).setValue(parseCurrencyString(Amount));
         if (DateStr) sheet.getRange(rowNum, headers.indexOf("Date") + 1).setValue(DateStr);
         if (Payment_Method && headers.indexOf("Payment_Method") !== -1) {
           sheet.getRange(rowNum, headers.indexOf("Payment_Method") + 1).setValue(Payment_Method);
@@ -885,7 +904,7 @@ function editarMovimientoTorneo(movObj, userEmail) {
     
     if (updated) {
       SpreadsheetApp.flush();
-      registrarLogAuditoria(userEmail || "Admin", "EDITAR", "MOVIMIENTO", `Modificado movimiento ID ${Movimiento_ID}: "${Concept}" por $${parseFloat(Amount).toLocaleString('es-AR')}`);
+      registrarLogAuditoria(userEmail || "Admin", "EDITAR", "MOVIMIENTO", `Modificado movimiento ID ${Movimiento_ID}: "${Concept}" por $${parseCurrencyString(Amount).toLocaleString('es-AR')}`);
       return { success: true, message: "Movimiento actualizado correctamente." };
     } else {
       return { success: false, message: "No se encontró el movimiento a modificar." };
@@ -1032,7 +1051,7 @@ function generarPagoMercadoPago(paymentId) {
     }
     
     const email = pagosData[filaIndex][emailColIndex];
-    const amount = parseFloat(pagosData[filaIndex][amountColIndex]);
+    const amount = parseCurrencyString(pagosData[filaIndex][amountColIndex]);
     const month = pagosData[filaIndex][monthColIndex];
     
     const mpLink = crearPreferenciaMercadoPago({
@@ -1146,7 +1165,7 @@ function registrarPagoTransferenciaComprobante(paymentId, email, amount, month, 
       const movId = `MOV-${Date.now().toString().slice(-6)}`;
       const dateFormatted = getArgIsoString().split("T")[0]; // YYYY-MM-DD
       const concept = `Cuota Social ${month} - Socio: ${socioEmail}`;
-      const numericAmount = parseFloat(amount || 0);
+      const numericAmount = parseCurrencyString(amount);
       
       // Columnas: Movimiento_ID, Torneo_ID, Type, Concept, Amount, Date, Payment_Method
       sheetFinanzas.appendRow([movId, "General", "Ingreso", concept, numericAmount, dateFormatted, methodStr]);
@@ -1160,7 +1179,7 @@ function registrarPagoTransferenciaComprobante(paymentId, email, amount, month, 
     SpreadsheetApp.flush();
     
     // 3. Registrar Log
-    registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Pago por transferencia autogestionado para cuota ${month} por $${parseFloat(amount).toLocaleString('es-AR')} (Comprobante recibido y validado)`);
+    registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Pago por transferencia autogestionado para cuota ${month} por $${parseCurrencyString(amount).toLocaleString('es-AR')} (Comprobante recibido y validado)`);
     
     return { success: true, message: "Comprobante validado correctamente. Tu cuota ha sido acreditada y registrada en las finanzas." };
     
@@ -1208,7 +1227,7 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
     }
     if (filaIndex === -1) throw new Error("No se encontró el registro de pago.");
     
-    const targetAmount = parseFloat(amount || 0);
+    const targetAmount = parseCurrencyString(amount);
     const socioEmail = pagosData[filaIndex][pEmailCol] || email;
     
     // Buscar nombre del socio
@@ -1241,7 +1260,7 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
     let cleanTxId = "";
     
     if (ocrAmount !== null && ocrAmount !== undefined) {
-      const parsedOcrAmt = parseFloat(ocrAmount);
+      const parsedOcrAmt = parseCurrencyString(ocrAmount);
       if (!isNaN(parsedOcrAmt) && Math.abs(parsedOcrAmt - targetAmount) > 10.0) { // Tolerancia de 10 pesos
         return { success: false, message: `El importe detectado en el comprobante ($${parsedOcrAmt.toLocaleString('es-AR')}) no coincide con el valor de la cuota ($${targetAmount.toLocaleString('es-AR')}).` };
       }
@@ -1277,7 +1296,7 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
       if (response.getResponseCode() === 200) {
         const paymentInfo = JSON.parse(response.getContentText());
         if (paymentInfo.status === 'approved') {
-          const mpAmount = parseFloat(paymentInfo.transaction_amount || 0);
+          const mpAmount = parseCurrencyString(paymentInfo.transaction_amount);
           if (Math.abs(mpAmount - targetAmount) < 10.0) { // Tolerancia de 10 pesos
             matchedPayment = paymentInfo;
             casoAExitoso = true;
@@ -1320,7 +1339,7 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
           // Filtrar candidatos aprobados con el monto correcto que no hayan sido acreditados
           const candidates = paymentsList.filter(p => {
             if (p.status !== 'approved') return false;
-            const mpAmount = parseFloat(p.transaction_amount || 0);
+            const mpAmount = parseCurrencyString(p.transaction_amount);
             if (Math.abs(mpAmount - targetAmount) >= 10.0) return false;
             
             // Verificar que este ID de pago de MP no esté en nuestra BD
@@ -1482,7 +1501,7 @@ function solicitarRevisionTransferencia(paymentId, email, amount, month, payment
     
     SpreadsheetApp.flush();
     
-    registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Socio envió comprobante para revisión de cuota ${month} por $${parseFloat(amount).toLocaleString('es-AR')} (${methodStr})`);
+    registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Socio envió comprobante para revisión de cuota ${month} por $${parseCurrencyString(amount).toLocaleString('es-AR')} (${methodStr})`);
     
     return { success: true, message: "¡Comprobante enviado con éxito! Tu pago se encuentra 'En Revisión' y será verificado por la administración a la brevedad." };
     
@@ -1543,7 +1562,7 @@ function aprobarRevisionPagoComprobante(paymentId, email, amount, month) {
       const movId = `MOV-${Date.now().toString().slice(-6)}`;
       const dateFormatted = getArgIsoString().split("T")[0]; // YYYY-MM-DD
       const concept = `Cuota Social ${month} - Socio: ${socioEmail}`;
-      const numericAmount = parseFloat(amount || 0);
+      const numericAmount = parseCurrencyString(amount);
       
       sheetFinanzas.appendRow([movId, "General", "Ingreso", concept, numericAmount, dateFormatted, methodStr]);
       
@@ -1555,7 +1574,7 @@ function aprobarRevisionPagoComprobante(paymentId, email, amount, month) {
     
     SpreadsheetApp.flush();
     
-    registrarLogAuditoria("Admin", "MODIFICAR", "PAGO", `Administrador aprobó comprobante de transferencia para cuota ${month} de ${socioEmail} ($${parseFloat(amount).toLocaleString('es-AR')})`);
+    registrarLogAuditoria("Admin", "MODIFICAR", "PAGO", `Administrador aprobó comprobante de transferencia para cuota ${month} de ${socioEmail} ($${parseCurrencyString(amount).toLocaleString('es-AR')})`);
     
     return { success: true, message: "Comprobante aprobado. El pago fue registrado como acreditado en la cuenta del socio y en las finanzas del club." };
     
@@ -2263,7 +2282,7 @@ function getSpreadsheet() {
 function crearPreferenciaMercadoPago({ paymentId, email, amount, month }) {
   const token = getMercadoPagoToken();
   const url = "https://api.mercadopago.com/checkout/preferences";
-  const numericAmount = parseFloat(amount || 0);
+  const numericAmount = parseCurrencyString(amount);
 
   const body = {
     items: [
@@ -2459,8 +2478,8 @@ function actualizarPrecios(categoriasObj, torneosObj, userEmail) {
           const catId = data[i][idIdx];
           const parentCatId = obtenerCategoriaPadre(catId);
           if (categoriasObj[parentCatId] !== undefined) {
-            const oldVal = parseFloat(data[i][feeIdx]) || 0;
-            const newVal = parseFloat(categoriasObj[parentCatId]) || 0;
+            const oldVal = parseCurrencyString(data[i][feeIdx]);
+            const newVal = parseCurrencyString(categoriasObj[parentCatId]);
             if (oldVal !== newVal) {
               const catName = nameIdx !== -1 ? data[i][nameIdx] : catId;
               sheetCategorias.getRange(i + 1, feeIdx + 1).setValue(newVal);
@@ -2490,8 +2509,8 @@ function actualizarPrecios(categoriasObj, torneosObj, userEmail) {
             const rawName = data[i][nameIdx].toString();
             const nameLimpio = rawName.split(" [Precio:")[0].trim();
             const match = rawName.match(/\[Precio:\s*(\d+)\]/);
-            const oldVal = match ? parseFloat(match[1]) : 0;
-            const newVal = parseFloat(torneosObj[parentCatId]) || 0;
+            const oldVal = match ? parseCurrencyString(match[1]) : 0;
+            const newVal = parseCurrencyString(torneosObj[parentCatId]);
             
             if (oldVal !== newVal) {
               const nuevoNombre = `${nameLimpio} [Precio: ${newVal}]`;
@@ -2571,7 +2590,7 @@ function verificarYGenerarCuotasMensuales() {
     for (let i = 1; i < catData.length; i++) {
       const id = String(catData[i][catIdIdx] || "").trim().toLowerCase();
       const name = String(catData[i][catNameIdx] || "").trim().toLowerCase();
-      const fee = parseFloat(catData[i][catFeeIdx]) || 0;
+      const fee = parseCurrencyString(catData[i][catFeeIdx]);
       if (id) categoryFees[id] = fee;
       if (name) categoryFees[name] = fee;
       
@@ -2614,7 +2633,7 @@ function verificarYGenerarCuotasMensuales() {
       const email = String(pagosData[i][pEmailCol] || "").trim().toLowerCase();
       const month = String(pagosData[i][pMonthCol] || "").trim();
       const status = String(pagosData[i][pStatusCol] || "").trim();
-      const amount = parseFloat(pagosData[i][pAmountCol]) || 0;
+      const amount = parseCurrencyString(pagosData[i][pAmountCol]);
       
       existingPayments[`${email}|${month}`] = {
         rowNum: i + 1,
@@ -2685,7 +2704,7 @@ function verificarYGenerarCuotasMensuales() {
           }
         }
         
-        const numericFee = parseFloat(fee) || 0;
+        const numericFee = parseCurrencyString(fee);
         if (numericFee > maxFee) maxFee = numericFee;
       });
       
