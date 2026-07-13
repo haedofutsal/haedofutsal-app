@@ -1465,7 +1465,7 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
  * Registra la solicitud de revisión del pago de una cuota enviando un comprobante.
  * Coloca la cuota en estado 'Revision' y guarda la imagen/PDF base64 en la columna MP_Link.
  */
-function solicitarRevisionTransferencia(paymentId, email, amount, month, paymentMethod, base64Receipt) {
+function solicitarRevisionTransferencia(paymentId, email, amount, month, paymentMethod, base64Receipt, failReason) {
   try {
     const ss = getSpreadsheet();
     const sheetPagos = ss.getSheetByName(HOJA_PAGOS);
@@ -1501,7 +1501,8 @@ function solicitarRevisionTransferencia(paymentId, email, amount, month, payment
     
     SpreadsheetApp.flush();
     
-    registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Socio envió comprobante para revisión de cuota ${month} por $${parseCurrencyString(amount).toLocaleString('es-AR')} (${methodStr})`);
+    const reasonStr = failReason ? ` (Motivo de fallo: ${failReason})` : "";
+    registrarLogAuditoria(socioEmail, "MODIFICAR", "PAGO", `Socio envió comprobante para revisión de cuota ${month} por $${parseCurrencyString(amount).toLocaleString('es-AR')} (${methodStr})${reasonStr}`);
     
     return { success: true, message: "¡Comprobante enviado con éxito! Tu pago se encuentra 'En Revisión' y será verificado por la administración a la brevedad." };
     
