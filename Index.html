@@ -4542,7 +4542,7 @@
       const paymentId = selectedOption.value;
       const month = selectedOption.getAttribute("data-month");
       const amount = selectedOption.getAttribute("data-amount");
-      const email = estadoApp.userEmail;
+        const email = estadoApp.userEmail;
       
       const transferTypeEl = document.querySelector('input[name="modal-transfer-method"]:checked');
       const transferMethod = transferTypeEl ? transferTypeEl.value : "Transferencia MP";
@@ -4556,19 +4556,25 @@
           
           const coelsaRegex = /\b([A-Z0-9]{22})\b/g;
           const matches = text.match(coelsaRegex) || [];
+          
+          // Si es un PDF de Personal Pay, a veces extrae con espacios entre letras
+          const textNoSpaces = text.replace(/\s+/g, '').replace(/coelsaid/ig, '');
+          const matchesNoSpaces = textNoSpaces.match(/[A-Z0-9]{22}/gi) || [];
+          matches.push(...matchesNoSpaces);
+          
           let detectedCoelsaId = "";
           
-          const validMatches = matches.filter(m => /[A-Z]/.test(m));
+          const validMatches = matches.filter(m => /[A-Z]/.test(m) && m.length === 22);
           
           if (validMatches.length > 0) {
-            detectedCoelsaId = validMatches[0];
+            detectedCoelsaId = validMatches[0].toUpperCase();
             console.log("[OCR/PDF] CoelsaID detectado:", detectedCoelsaId);
           } else {
-            const relaxedRegex = /[A-Z0-9]{22}/g;
+            const relaxedRegex = /[A-Z0-9]{22}/gi;
             const relaxedMatches = text.match(relaxedRegex) || [];
-            const validRelaxed = relaxedMatches.filter(m => /[A-Z]/.test(m));
+            const validRelaxed = relaxedMatches.filter(m => /[A-Z]/.test(m) && m.length === 22);
             if (validRelaxed.length > 0) {
-              detectedCoelsaId = validRelaxed[0];
+              detectedCoelsaId = validRelaxed[0].toUpperCase();
               console.log("[OCR/PDF] CoelsaID detectado (relaxed):", detectedCoelsaId);
             }
           }
