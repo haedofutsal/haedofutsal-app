@@ -1379,7 +1379,9 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
               if (payerEmail && (payerEmail === cleanAthleteEmail || payerEmail.includes(cleanAthleteEmail.split('@')[0]))) {
                 matches = true;
               }
-              const payerName = (p.description || (p.payer && (p.payer.first_name + ' ' + (p.payer.last_name || '')) || '')).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+              const bankPayerName = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.bank_info && p.point_of_interaction.transaction_data.bank_info.payer && p.point_of_interaction.transaction_data.bank_info.payer.long_name || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+              const basePayerName = (p.description || (p.payer && (p.payer.first_name + ' ' + (p.payer.last_name || '')) || '')).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+              const payerName = basePayerName + " " + bankPayerName;
               if (payerName && cleanAthleteName) {
                 const parts = cleanAthleteName.split(" ");
                 parts.forEach(part => {
