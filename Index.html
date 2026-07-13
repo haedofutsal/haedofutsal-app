@@ -4675,7 +4675,26 @@
           reader.readAsDataURL(file);
       };
 
-      if (file.type === "application/pdf") {
+      
+      const checkIsPdf = function(fileBlob, callback) {
+        if (fileBlob.type === "application/pdf" || (fileBlob.name && fileBlob.name.toLowerCase().endsWith(".pdf"))) {
+          callback(true);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onloadend = function(e) {
+          if (!e.target.result) { callback(false); return; }
+          const arr = new Uint8Array(e.target.result);
+          let header = "";
+          for(let i=0; i<arr.length; i++) header += String.fromCharCode(arr[i]);
+          callback(header === "%PDF");
+        };
+        reader.onerror = () => callback(false);
+        reader.readAsArrayBuffer(fileBlob.slice(0, 4));
+      };
+
+      checkIsPdf(file, function(isPdf) {
+        if (isPdf) {
         if (typeof pdfjsLib !== "undefined") {
           const reader = new FileReader();
           reader.onload = function(e) {
@@ -4695,7 +4714,8 @@
         }
       } else {
         Tesseract.recognize(file, 'eng+spa').then(res => processOCRText(res.data.text)).catch(handleError);
-      }
+        }
+      });
     }
 
     function ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, transactionId, ocrAmount) {
