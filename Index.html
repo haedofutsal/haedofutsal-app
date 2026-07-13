@@ -4826,7 +4826,7 @@
                 alert("Error de conexión al enviar comprobante: " + err.toString());
                 cerrarModalValidarComprobante();
               })
-              .solicitarRevisionTransferencia(paymentId, email, amount, month, transferMethod, base64Data);
+              .solicitarRevisionTransferencia(paymentId, email, amount, month, transferMethod, base64Data, res && res.message ? res.message : \);
           }
         })
         .withFailureHandler(function(err) {
