@@ -251,6 +251,79 @@ app.post('/api/scan-receipt', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// --- NOTIFICACIONES PUSH E IN-APP ---
+const webpush = require('web-push');
+
+// Configuración de VAPID keys para Web Push (se usarán variables de entorno en producción)
+const vapidPublicKey = process.env.VAPID_PUBLIC_KEY || 'BFvdjHU0w3bplc8vT-ywJwYGy_hQmJqUNxvXecR9GxMA97-ItmDLlxNDYkUe88CdFPfMdDat6Tl535-DVel5vSc';
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY || 'uA05adM20cxNTUFDyo33zZCcpc0gf2ZJK17e_QojYP0';
+webpush.setVapidDetails(
+  'mailto:admin@haedofutsal.com',
+  vapidPublicKey,
+  vapidPrivateKey
+);
+
+// 1. Guardar suscripción del dispositivo
+app.post('/api/notifications/subscribe', auth.authenticateToken, async (req, res) => {
+  const subscription = req.body;
+  const email_socio = req.user.email;
+  
+  if (!email_socio) return res.status(401).json({ error: 'No autorizado' });
+
+  // Guardar en Supabase (upsert)
+  try {
+    const { error } = await supabase
+      .from('suscripciones_push')
+      .upsert({ email_socio: email_socio, suscripcion: subscription }, { onConflict: 'email_socio' });
+      
+    if (error) throw error;
+    res.status(201).json({ success: true });
+  } catch (err) {
+    console.error('Error al suscribir:', err);
+    res.status(500).json({ error: 'Error al guardar suscripción' });
+  }
+});
+
+// 2. Enviar Notificación (Solo Admin)
+app.post('/api/notifications/send', auth.authenticateToken, async (req, res) => {
+  if (req.user.role !== 'Admin' && req.user.role !== 'Entrenador' && req.user.role !== 'Tesorero') {
+    return res.status(403).json({ error: 'Permisos insuficientes' });
+  }
+
+  const { titulo, mensaje, categoria_destino, estado_pago_destino } = req.body;
+
+  try {
+    // A) Guardar en BD para las Alertas In-App
+    const { data: nuevaNotif, error: errBd } = await supabase
+      .from('notificaciones')
+      .insert([{
+        titulo,
+        mensaje,
+        categoria_destino: categoria_destino || 'TODAS',
+        estado_pago_destino: estado_pago_destino || 'TODOS'
+      }]);
+      
+    if (errBd) throw errBd;
+
+    // B) Disparar Push a los dispositivos relevantes
+    const { data: subs, error: errSub } = await supabase.from('suscripciones_push').select('*');
+    
+    if (!errSub && subs) {
+      const payload = JSON.stringify({ title: titulo, body: mensaje });
+      const promises = subs.map(sub => {
+        return webpush.sendNotification(sub.suscripcion, payload).catch(err => {
+          console.error("Fallo al enviar push a ", sub.email_socio, err);
+        });
+      });
+      await Promise.all(promises);
+    }
+    
+    res.status(200).json({ success: true, message: 'Notificaciones enviadas con éxito' });
+  } catch (err) {
+    console.error('Error al enviar notificaciones:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
 
 app.get('/ping', (req, res) => res.status(200).send('Pong! Servidor activo.'));
 

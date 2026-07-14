@@ -16,7 +16,118 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Tesseract OCR Library for client-side receipt scanning -->
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
+    // --- NOTIFICACIONES ---
+    const VAPID_PUBLIC_KEY = "BFvdjHU0w3bplc8vT-ywJwYGy_hQmJqUNxvXecR9GxMA97-ItmDLlxNDYkUe88CdFPfMdDat6Tl535-DVel5vSc";
+
+    function enviarNotificacionAdmin() {
+      const titulo = document.getElementById("notif-titulo").value.trim();
+      const mensaje = document.getElementById("notif-mensaje").value.trim();
+      const categoria_destino = document.getElementById("notif-categoria").value;
+      const estado_pago_destino = document.getElementById("notif-estado").value;
+      
+      if(!titulo || !mensaje) return alert("El título y el mensaje son obligatorios");
+      
+      mostrarCarga("Enviando comunicados...");
+      
+      fetch(API_URL + "/notifications/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("haedo_jwt_token")
+        },
+        body: JSON.stringify({ titulo, mensaje, categoria_destino, estado_pago_destino })
+      })
+      .then(res => res.json())
+      .then(data => {
+        ocultarCarga();
+        if(data.error) alert("Error: " + data.error);
+        else {
+          alert("¡Comunicado enviado con éxito a todos los dispositivos!");
+          document.getElementById("notif-titulo").value = "";
+          document.getElementById("notif-mensaje").value = "";
+        }
+      })
+      .catch(err => {
+        ocultarCarga();
+        alert("Error al conectar con el servidor.");
+      });
+    }
+
+    async function initNotificacionesSocio() {
+      // 1. Mostrar Alertas In-App
+      try {
+        const estadoApp = JSON.parse(localStorage.getItem("haedo_estado"));
+        const socioData = estadoApp ? estadoApp.userData : null;
+        if(socioData) {
+          const res = await fetch(API_URL + "/run?action=dbQuery&query=SELECT * FROM notificaciones ORDER BY created_at DESC LIMIT 5", {
+            headers: { "Authorization": "Bearer " + localStorage.getItem("haedo_jwt_token") }
+          });
+          const data = await res.json();
+          if(data.data) {
+            const notifs = data.data.filter(n => 
+              (n.categoria_destino === "TODAS" || n.categoria_destino === socioData.categoria) &&
+              (n.estado_pago_destino === "TODOS" || 
+               (n.estado_pago_destino === "AL DIA" && socioData.estado_pago === "Al Día") ||
+               (n.estado_pago_destino === "DEUDOR" && socioData.estado_pago === "Deudor")
+              )
+            );
+            if(notifs.length > 0) {
+              const noLeidas = notifs.filter(n => !n.leido_por || !n.leido_por.includes(socioData.email));
+              if(noLeidas.length > 0) {
+                const modal = document.createElement("div");
+                modal.style.position = "fixed"; modal.style.top = "0"; modal.style.left = "0"; modal.style.width = "100%"; modal.style.height = "100%"; modal.style.backgroundColor = "rgba(0,0,0,0.8)"; modal.style.zIndex = "9999"; modal.style.display = "flex"; modal.style.justifyContent = "center"; modal.style.alignItems = "center";
+                modal.innerHTML = `
+                  <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #00f2fe;">
+                    <i class="fa-solid fa-bullhorn" style="font-size: 3rem; color: #00f2fe; margin-bottom: 20px;"></i>
+                    <h2 style="color: white; margin-bottom: 10px; font-size: 1.5rem;">${noLeidas[0].titulo}</h2>
+                    <p style="color: #cbd5e1; margin-bottom: 25px; line-height: 1.5;">${noLeidas[0].mensaje}</p>
+                    <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="this.parentElement.parentElement.remove(); marcarComoLeida('${noLeidas[0].id}')">Entendido</button>
+                  </div>
+                `;
+                document.body.appendChild(modal);
+              }
+            }
+          }
+        }
+      } catch(e) { console.error("Error cargando in-app alerts", e); }
+
+      // 2. Suscribir a Web Push
+      if ("serviceWorker" in navigator && "PushManager" in window) {
+        try {
+          const reg = await navigator.serviceWorker.register("/sw.js");
+          const sub = await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+          });
+          
+          await fetch(API_URL + "/notifications/subscribe", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + localStorage.getItem("haedo_jwt_token")
+            },
+            body: JSON.stringify(sub)
+          });
+          console.log("Push subscrito!");
+        } catch(e) { console.error("Push Error", e); }
+      }
+    }
+
+    async function marcarComoLeida(id) {
+      // Simplificado: Cerramos modal.
+    }
+
+    function urlBase64ToUint8Array(base64String) {
+      const padding = "=".repeat((4 - base64String.length % 4) % 4);
+      const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) { outputArray[i] = rawData.charCodeAt(i); }
+      return outputArray;
+    }
+    // --- FIN NOTIFICACIONES ---
+  </script>
   <!-- PDF.js for parsing PDF receipts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <script>
@@ -2170,7 +2281,52 @@
     </div>
 
     <!-- VISTA ADMIN: TORNEOS & MOVIMIENTOS -->
-    <div id="admin-torneos-view" class="view-section" style="gap: 8px;">
+        <!-- VISTA ADMIN: COMUNICADOS -->
+    <div id="admin-comunicados-view" class="view-section" style="gap: 8px; display:none;">
+      <div class="header-bar" style="margin-bottom: 2px; padding-bottom: 6px; border-bottom: none;">
+        <div>
+          <h2 style="font-size: 1.1rem; color: #f1f5f9;">Comunicados Masivos</h2>
+          <span style="font-size: 0.75rem; color: #94a3b8;">Env�e notificaciones Push y Alertas</span>
+        </div>
+      </div>
+      
+      <div class="card" style="padding: 15px;">
+        <div class="form-group">
+          <label class="form-label" style="font-size: 0.8rem; color: #e2e8f0; font-weight: 600; margin-bottom: 5px;">T�tulo del Aviso</label>
+          <input type="text" id="notif-titulo" class="form-input" placeholder="Ej: Se suspende el partido">
+        </div>
+        <div class="form-group" style="margin-top: 10px;">
+          <label class="form-label" style="font-size: 0.8rem; color: #e2e8f0; font-weight: 600; margin-bottom: 5px;">Mensaje</label>
+          <textarea id="notif-mensaje" class="form-input" rows="3" placeholder="Detalle del aviso..."></textarea>
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label" style="font-size: 0.8rem; color: #e2e8f0; font-weight: 600; margin-bottom: 5px;">Categor�a Destino</label>
+            <select id="notif-categoria" class="form-input">
+              <option value="TODAS">Todas las Categor�as</option>
+              <option value="Bab-2015">Bab-2015</option>
+              <option value="Bab-2016">Bab-2016</option>
+              <option value="Bab-2017">Bab-2017</option>
+              <option value="Infan-2014">Infan-2014</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label" style="font-size: 0.8rem; color: #e2e8f0; font-weight: 600; margin-bottom: 5px;">Estado de Pago</label>
+            <select id="notif-estado" class="form-input">
+              <option value="TODOS">Todos</option>
+              <option value="DEUDOR">Solo Deudores</option>
+              <option value="AL DIA">Solo Al D�a</option>
+            </select>
+          </div>
+        </div>
+        
+        <button class="btn-primary" style="margin-top: 15px; width: 100%; justify-content: center; padding: 12px; font-weight: 700;" onclick="enviarNotificacionAdmin()">
+          <i class="fa-solid fa-paper-plane"></i> Enviar Comunicado Masivo
+        </button>
+      </div>
+    </div>
+
+<div id="admin-torneos-view" class="view-section" style="gap: 8px;">
       <div class="header-bar" style="margin-bottom: 2px; padding-bottom: 6px; border-bottom: none;">
         <div class="header-brand">
           <img src="logo.png" class="club-header-logo" alt="Haedo Futsal">
@@ -2697,7 +2853,11 @@
       <i class="fa-solid fa-users"></i>
       <span>Socios</span>
     </button>
-    <button class="nav-item" id="nav-admin-torneos" onclick="navegarAdmin('torneos')">
+        <button class="nav-item" id="nav-admin-comunicados" onclick="navegarAdmin('comunicados')">
+      <i class="fa-solid fa-bullhorn"></i>
+      <span>Avisos</span>
+    </button>
+<button class="nav-item" id="nav-admin-torneos" onclick="navegarAdmin('torneos')">
       <i class="fa-solid fa-trophy"></i>
       <span>Finanzas</span>
     </button>
@@ -3641,17 +3801,17 @@
     // 2. Open/Closed Principle: Extensible Role Permissions Configuration Matrix
     const RolePermissions = {
       Admin: {
-        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-torneos-view", "admin-agenda-view", "club-tienda-view"],
+        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-comunicados-view", "admin-torneos-view", "admin-agenda-view", "club-tienda-view"],
         navBar: "admin",
-        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"],
+        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-comunicados", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"],
         defaultView: "inicio",
         canEditFinanzas: true,
         canEditMatches: true
       },
       Coach: {
-        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-torneos-view", "admin-agenda-view", "club-tienda-view"],
+        allowedViews: ["admin-inicio-view", "admin-socios-view", "admin-comunicados-view", "admin-torneos-view", "admin-agenda-view", "club-tienda-view"],
         navBar: "admin",
-        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"],
+        visibleTabs: ["nav-admin-inicio", "nav-admin-socios", "nav-admin-comunicados", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"],
         defaultView: "inicio",
         canEditFinanzas: false,
         canEditMatches: true
@@ -3677,7 +3837,7 @@
           document.getElementById("nav-bar-socio").style.display = "none";
           document.getElementById("nav-bar-admin").style.display = "flex";
           
-          const allAdminTabs = ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"];
+          const allAdminTabs = ["nav-admin-inicio", "nav-admin-socios", "nav-admin-comunicados", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"];
           allAdminTabs.forEach(tabId => {
             const tabEl = document.getElementById(tabId);
             if (tabEl) {
@@ -3869,7 +4029,7 @@
       if (config.navBar === 'admin') {
         // Admin/Coach: mostrar barra admin con tabs del rol
         document.getElementById("nav-bar-admin").style.display = "flex";
-        const allAdminTabs = ["nav-admin-inicio", "nav-admin-socios", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"];
+        const allAdminTabs = ["nav-admin-inicio", "nav-admin-socios", "nav-admin-comunicados", "nav-admin-torneos", "nav-admin-agenda", "nav-admin-tienda"];
         allAdminTabs.forEach(tabId => {
           const tabEl = document.getElementById(tabId);
           if (tabEl) tabEl.style.display = config.visibleTabs.includes(tabId) ? "flex" : "none";
