@@ -4084,6 +4084,7 @@
         if (response && response.success) {
           if (rememberChecked) response.password = passwordInput;
           if (response.token) localStorage.setItem('haedo_jwt_token', response.token);
+          if (response.token) localStorage.setItem("haedo_jwt_token", response.token);
           cargarRolUsuario(response, rememberChecked);
         } else {
           ocultarCarga();
@@ -4107,9 +4108,11 @@
       .then(function(response) {
         if (response && response.success) {
           if (response.token) localStorage.setItem('haedo_jwt_token', response.token);
+          if (response.token) localStorage.setItem("haedo_jwt_token", response.token);
           cargarRolUsuario(response, !!password);
         } else {
           AuthService.clearSession();
+      localStorage.removeItem("haedo_jwt_token");
       localStorage.removeItem('haedo_jwt_token');
           ocultarCarga();
           mostrarPantalla("login-view");
