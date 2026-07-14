@@ -45,7 +45,7 @@ app.post('/api/run', auth.authenticateToken, async (req, res) => {
   
   try {
     // 1. Intentar correr la version nativa Node.js (rapida)
-    if (apiFuncs[functionName]) {
+    if (false && apiFuncs[functionName]) {
       console.log(`[NATIVE] Ejecutando ${functionName} nativamente en Node.js`);
       const result = await apiFuncs[functionName](...(args || []));
       return res.json({ success: true, result });
