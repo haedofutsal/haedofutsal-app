@@ -1419,7 +1419,11 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
               matchedPayment = candidates[0];
               console.log(`[MP SMART MATCH] Coincidencia por candidato único sin coincidencia de nombre para $${targetAmount}.`);
             } else {
-              return { success: false, message: `No se encontró una transferencia única por $${targetAmount} que coincida con tus datos registrados.` };
+              let dbg = [];
+              candidates.forEach(c => {
+                dbg.push(`id:${c.id}, pId:${c.payer?.identification?.number||"N/A"}, bId:${c.point_of_interaction?.transaction_data?.bank_info?.payer?.identification?.number||"N/A"}, bName:${c.point_of_interaction?.transaction_data?.bank_info?.payer?.long_name||"N/A"}`);
+              });
+              return { success: false, message: `No se encontró una transferencia única por $${targetAmount} que coincida con tus datos registrados. Debug: OCR_LEN=${ocrText?ocrText.length:0}, DNI=${cleanAthleteDni}. Cand: ${dbg.join(" | ")}` };
             }
           }
         } else {
