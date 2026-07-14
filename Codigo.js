@@ -1383,6 +1383,13 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
                   matches = true;
                 }
               }
+
+              if (cleanTxId && (p.id.toString() === cleanTxId)) {
+                matches = true;
+              }
+              if (ocrText && ocrText.includes(p.id.toString())) {
+                matches = true;
+              }
               
               const payerEmail = p.payer && p.payer.email ? p.payer.email.toLowerCase().trim() : "";
               if (payerEmail && (payerEmail === cleanAthleteEmail || payerEmail.includes(cleanAthleteEmail.split('@')[0]))) {
@@ -1418,6 +1425,9 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
             if (candidates.length === 1) {
               matchedPayment = candidates[0];
               console.log(`[MP SMART MATCH] Coincidencia por candidato único sin coincidencia de nombre para $${targetAmount}.`);
+            } else if (candidates.length > 1 && candidates.every(c => c.payer?.identification?.number === candidates[0].payer?.identification?.number && candidates[0].payer?.identification?.number)) {
+              matchedPayment = candidates[0];
+              console.log(`[MP SMART MATCH] Múltiples candidatos del mismo remitente idénticos. Asignando uno. para $${targetAmount}.`);
             } else {
               let dbg = [];
               candidates.forEach(c => {
