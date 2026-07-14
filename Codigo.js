@@ -1405,17 +1405,16 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
               return { success: false, message: `No pudimos encontrar ninguna transferencia recibida en nuestra cuenta de Mercado Pago con el CoelsaID o Código: ${cleanTxId}.` };
             }
             
-            // Si no hay coincidencia exacta de nombre, pero hay un ÚNICO candidato libre por ese monto en todo Mercado Pago
+            // Si no hay coincidencia exacta de nombre, pero hay candidatos libres por ese monto
             if (candidates.length === 1) {
               matchedPayment = candidates[0];
               console.log(`[MP SMART MATCH] Coincidencia por candidato único sin coincidencia de nombre para $${targetAmount}.`);
             } else {
-              const namesFound = candidates.map(p => {
-                const bName = (p.point_of_interaction && p.point_of_interaction.transaction_data && p.point_of_interaction.transaction_data.bank_info && p.point_of_interaction.transaction_data.bank_info.payer && p.point_of_interaction.transaction_data.bank_info.payer.long_name || "N/A").toString().trim();
-                const base = (p.description || (p.payer && (p.payer.first_name + ' ' + (p.payer.last_name || '')) || 'N/A')).toString().trim();
-                return `[${base} / ${bName}]`;
-              }).join(", ");
-              return { success: false, message: `No se encontró una transferencia única por $${targetAmount} que coincida con tus datos. Nombres en MP: ${namesFound}` };
+              // Hay múltiples candidatos huérfanos del mismo importe.
+              // Como en Mercado Pago las transferencias de "Misma Titularidad" vienen sin nombre (Bank Transfer),
+              // tomamos el más reciente (candidates[0]) para no bloquear al socio, ya que ambos son válidos y del monto exacto.
+              matchedPayment = candidates[0];
+              console.log(`[MP SMART MATCH] Múltiples candidatos huérfanos idénticos ($${targetAmount}). Asignando el más reciente automáticamente.`);
             }
           }
         } else {
