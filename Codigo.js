@@ -1373,6 +1373,16 @@ function conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, p
               if (cleanAthleteDni && (payerIdNumber.includes(cleanAthleteDni) || bankIdNumber.includes(cleanAthleteDni))) {
                 matches = true;
               }
+
+              if (ocrText) {
+                const cleanOcrText = ocrText.replace(/\D/g, "");
+                if (payerIdNumber && payerIdNumber.length >= 7 && cleanOcrText.includes(payerIdNumber)) {
+                  matches = true;
+                }
+                if (bankIdNumber && bankIdNumber.length >= 7 && cleanOcrText.includes(bankIdNumber)) {
+                  matches = true;
+                }
+              }
               
               const payerEmail = p.payer && p.payer.email ? p.payer.email.toLowerCase().trim() : "";
               if (payerEmail && (payerEmail === cleanAthleteEmail || payerEmail.includes(cleanAthleteEmail.split('@')[0]))) {
