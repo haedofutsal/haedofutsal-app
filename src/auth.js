@@ -24,11 +24,11 @@ const loginHandler = async (req, res) => {
   try {
     const target = username.toString().trim().toLowerCase();
     
-    // Buscar por DNI o Username
+    // Buscar por DNI, Username o Email
     const { data: users, error } = await supabase
       .from('usuarios')
       .select('id, email, role, name, photo, username, dni, password')
-      .or(`username.ilike.${target},dni.eq.${target}`);
+      .or(`username.ilike.${target},dni.eq.${target},email.ilike.${target}`);
       
     if (error) {
       console.error('[LOGIN DB ERROR]', error.message);
