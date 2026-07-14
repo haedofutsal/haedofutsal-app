@@ -2567,8 +2567,10 @@ function actualizarPrecios(categoriasObj, torneosObj, userEmail) {
  * a partir de Julio 2026.
  */
 function verificarYGenerarCuotasMensuales() {
-  try {
-    const ss = getSpreadsheet();
+    try {
+      const cache = CacheService.getScriptCache();
+      if (cache.get("quotas_checked") === "true") return;
+      const ss = getSpreadsheet();
     const sheetPagos = ss.getSheetByName(HOJA_PAGOS);
     const sheetUsuarios = ss.getSheetByName(HOJA_USUARIOS);
     const sheetCategorias = ss.getSheetByName(HOJA_CATEGORIAS);
@@ -2782,8 +2784,9 @@ function verificarYGenerarCuotasMensuales() {
     });
     
     if (dbModified) {
-      SpreadsheetApp.flush();
-    }
+        SpreadsheetApp.flush();
+      }
+      cache.put("quotas_checked", "true", 3600);
     
   } catch (error) {
     console.error("Error en verificarYGenerarCuotasMensuales:", error);
