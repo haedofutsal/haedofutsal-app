@@ -4635,7 +4635,7 @@
           const reader = new FileReader();
           reader.onload = function(e) {
             const base64Data = e.target.result;
-            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, detectedCoelsaId, detectedAmount);
+            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, detectedCoelsaId, detectedAmount, text);
           };
           reader.onerror = function() {
             alert("No se pudo leer el archivo de comprobante. Intentá con otra imagen.");
@@ -4650,7 +4650,7 @@
           const reader = new FileReader();
           reader.onload = function(e) {
             const base64Data = e.target.result;
-            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, "", null);
+            ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, "", null, null);
           };
           reader.onerror = function() {
             alert("No se pudo leer el archivo de comprobante.");
@@ -4741,7 +4741,7 @@
       });
     }
 
-    function ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, transactionId, ocrAmount) {
+    function ejecutarConciliacionAutomatica(paymentId, email, amount, month, transferMethod, base64Data, transactionId, ocrAmount, ocrText) {
       google.script.run
         .withSuccessHandler(function(response) {
           const scannerLine = document.getElementById("comprobante-scanner-line");
@@ -4833,7 +4833,7 @@
           alert("Error de conexión al conciliar: " + err.toString());
           cerrarModalValidarComprobante();
         })
-        .conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, transferMethod, base64Data, transactionId, ocrAmount);
+        .conciliarPagoTransferenciaAutomatico(paymentId, email, amount, month, transferMethod, base64Data, transactionId, ocrAmount, ocrText);
     }
 
     function actualizarMontoEsperadoComprobante() {
