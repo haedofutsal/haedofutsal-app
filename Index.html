@@ -4083,6 +4083,7 @@
       .then(function(response) {
         if (response && response.success) {
           if (rememberChecked) response.password = passwordInput;
+          if (response.token) localStorage.setItem('haedo_jwt_token', response.token);
           cargarRolUsuario(response, rememberChecked);
         } else {
           ocultarCarga();
@@ -4105,15 +4106,18 @@
       .then(r => r.json())
       .then(function(response) {
         if (response && response.success) {
+          if (response.token) localStorage.setItem('haedo_jwt_token', response.token);
           cargarRolUsuario(response, !!password);
         } else {
           AuthService.clearSession();
+      localStorage.removeItem('haedo_jwt_token');
           ocultarCarga();
           mostrarPantalla("login-view");
         }
       })
       .catch(function() {
         AuthService.clearSession();
+      localStorage.removeItem('haedo_jwt_token');
         ocultarCarga();
         mostrarPantalla("login-view");
       });
@@ -9269,6 +9273,7 @@
     function ejecutarLogout() {
       // Limpiar toda la sesión y credenciales recordadas
       AuthService.clearSession();
+      localStorage.removeItem('haedo_jwt_token');
       estadoApp.userEmail = null;
       estadoApp.role = null;
       estadoApp.userName = null;
