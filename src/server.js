@@ -233,7 +233,7 @@ app.post('/api/scan-receipt', async (req, res) => {
     });
     
     let code = null;
-    const codeMatch = text.match(/(?:operaci[oó]n|comprobante|transacci[oó]n|cod.*?)\s*[:#Nro]*\s*([0-9A-Z]{8,20})/i);
+    const codeMatch = text.match(/(?:operaci[oï¿½]n|comprobante|transacci[oï¿½]n|cod.*?)\s*[:#Nro]*\s*([0-9A-Z]{8,20})/i);
     if (codeMatch) {
       code = codeMatch[1];
     }
@@ -244,7 +244,7 @@ app.post('/api/scan-receipt', async (req, res) => {
       amount = amountMatch[1];
     }
     
-    console.log(`[OCR] Éxito. Codigo: ${code}, Monto: ${amount}`);
+    console.log(`[OCR] ï¿½xito. Codigo: ${code}, Monto: ${amount}`);
     res.json({ text, extractedCode: code, extractedAmount: amount });
   } catch (error) {
     console.error('[OCR Error]', error);
@@ -252,4 +252,18 @@ app.post('/api/scan-receipt', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`?? Servidor ERP profesional corriendo en puerto ${PORT}`));
+app.get('/ping', (req, res) => res.status(200).send('Pong! Servidor activo.'));
+
+app.listen(PORT, () => {
+  console.log('Servidor ERP profesional corriendo en puerto ' + PORT);
+  const RENDER_URL = process.env.RENDER_EXTERNAL_URL;
+  if (RENDER_URL) {
+    const https = require('https');
+    setInterval(() => {
+      https.get(RENDER_URL + '/ping', (resp) => {
+        if (resp.statusCode === 200) console.log('Keep-Alive ping exitoso.');
+      }).on('error', (err) => console.error('Keep-Alive ping fallido:', err.message));
+    }, 840000);
+    console.log('Keep-Alive activado hacia: ' + RENDER_URL + '/ping');
+  }
+});
