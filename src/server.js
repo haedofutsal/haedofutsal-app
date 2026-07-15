@@ -192,7 +192,7 @@ function getMockSpreadsheetApp() {
           setValue: (val) => {
             // Simplified patch for fallback VM
             const headers = SHEET_HEADERS[sheetName] || [];
-            const fieldName = (headers[col - 1] || '').toLowerCase();
+            let fieldName = (headers[col - 1] || '').toLowerCase();
             const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*');
             if (!Array.isArray(sbRows)) return;
             const targetObj = sbRows[row - 2];
