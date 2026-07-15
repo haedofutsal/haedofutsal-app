@@ -341,7 +341,7 @@ app.get('/api/mp-transfers', async (req, res) => {
     let queryParams = new URLSearchParams();
     queryParams.append('sort', 'date_created');
     queryParams.append('criteria', 'desc');
-    queryParams.append('limit', '50');
+    queryParams.append('limit', '1000');
 
     // add date filters if requested
     const startDate = req.query.startDate;
