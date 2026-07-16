@@ -34,3 +34,39 @@ self.addEventListener('notificationclick', function(event) {
     })
   );
 });
+
+// Interceptar Web Share Target (POST /share-receipt)
+self.addEventListener('fetch', function(event) {
+  const url = new URL(event.request.url);
+  if (event.request.method === 'POST' && url.pathname === '/share-receipt') {
+    event.respondWith((async () => {
+      try {
+        const formData = await event.request.formData();
+        const file = formData.get('receipt');
+        if (file) {
+          const cache = await caches.open('receipt-share');
+          const responseHeaders = new Headers({
+            'Content-Type': file.type,
+            'X-File-Name': encodeURIComponent(file.name || 'comprobante.png')
+          });
+          const fileResponse = new Response(file, { headers: responseHeaders });
+          await cache.put('/shared-receipt-file', fileResponse);
+        }
+      } catch (err) {
+        console.error('[SW] Error procesando share target:', err);
+      }
+      // Redirigir usando 303 (See Other) para que el navegador cambie a GET
+      return Response.redirect('/?shared=1', 303);
+    })());
+  }
+});
+
+self.addEventListener('install', event => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(self.clients.claim());
+});
+
+

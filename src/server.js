@@ -67,6 +67,12 @@ app.post('/api/run', auth.authenticateToken, async (req, res) => {
   }
 });
 
+// Servidor fallback para Web Share Target (si no se intercepta por Service Worker)
+app.post('/share-receipt', (req, res) => {
+  console.log('[SERVER] Recibido share target POST sin interceptar. Redirigiendo...');
+  res.redirect('/?shared=fallback');
+});
+
 // =====================================
 // MOCK VM PARA CODIGO.JS HEREDADO
 // =====================================
@@ -154,7 +160,8 @@ function getMockSpreadsheetApp() {
     'Torneos': ['Torneo_ID','Name','Category','Year','Is_Active'],
     'Finanzas_Torneos': ['Movimiento_ID','Torneo_ID','Date','Type','Concept','Amount','Notes','Created_By'],
     'Partidos': ['Partido_ID','Torneo_ID','Date','Opponent','Is_Home','Status','Goals_For','Goals_Against','Notes'],
-    'Admins': ['Username','Name','Role']
+    'Admins': ['Username','Name','Role'],
+    'Logs_Audit': ['Log_ID', 'Timestamp', 'User_Email', 'Action_Type', 'Entity', 'Details']
   };
 
   const mockSpreadsheet = {
@@ -166,7 +173,7 @@ function getMockSpreadsheetApp() {
       return {
         getDataRange: () => ({
           getValues: () => {
-            const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*');
+            const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*&order=id.asc');
             if (!Array.isArray(sbRows)) return [];
             const headers = SHEET_HEADERS[sheetName] || Object.keys(sbRows[0] || {});
             const mappedRows = sbRows.map(obj => headers.map(h => {
@@ -190,7 +197,7 @@ function getMockSpreadsheetApp() {
           syncSupabase(sbTable, 'POST', [obj]);
         },
         getLastRow: () => {
-          const sbRows = syncSupabase(sbTable, 'GET', null, '?select=id');
+          const sbRows = syncSupabase(sbTable, 'GET', null, '?select=id&order=id.asc');
           return Array.isArray(sbRows) ? sbRows.length + 1 : 1;
         },
         getRange: (row, col) => ({
@@ -198,7 +205,7 @@ function getMockSpreadsheetApp() {
             // Simplified patch for fallback VM
             const headers = SHEET_HEADERS[sheetName] || [];
             let fieldName = (headers[col - 1] || '').toLowerCase();
-            const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*');
+            const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*&order=id.asc');
             if (!Array.isArray(sbRows)) return;
             const targetObj = sbRows[row - 2];
             if (targetObj) {
@@ -214,7 +221,7 @@ function getMockSpreadsheetApp() {
           setNumberFormat: () => {}
         }),
         deleteRow: (rowIndex1Based) => {
-          const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*');
+          const sbRows = syncSupabase(sbTable, 'GET', null, '?select=*&order=id.asc');
           if (!Array.isArray(sbRows)) return;
           const targetObj = sbRows[rowIndex1Based - 2];
           if (targetObj) {

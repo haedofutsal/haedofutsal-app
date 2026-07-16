@@ -8013,6 +8013,201 @@
         row.style.boxShadow = "0 2px 6px rgba(15,23,42,0.04)";
         
         let badgeStyle = "background:rgba(37,99,235,0.1); color:#1d4ed8; border:1px solid rgba(37,99,235,0.3);";
+        const x1 = cx + r * Math.cos(startRad);
+        const y1 = cy + r * Math.sin(startRad);
+        const x2 = cx + r * Math.cos(endRad);
+        const y2 = cy + r * Math.sin(endRad);
+        
+        const largeArcFlag = angle > 180 ? 1 : 0;
+        
+        if (pct === 1) {
+          svgContent += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${colors[idx % colors.length]}" />`;
+        } else {
+          svgContent += `
+            <path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArcFlag} 1 ${x2} ${y2} Z" 
+                  fill="${colors[idx % colors.length]}" 
+                  stroke="#ffffff" 
+                  stroke-width="1.5" />
+          `;
+        }
+        
+        cumulativeAngle += angle;
+      });
+
+      let leyendaContent = `<div style="display:flex; flex-direction:column; gap:6px; align-items:flex-start; text-align:left; font-size:0.7rem; font-weight:600; width:100%; max-width:220px;">`;
+      top5.forEach((item, idx) => {
+        const pct = ((item.value / total) * 100).toFixed(1);
+        leyendaContent += `
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:12px; height:12px; border-radius:3px; background:${colors[idx % colors.length]}; flex-shrink:0;"></span>
+            <span style="color:#0f172a; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">${item.label}</span>
+            <span style="color:var(--text-muted); font-size:0.65rem;">(${pct}%)</span>
+          </div>
+        `;
+      });
+      leyendaContent += `</div>`;
+
+      container.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:center; gap:30px; width:100%; flex-wrap:wrap; margin: 10px 0;">
+          <svg width="200" height="200" style="flex-shrink:0;">
+            ${svgContent}
+            <circle cx="100" cy="100" r="45" fill="#ffffff" />
+            <text x="100" y="105" text-anchor="middle" font-size="9" font-weight="800" fill="#0f172a">EGRESOS</text>
+          </svg>
+          ${leyendaContent}
+        </div>
+      `;
+    }
+
+    // DIBUJAR GRÁFICO DE BARRAS COMPARATIVO SVG DINÁMICO
+    function dibujarGraficoBarrasSVG(container, data) {
+      const filtered = data.filter(d => (d.pagado + d.pendiente) > 0).slice(0, 5);
+      if (filtered.length === 0) {
+        container.innerHTML = `<span style="color:var(--text-muted);">Sin datos para graficar</span>`;
+        return;
+      }
+
+      const maxVal = Math.max(...filtered.map(d => d.pagado + d.pendiente));
+      
+      let barsContent = '';
+      
+      filtered.forEach((d, idx) => {
+        const total = d.pagado + d.pendiente;
+        const pagadoPct = total > 0 ? (d.pagado / maxVal) * 120 : 0; 
+        const pendientePct = total > 0 ? (d.pendiente / maxVal) * 120 : 0;
+        
+        const xPos = 40 + idx * 60;
+        
+        barsContent += `
+          <!-- Barra de Pagado (Verde) -->
+          <rect x="${xPos}" y="${150 - pagadoPct}" width="16" height="${pagadoPct}" fill="#10b981" rx="2" />
+          
+          <!-- Barra de Pendiente (Naranja) -->
+          <rect x="${xPos + 18}" y="${150 - pendientePct}" width="16" height="${pendientePct}" fill="#f59e0b" rx="2" />
+          
+          <!-- Etiqueta debajo -->
+          <text x="${xPos + 17}" y="165" text-anchor="middle" font-size="7" font-weight="700" fill="#64748b">${d.label.substring(0, 8)}</text>
+        `;
+      });
+
+      const leyenda = `
+        <div style="display:flex; justify-content:center; gap:20px; font-size:0.7rem; font-weight:600; margin-top:10px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="width:12px; height:12px; border-radius:3px; background:#10b981;"></span>
+            <span style="color:#0f172a;">Cobrado</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="width:12px; height:12px; border-radius:3px; background:#f59e0b;"></span>
+            <span style="color:#0f172a;">Pendiente</span>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; width:100%; margin: 10px 0;">
+          <svg width="340" height="180">
+            <line x1="20" y1="30" x2="330" y2="30" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="20" y1="70" x2="330" y2="70" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="20" y1="110" x2="330" y2="110" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="20" y1="150" x2="330" y2="150" stroke="#cbd5e1" stroke-width="1.5" />
+            
+            ${barsContent}
+          </svg>
+          ${leyenda}
+        </div>
+      `;
+    }
+
+    // DIBUJAR GRÁFICO DE BALANCE GENERAL (COMPARA INGRESO VS EGRESO)
+    function dibujarGraficoBalanceSVG(container, ingresos, gastos) {
+      const maxVal = Math.max(ingresos, gastos, 1);
+      
+      const ingHeight = (ingresos / maxVal) * 110;
+      const gastHeight = (gastos / maxVal) * 110;
+      
+      container.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:center; gap:40px; width:100%; height:180px; margin: 10px 0;">
+          <div style="display:flex; flex-direction:column; align-items:center;">
+            <div style="width:40px; height:120px; background:#f1f5f9; border-radius:6px; display:flex; align-items:flex-end;">
+              <div style="width:100%; height:${ingHeight}px; background:#10b981; border-radius:6px; transition:height 0.3s;"></div>
+            </div>
+            <span style="font-size:0.75rem; font-weight:700; margin-top:8px; color:var(--success);">INGRESOS</span>
+            <strong style="font-size:0.8rem; color:#0f172a; margin-top:2px;">$${ingresos.toLocaleString('es-AR')}</strong>
+          </div>
+          
+          <div style="display:flex; flex-direction:column; align-items:center;">
+            <div style="width:40px; height:120px; background:#f1f5f9; border-radius:6px; display:flex; align-items:flex-end;">
+              <div style="width:100%; height:${gastHeight}px; background:#ef4444; border-radius:6px; transition:height 0.3s;"></div>
+            </div>
+            <span style="font-size:0.75rem; font-weight:700; margin-top:8px; color:var(--danger);">EGRESOS</span>
+            <strong style="font-size:0.8rem; color:#0f172a; margin-top:2px;">$${gastos.toLocaleString('es-AR')}</strong>
+          </div>
+        </div>
+      `;
+    }
+
+    // EXPORTAR REPORTE A FORMATO CSV / EXCEL DESCARGABLE
+    function descargarReporteExcel() {
+      if (!datosReporteActual || !datosReporteActual.filas || datosReporteActual.filas.length === 0) {
+        alert("No hay datos disponibles en el reporte para exportar.");
+        return;
+      }
+      
+      const tipo = datosReporteActual.tipo;
+      const mes = datosReporteActual.mes;
+      const filas = datosReporteActual.filas;
+      
+      const headers = Object.keys(filas[0]);
+      
+      let csvContent = "\ufeff"; 
+      csvContent += `Reporte: ${tipo.toUpperCase()} - Periodo: ${mes}\n\n`;
+      csvContent += headers.join(";") + "\n";
+      
+      filas.forEach(f => {
+        const values = headers.map(h => {
+          const val = f[h] !== undefined && f[h] !== null ? f[h] : '';
+          return typeof val === 'string' && val.includes(';') ? `"${val}"` : val;
+        });
+        csvContent += values.join(";") + "\n";
+      });
+      
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Reporte_${tipo}_${mes}.csv`);
+      link.style.visibility = 'hidden';
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      console.log(`[REPORT EXPORT] Reporte de ${tipo} exportado a CSV con éxito.`);
+    }
+
+    function renderizarLogsAuditoria(logs) {
+      const container = document.getElementById("log-auditoria-container");
+      container.innerHTML = "";
+      
+      if (logs.length === 0) {
+        container.innerHTML = `<div class="empty-state"><p>No hay registros de actividad en el Log General.</p></div>`;
+        return;
+      }
+      
+      logs.forEach(log => {
+        const row = document.createElement("div");
+        row.style.background = "#ffffff";
+        row.style.border = "1px solid var(--border-color)";
+        row.style.padding = "10px 12px";
+        row.style.borderRadius = "10px";
+        row.style.marginBottom = "8px";
+        row.style.display = "flex";
+        row.style.flexDirection = "column";
+        row.style.gap = "4px";
+        row.style.boxShadow = "0 2px 6px rgba(15,23,42,0.04)";
+        
+        let badgeStyle = "background:rgba(37,99,235,0.1); color:#1d4ed8; border:1px solid rgba(37,99,235,0.3);";
         if (log.Action_Type === "CREAR") badgeStyle = "background:rgba(22,163,74,0.1); color:#15803d; border:1px solid rgba(22,163,74,0.3);";
         else if (log.Action_Type === "EDITAR" || log.Action_Type === "MODIFICAR") badgeStyle = "background:rgba(217,119,6,0.1); color:#b45309; border:1px solid rgba(217,119,6,0.3);";
         else if (log.Action_Type === "ELIMINAR") badgeStyle = "background:rgba(239,68,68,0.1); color:#dc2626; border:1px solid rgba(239,68,68,0.3);";
@@ -8028,7 +8223,7 @@
             <span style="font-size:0.68rem; color:var(--text-muted);">${log.Timestamp || ''}</span>
           </div>
           <p style="font-size:0.8rem; color:#334155; margin:2px 0 0 0;">${log.Details || ''}</p>
-          <span style="font-size:0.68rem; color:var(--text-muted); text-align:right;">Por: ${log.User_Username || 'Sistema'}</span>
+          <span style="font-size:0.68rem; color:var(--text-muted); text-align:right;">Por: ${log.User_Username || log.User_Email || 'Sistema'}</span>
         `;
         container.appendChild(row);
       });
@@ -10017,6 +10212,13 @@
 
     // ───────────── PWA: Registro del Service Worker e Intercepción de Share Target ─────────────
     function chequearReciboCompartido() {
+      // Fallback si no fue interceptado por el Service Worker y vino por redirección del servidor
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('shared') === 'fallback') {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        alert("El archivo se compartió, pero el Service Worker no estaba activo aún.\n\nPor favor, ingresá a tu cuenta y subí el comprobante de forma manual usando el botón 'Pagar / Subir Comprobante'.");
+      }
+
       if ('caches' in window) {
           caches.open('receipt-share').then(cache => {
             cache.match('/shared-receipt-file').then(response => {
@@ -10051,66 +10253,6 @@
             });
           });
         }
-    }
-    function cambiarTabRevisiones(tab) {
-      document.getElementById("btn-tab-rev-pendientes").className = tab === 'pendientes' ? "btn-primary" : "btn-secondary";
-      document.getElementById("btn-tab-rev-mp").className = tab === 'mp' ? "btn-primary" : "btn-secondary";
-      document.getElementById("btn-tab-rev-todas").className = tab === 'todas' ? "btn-primary" : "btn-secondary";
-      
-      document.getElementById("tab-rev-pendientes").style.display = tab === 'pendientes' ? "block" : "none";
-      document.getElementById("tab-rev-mp").style.display = tab === 'mp' ? "block" : "none";
-      document.getElementById("tab-rev-todas").style.display = tab === 'todas' ? "block" : "none";
-      
-      if (tab === 'mp' && document.getElementById("admin-mp-list").innerHTML.includes("Cargando transferencias")) {
-        cargarRevisionesYTransferencias();
-      } else if (tab === 'todas' && document.getElementById("admin-todas-cuotas-list").innerHTML.includes("Cargando cuotas")) {
-        renderizarTodasLasCuotas();
-      }
-    }
-
-    function cargarRevisionesYTransferencias() {
-      // 1. Cargar Cuotas Pendientes
-      const listPendientes = document.getElementById("admin-revisiones-list");
-      const pagosRevision = (estadoApp.datosAdmin?.pagos || []).filter(p => p.Status === 'Revision' || p.Status === 'En Revisión' || p.Collected_By?.includes('Revision'));
-      
-      if (pagosRevision.length === 0) {
-        listPendientes.innerHTML = `<div class="empty-state"><p>No hay cuotas pendientes de revisión.</p></div>`;
-      } else {
-        listPendientes.innerHTML = pagosRevision.map(p => {
-          const socioData = (estadoApp.datosAdmin?.socios || []).find(u => {
-            const usernameMatch = (u.Username || "").trim().toLowerCase() === (p.Username || "").trim().toLowerCase();
-            const userMatch = (u.Username || "").trim().toLowerCase() === (p.Username || "").split('@')[0].trim().toLowerCase();
-            return usernameMatch || userMatch;
-          });
-          let socioName = p.Username.split('@')[0];
-          let socioCat = "Sin Categoría";
-          if (socioData) {
-            socioName = socioData.Username || socioData.Name || socioName;
-            socioCat = socioData.Category || "Sin Categoría";
-          }
-          const socioLabel = `${socioName} | ${socioCat}`;
-          const safeBase64 = p.MP_Link ? encodeURIComponent(p.MP_Link) : "";
-          
-          return `
-          <div class="list-item-card" style="display:flex; flex-direction:column; gap:8px;">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-              <div style="font-weight:800; color:#0f172a;">${socioLabel}</div>
-              <div style="font-weight:900; color:#1d4ed8;">$${parseCurrencyString(p.Amount).toLocaleString('es-AR')}</div>
-            </div>
-            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748b;">
-              <div>Mes: <span style="font-weight:700;">${p.Month}</span></div>
-              <div>ID: ${p.Payment_ID}</div>
-            </div>
-            <div style="display:flex; gap:10px; margin-top:5px;">
-              <button class="btn-primary" style="flex:1; justify-content:center; display:flex; align-items:center; gap:8px; background:var(--primary); border:1px solid var(--primary); color:white;" onclick="abrirModalRevisionAdmin('${p.Payment_ID}', '${p.Month}', '${p.Amount}', '${safeBase64}', '${p.Username}')">
-                <i class="fa-solid fa-file-invoice-dollar"></i> Revisar Pago
-              </button>
-            </div>
-          </div>
-          `;
-        }).join("");
-      }
-
       // 2. Cargar Transferencias MP desde servidor
       const listMp = document.getElementById("admin-mp-list");
       listMp.innerHTML = `<div class="empty-state"><p><i class="fa-solid fa-spinner fa-spin"></i> Conectando con Mercado Pago...</p></div>`;
